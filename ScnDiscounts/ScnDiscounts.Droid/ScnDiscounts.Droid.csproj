@@ -1,0 +1,285 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4A47468A-6962-4F56-82A5-071100D9E99B}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ScnDiscounts.Droid</RootNamespace>
+    <AssemblyName>ScnDiscounts.Droid</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <AndroidApplication>true</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
+    <AndroidSupportedAbis>armeabi,armeabi-v7a,x86</AndroidSupportedAbis>
+    <MandroidI18n />
+    <JavaMaximumHeapSize>
+    </JavaMaximumHeapSize>
+    <NuGetPackageImportStamp>50081b58</NuGetPackageImportStamp>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
+    <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
+    <MonoDroidExtraArgs>
+    </MonoDroidExtraArgs>
+    <AndroidLinkSkip>
+    </AndroidLinkSkip>
+    <AndroidStoreUncompressedFileExtensions>
+    </AndroidStoreUncompressedFileExtensions>
+    <JavaOptions>
+    </JavaOptions>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+    <AndroidSupportedAbis>armeabi;armeabi-v7a;x86;x86_64</AndroidSupportedAbis>
+    <Debugger>Xamarin</Debugger>
+    <DevInstrumentationEnabled>False</DevInstrumentationEnabled>
+    <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Android" />
+    <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\monoandroid\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\monoandroid\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+    <Reference Include="FormsViewGroup">
+      <HintPath>..\..\packages\Xamarin.Forms.1.4.2.6359\lib\MonoAndroid10\FormsViewGroup.dll</HintPath>
+    </Reference>
+    <Reference Include="GooglePlayServicesLib">
+      <HintPath>..\..\packages\Xamarin.GooglePlayServices.22.0.0.2\lib\MonoAndroid41\GooglePlayServicesLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v4">
+      <HintPath>..\..\packages\Xamarin.Android.Support.v4.22.1.1.1\lib\MonoAndroid403\Xamarin.Android.Support.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Core">
+      <HintPath>..\..\packages\Xamarin.Forms.1.4.2.6359\lib\MonoAndroid10\Xamarin.Forms.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Maps">
+      <HintPath>..\..\packages\Xamarin.Forms.Maps.1.4.2.6359\lib\MonoAndroid10\Xamarin.Forms.Maps.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Maps.Android">
+      <HintPath>..\..\packages\Xamarin.Forms.Maps.1.4.2.6359\lib\MonoAndroid10\Xamarin.Forms.Maps.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Platform">
+      <HintPath>..\..\packages\Xamarin.Forms.1.4.2.6359\lib\MonoAndroid10\Xamarin.Forms.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Platform.Android">
+      <HintPath>..\..\packages\Xamarin.Forms.1.4.2.6359\lib\MonoAndroid10\Xamarin.Forms.Platform.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Xaml">
+      <HintPath>..\..\packages\Xamarin.Forms.1.4.2.6359\lib\MonoAndroid10\Xamarin.Forms.Xaml.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DependencyInterface\GeoLocation\GeolocationContinuousListener.cs" />
+    <Compile Include="DependencyInterface\GeoLocation\GeolocationSingleListener.cs" />
+    <Compile Include="DependencyInterface\GeoLocation\Geolocator.cs" />
+    <Compile Include="DependencyInterface\Network\BroadcastMonitor.cs" />
+    <Compile Include="DependencyInterface\Network\Network.cs" />
+    <Compile Include="DependencyInterface\Network\Reachability.cs" />
+    <Compile Include="DependencyInterface\PhoneServiceDroid.cs" />
+    <Compile Include="MainActivity.cs" />
+    <Compile Include="Renderers\MapTileDroid.cs" />
+    <Compile Include="Renderers\LabelExtendedRenderer.cs" />
+    <Compile Include="Renderers\ViewCellExtendedRenderer.cs" />
+    <Compile Include="Resources\Resource.Designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Resources\AboutResources.txt" />
+    <None Include="Assets\AboutAssets.txt" />
+    <AndroidResource Include="Resources\Drawable\ic_pin_blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable-xhdpi\test.png" />
+    <AndroidResource Include="Resources\Drawable\Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\ic_pin.png" />
+    <Content Include="Properties\AndroidManifest.xml" />
+    <AndroidResource Include="Resources\Drawable\ic_about.png" />
+    <AndroidResource Include="Resources\Drawable\ic_empty.png" />
+    <AndroidResource Include="Resources\Drawable\ic_map.png" />
+    <AndroidResource Include="Resources\Drawable\ic_settings.png" />
+    <AndroidResource Include="Resources\Drawable\ic_menu.png" />
+    <AndroidResource Include="Resources\Drawable\test_image_64x64.png" />
+    <AndroidResource Include="Resources\Drawable\test_image_big.png" />
+    <AndroidResource Include="Resources\Drawable\test.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\test.png" />
+    <AndroidResource Include="Resources\Drawable\ic_menu_about.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_menu.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_menu_about.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_menu.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_menu_about.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_menu.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_menu_about.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_menu.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_menu_about.png" />
+    <AndroidResource Include="Resources\Drawable\ic_menu_phone.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_menu_phone.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_menu_phone.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_menu_phone.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_menu_phone.png" />
+    <AndroidResource Include="Resources\Drawable\discount_label.png" />
+    <AndroidResource Include="Resources\Drawable\ic_pin.png" />
+    <AndroidResource Include="Resources\Drawable\ic_tag.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_pin.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_settings.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_tag.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_pin.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_settings.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_tag.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_pin.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_settings.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_tag.png" />
+    <AndroidResource Include="Resources\Drawable\ic_logo.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_logo.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_logo.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_logo.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_logo.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_pin.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_settings.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_tag.png" />
+    <AndroidResource Include="Resources\Drawable\ic_menu_back.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_menu_back.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_menu_back.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_menu_back.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_menu_back.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_pin_blue.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_pin_blue.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_pin_blue.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_pin_blue.png" />
+    <AndroidResource Include="Resources\Drawable\ic_pin_green.png" />
+    <AndroidResource Include="Resources\Drawable\ic_pin_grey.png" />
+    <AndroidResource Include="Resources\Drawable\ic_pin_orange.png" />
+    <AndroidResource Include="Resources\Drawable\ic_pin_purple.png" />
+    <AndroidResource Include="Resources\Drawable\ic_pin_rose.png" />
+    <AndroidResource Include="Resources\Drawable\ic_pin_yellow.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_pin_green.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_pin_grey.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_pin_orange.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_pin_purple.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_pin_rose.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_pin_yellow.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_pin_green.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_pin_grey.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_pin_orange.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_pin_purple.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_pin_rose.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_pin_yellow.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_pin_green.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_pin_grey.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_pin_orange.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_pin_purple.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_pin_rose.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_pin_yellow.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_pin_green.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_pin_grey.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_pin_orange.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_pin_purple.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_pin_rose.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_pin_yellow.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_pin_navigation.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_pin_navigation.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_pin_navigation.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_pin_navigation.png" />
+    <AndroidResource Include="Resources\Drawable\ic_pin_navigation.png" />
+    <AndroidResource Include="Resources\Drawable\ic_marker_distance.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_marker_distance.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_marker_distance.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_marker_distance.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_marker_distance.png" />
+    <AndroidResource Include="Resources\Drawable\ic_detail.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_detail.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_detail.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_detail.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_detail.png" />
+    <AndroidResource Include="Resources\Drawable\list_border.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\list_border.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\list_border.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\list_border.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\list_border.png" />
+    <AndroidResource Include="Resources\Drawable\img_background.png" />
+    <AndroidResource Include="Resources\Drawable\img_logo.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\img_background.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\img_logo.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\img_background.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\img_logo.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\img_background.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\img_logo.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\img_background.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\img_logo.png" />
+    <AndroidResource Include="Resources\Drawable\ic_location.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\ic_location.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\ic_location.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\ic_location.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\ic_location.png" />
+    <AndroidResource Include="Resources\Drawable\img_empty_big.png" />
+    <AndroidResource Include="Resources\Drawable\img_empty_small.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\img_empty_big.png" />
+    <AndroidResource Include="Resources\Drawable-hdpi\img_empty_small.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\img_empty_big.png" />
+    <AndroidResource Include="Resources\Drawable-mdpi\img_empty_small.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\img_empty_big.png" />
+    <AndroidResource Include="Resources\Drawable-xhdpi\img_empty_small.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\img_empty_big.png" />
+    <AndroidResource Include="Resources\Drawable-xxhdpi\img_empty_small.png" />
+    <AndroidResource Include="Resources\values\styles.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\values-v21\styles.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\layout\" />
+  </ItemGroup>
+  <Import Project="..\ScnDiscounts\ScnDiscounts.projitems" Label="Shared" Condition="Exists('..\ScnDiscounts\ScnDiscounts.projitems')" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <Import Project="..\..\packages\Xamarin.Forms.1.4.2.6359\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.1.4.2.6359\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Xamarin.Forms.1.4.2.6359\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Forms.1.4.2.6359\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+     Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
