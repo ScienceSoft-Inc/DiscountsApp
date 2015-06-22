@@ -30,7 +30,7 @@ namespace ScnDiscounts.Control.SideBar
                     Constraint.RelativeToParent(parent =>
                     {
                         if (_leftPanelWidth == 0)
-                            _leftPanelWidth = parent.Width - 50;
+                            _leftPanelWidth = parent.Width - Device.OnPlatform(50, 48, 64);
 
                         return 0 - _leftPanelWidth;
                     }),
@@ -88,7 +88,7 @@ namespace ScnDiscounts.Control.SideBar
                     Constraint.RelativeToParent(parent =>
                     {
                         if (_rightPanelWidth == 0)
-                            _rightPanelWidth = parent.Width - 50;
+                            _rightPanelWidth = parent.Width - Device.OnPlatform(50, 48, 64);
 
                         return _rightPanelWidth;
                     }),
@@ -164,12 +164,12 @@ namespace ScnDiscounts.Control.SideBar
         {
             IsShowLeftPanel = false;
 
-            await RightPanel.TranslateTo((0 - _rightPanelWidth), RightPanel.TranslationY, SpeedAnimatePanel, Easing.CubicOut);
+            await RightPanel.LayoutTo(new Rectangle((baseLayout.Width - _rightPanelWidth), RightPanel.TranslationY, RightPanel.Width, RightPanel.Height), SpeedAnimatePanel, Easing.CubicIn);
         }
 
         async private void HideRightPanel()
         {
-            await RightPanel.TranslateTo(0, RightPanel.TranslationY, SpeedAnimatePanel, Easing.CubicOut);
+            await RightPanel.LayoutTo(new Rectangle(baseLayout.Width, RightPanel.TranslationY, RightPanel.Width, RightPanel.Height), SpeedAnimatePanel, Easing.CubicOut);
         }
         #endregion
 

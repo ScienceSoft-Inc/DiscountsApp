@@ -8,7 +8,9 @@ namespace ScnDiscounts.Control.SideBar
         public SideBarPanel()
         {
             BackgroundColor = Color.White;
-
+            VerticalOptions = LayoutOptions.FillAndExpand;
+            HorizontalOptions = LayoutOptions.EndAndExpand;
+            
             var tapSideBar = new TapGestureRecognizer();
             tapSideBar.Tapped += (sender, e) => { OnClick(); };
             GestureRecognizers.Add(tapSideBar);

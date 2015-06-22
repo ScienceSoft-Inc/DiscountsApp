@@ -19,7 +19,6 @@ namespace ScnDiscounts.Helpers
             LangTypeEnum result = LangTypeEnum.ltEn;
             foreach (var item in LanguageList)
             {
-                string ss = item.Value;
                 if (String.Compare(item.Value, lang, StringComparison.CurrentCultureIgnoreCase) == 0)
                 {
                     result = item.Key;

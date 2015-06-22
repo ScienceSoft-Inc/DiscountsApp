@@ -58,7 +58,7 @@ namespace ScnDiscounts.Droid.Renderers
             moveCallBack.Finishing += (ss, ee) => 
             {
                 if (marker.Snippet != CurrentLocationSnippet)
-                    mapTile.ShowDetailInfo(marker.Snippet);
+                    mapTile.ShowPinDetailInfo(marker.Snippet);
             };
             NativeMap.AnimateCamera(newCamera, 200, moveCallBack);
         }

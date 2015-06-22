@@ -21,6 +21,7 @@ namespace ScnDiscounts.Views
 
             var stackSelection = new StackLayout
             {
+                BackgroundColor = Color.Transparent,
                 Padding = new Thickness(16),
                 Children =
                 {

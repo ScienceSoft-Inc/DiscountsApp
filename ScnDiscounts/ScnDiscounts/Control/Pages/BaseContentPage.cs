@@ -64,7 +64,11 @@ namespace ScnDiscounts.Control.Pages
 
             this.SetBinding(IsBusyProperty, "IsLoadBusy");
 
-            baseLayout = new RelativeLayout();
+            baseLayout = new RelativeLayout 
+            {
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            };
             Content = baseLayout;
 
             InitContentLayout();

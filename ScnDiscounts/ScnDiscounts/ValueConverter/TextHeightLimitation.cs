@@ -9,9 +9,9 @@ namespace ScnDiscounts.ValueConverter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string text = (string)value;
-            
-            if (text.Length > 110)
-                text = text.Remove(110) + " ...";
+
+            if (text.Length > 145)
+                text = text.Remove(145);
             
             return text;
         }

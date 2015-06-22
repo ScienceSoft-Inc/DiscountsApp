@@ -73,7 +73,8 @@ namespace ScnDiscounts.ViewModels
                     IsRetry = true;
                     return;
                 }
-                
+
+                ProcessMessage = "";
                 //await Task.Delay(3000);//for fun, i will del it
                 MessagingCenter.Send(this, "StartMainForm");
             }

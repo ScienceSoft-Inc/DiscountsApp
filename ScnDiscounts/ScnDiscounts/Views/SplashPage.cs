@@ -39,7 +39,8 @@ namespace ScnDiscounts.Views
 
             var imgLogo = new Image
             {
-                Source = contentUI.ImgLogo
+                Source = contentUI.ImgLogo,
+                HeightRequest = Device.OnPlatform(-1, -1, 150),
             };
             AbsoluteLayout.SetLayoutFlags(imgLogo, AbsoluteLayoutFlags.PositionProportional);
             AbsoluteLayout.SetLayoutBounds(imgLogo,

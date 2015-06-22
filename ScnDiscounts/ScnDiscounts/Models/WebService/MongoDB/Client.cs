@@ -23,7 +23,6 @@ namespace ScnDiscounts.Models.WebService.MongoDB
         {
             var client = new HttpClient { BaseAddress = new Uri(Config.ServerAddress), Timeout = new TimeSpan(0, 0, 10)};
             var response = await client.GetAsync(request);
-            response.EnsureSuccessStatusCode();
 
             return response.Content.ReadAsStringAsync().Result;
         }
@@ -86,8 +85,7 @@ namespace ScnDiscounts.Models.WebService.MongoDB
 
             try
             {
-                AppData.Discount.BranchCollection.Clear();
-                AppData.Discount.PreviewImage = "";
+                discountData.BranchList.Clear();
 
                 var token = await Get(String.Format(RequestPartnerDetail, discountData.Id));
                 var branchList = JsonConvert.DeserializeObject<List<Object>>(token);
@@ -95,9 +93,10 @@ namespace ScnDiscounts.Models.WebService.MongoDB
                 foreach (var item in branchList)
                 {
                     var deserializeBranch = JsonConvert.DeserializeObject<DeserializeBranchItem>(item.ToString());
-                    AppData.Discount.BranchCollection.Add(new BranchData(deserializeBranch));
+                    discountData.BranchList.Add(new BranchData(deserializeBranch)); 
+                    
                     if (deserializeBranch.Id == deserializeBranch.PartnerId)
-                        AppData.Discount.PreviewImage = deserializeBranch.Image;
+                        discountData.Image = deserializeBranch.Image;
                 }
 
                 isSuccess = true;

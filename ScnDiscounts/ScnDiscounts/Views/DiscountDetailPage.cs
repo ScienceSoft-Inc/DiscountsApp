@@ -21,6 +21,9 @@ namespace ScnDiscounts.Views
             get { return (DiscountDetailContentUI)ContentUI; }
         }
 
+        public ListView BranchListView;
+        private StackLayout discountLayout;
+
         public DiscountDetailPage(DiscountData discountData)
             : base(typeof(DiscountDetailViewModel), typeof(DiscountDetailContentUI))
         {
@@ -29,7 +32,6 @@ namespace ScnDiscounts.Views
             BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
 
             var mainLayout = new AbsoluteLayout();
-            mainLayout.VerticalOptions = LayoutOptions.FillAndExpand;
 
             var appBar = new CustomAppBar(this, CustomAppBar.CustomBarBtnEnum.cbBack)
             {
@@ -41,20 +43,20 @@ namespace ScnDiscounts.Views
             appBar.BtnBack.WidthRequest = appBar.HeightRequest;
             appBar.BtnBack.HeightRequest = appBar.HeightRequest;
 
-            var discountLayout = new StackLayout
+            discountLayout = new StackLayout
             { 
-                Spacing = 0
+                Spacing = Device.OnPlatform(0, 0, 4),
             };
 
             #region Photo
             var imageLayout = new RelativeLayout 
             {
-                HeightRequest = Device.OnPlatform(200, 200, 200)
+                HeightRequest = Device.OnPlatform(200, 200, 240)
             };
 
             var imgPhoto = new Image
             {
-                Aspect = Aspect.AspectFill
+                Aspect = Aspect.AspectFill,
             };
             imgPhoto.SetBinding(Image.SourceProperty, new Binding("ImgPhoto", BindingMode.Default, new FileStreamToImageSource(), FileStreamToImageSource.SizeImage.siBig));
 
@@ -174,7 +176,7 @@ namespace ScnDiscounts.Views
 
                 var categoryLayout = new StackLayout
                 {
-                    Padding = new Thickness(4),
+                    Padding = Device.OnPlatform(new Thickness(4), new Thickness(4), new Thickness(6)),
                     VerticalOptions = LayoutOptions.Center,
                     HorizontalOptions = LayoutOptions.End,
                     Children =
@@ -191,7 +193,7 @@ namespace ScnDiscounts.Views
             var titleDetailLayout = new StackLayout
             {
                 Padding = new Thickness (2, 0, 0, 0),
-                Spacing = 0,
+                Spacing = Device.OnPlatform(0, 0, 4),
                 HorizontalOptions = LayoutOptions.FillAndExpand
             };
             titleDetailLayout.Children.Add(stackCategories);
@@ -242,21 +244,9 @@ namespace ScnDiscounts.Views
             discountLayout.Children.Add(descriptionLayout);
             #endregion
 
-            #region Branch
-            var branchView = new ListView();
-            branchView.HasUnevenRows = true;
-            branchView.SeparatorVisibility = SeparatorVisibility.None;
-            branchView.ItemTapped += viewModel.OnBranchViewItemTapped;
-            branchView.SetBinding(ListView.ItemsSourceProperty, "BranchItems");
-            branchView.ItemTemplate = new DataTemplate(() => new BranchInfoViewTemplate(contentUI, viewModel));
-            branchView.HeightRequest = viewModel.BranchItems.Count * (236);
-
-            discountLayout.Children.Add(branchView);
-            #endregion
-
             var scrollDiscount = new ScrollView
             {
-                Content = discountLayout
+                Content = discountLayout,
             };
 
             AbsoluteLayout.SetLayoutFlags(scrollDiscount, AbsoluteLayoutFlags.All);
@@ -271,9 +261,30 @@ namespace ScnDiscounts.Views
             ContentLayout.Children.Add(mainLayout);
         }
 
+        public void InitBranchListView()
+        {
+            #region Branch
+            BranchListView = new ListView();
+            BranchListView.HasUnevenRows = true;
+            BranchListView.SeparatorVisibility = SeparatorVisibility.None;
+            BranchListView.ItemTapped += viewModel.OnBranchViewItemTapped;
+            BranchListView.SetBinding(ListView.ItemsSourceProperty, "BranchItems");
+            BranchListView.ItemTemplate = new DataTemplate(() => new BranchInfoViewTemplate(BranchListView, contentUI, viewModel));
+            BranchListView.SetBinding(ListView.HeightRequestProperty, new Binding("BranchItemsCount", BindingMode.Default, new ListViewHeightConverter(), (Device.OnPlatform(200, 190, 250))));
+
+            var stackBranchView = new StackLayout
+            {
+                Padding = Device.OnPlatform(new Thickness(0), new Thickness(0), new Thickness(0, 0, -4, 0)),
+                Children = { BranchListView }
+            };
+
+            discountLayout.Children.Add(stackBranchView);
+            #endregion
+        }
+
         class BranchInfoViewTemplate : ViewCellExtended
         {
-            public BranchInfoViewTemplate(DiscountDetailContentUI parentContentUI, DiscountDetailViewModel parentViewModel)
+            public BranchInfoViewTemplate(ListView parentListView, DiscountDetailContentUI parentContentUI, DiscountDetailViewModel parentViewModel)
             {
                 HighlightSelection = false;
 
@@ -374,40 +385,74 @@ namespace ScnDiscounts.Views
                 stackBranch.Children.Add(gridLocation);
 
                 #endregion
-                
-                #region Phone
-                var phoneView = new ListView();
-                phoneView.RowHeight = Device.OnPlatform(50, 50, 50);
-                phoneView.ItemTapped += parentViewModel.OnPhoneViewItemTapped;
-                phoneView.SeparatorVisibility = SeparatorVisibility.None;
-                phoneView.SetBinding(ListView.ItemsSourceProperty, "PhoneList");
-                phoneView.ItemTemplate = new DataTemplate(() => new PhoneViewTemplate(parentContentUI, phoneView.RowHeight));
-                phoneView.SetBinding(HeightRequestProperty, new Binding("PhoneList", BindingMode.Default, new ListViewHeight(), (phoneView.RowHeight + 16)));
-                stackBranch.Children.Add(phoneView);
+
+                #region Phone list
+                var phone1 = CreateCallButton(parentContentUI, "Phone1");
+                phone1.SetBinding(BorderBox.IsVisibleProperty, "IsPhone1FillIn");
+                var tapGesture1 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
+                tapGesture1.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone1");
+                phone1.TapGesture = tapGesture1;
+
+                var phone2 = CreateCallButton(parentContentUI, "Phone2");
+                phone2.SetBinding(BorderBox.IsVisibleProperty, "IsPhone2FillIn");
+                var tapGesture2 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
+                tapGesture2.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone2");
+                phone2.TapGesture = tapGesture2;
+
+                //var phone3 = CreateCallButton(parentContentUI, "Phone3");
+                //phone3.SetBinding(StackLayout.IsVisibleProperty, "IsPhone3FillIn");
+                //var tapGesture3 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
+                //tapGesture3.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone3");
+                //phone3.TapGesture = tapGesture3;
+
+                //var phone4 = CreateCallButton(parentContentUI, "Phone4");
+                //phone4.SetBinding(StackLayout.IsVisibleProperty, "IsPhone4FillIn");
+                //var tapGesture4 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
+                //tapGesture4.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone4");
+                //phone4.TapGesture = tapGesture4;
+
+                //var phone5 = CreateCallButton(parentContentUI, "Phone5");
+                //phone5.SetBinding(StackLayout.IsVisibleProperty, "IsPhone5FillIn");
+                //var tapGesture5 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
+                //tapGesture5.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone5");
+                //phone5.TapGesture = tapGesture5;
+
+                var stackPhoneView = new StackLayout
+                {
+                    Padding = Device.OnPlatform(new Thickness(0, 4), new Thickness(0, 4), new Thickness(0, 4, -8, 4)),
+                    Children = 
+                    { 
+                        phone1,
+                        phone2,
+                        //phone3,
+                        //phone4,
+                        //phone5
+                    }
+                };
+                stackBranch.Children.Add(stackPhoneView);
                 #endregion
                 
                 View = stackBranch;
             }
-        }
 
-        class PhoneViewTemplate : ViewCell
-        {
-            public PhoneViewTemplate(DiscountDetailContentUI parentContentUI, int rowHeight )
+            private BorderBox CreateCallButton(DiscountDetailContentUI parentContentUI, string bindingProperty)
             {
-                var imgPhone= new Image
+                int btnHeight = Device.OnPlatform(50, 50, 64);
+
+                var imgPhone = new Image
                 {
                     Source = parentContentUI.IconPhone,
-                    HeightRequest = rowHeight / 1.5,
-                    WidthRequest = rowHeight / 1.5
+                    HeightRequest = btnHeight / 1.5,
+                    WidthRequest = btnHeight / 1.5
                 };
-                
+
                 var txtPhone = new Label
                 {
                     HorizontalOptions = LayoutOptions.CenterAndExpand,
                     VerticalOptions = LayoutOptions.CenterAndExpand,
                     Style = (Style)App.Current.Resources[LabelStyles.DetailPhoneStyle]
                 };
-                txtPhone.SetBinding(Label.TextProperty, ".");
+                txtPhone.SetBinding(Label.TextProperty, bindingProperty);
 
                 AbsoluteLayout phoneLayout = new AbsoluteLayout
                 {
@@ -418,7 +463,7 @@ namespace ScnDiscounts.Views
                 AbsoluteLayout.SetLayoutBounds(imgPhone,
                     new Rectangle(0.1, 0.5, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize)
                 );
-                
+
                 AbsoluteLayout.SetLayoutFlags(txtPhone, AbsoluteLayoutFlags.PositionProportional);
                 AbsoluteLayout.SetLayoutBounds(
                     txtPhone,
@@ -431,23 +476,14 @@ namespace ScnDiscounts.Views
 
                 phoneLayout.Children.Add(imgPhone);
                 phoneLayout.Children.Add(txtPhone);
-                
+
                 var borderPhone = new BorderBox();
-                borderPhone.HeightRequest = rowHeight - 8;
+                borderPhone.HeightRequest = btnHeight - 8;
                 borderPhone.BorderWidth = 1;
                 borderPhone.BorderColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor];
                 borderPhone.Content = phoneLayout;
-                
-                var itemLayout = new StackLayout
-                {
-                    Padding = new Thickness(0, 4),
-                    Children = 
-                    {
-                        borderPhone
-                    }
-                };
 
-                View = itemLayout;
+                return borderPhone;
             }
         }
     }

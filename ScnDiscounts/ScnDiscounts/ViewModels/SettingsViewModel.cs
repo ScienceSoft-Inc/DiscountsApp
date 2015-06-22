@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using ScnDiscounts.Control.Pages;
 using ScnDiscounts.Helpers;
@@ -6,6 +7,7 @@ using ScnDiscounts.Models;
 using ScnDiscounts.Views;
 using ScnDiscounts.Views.ContentUI;
 using Xamarin.Forms;
+using ScnDiscounts.Control;
 
 namespace ScnDiscounts.ViewModels
 {
@@ -21,6 +23,7 @@ namespace ScnDiscounts.ViewModels
             ViewPage.Disappearing += ViewPage_Disappearing;
 
             _currLanguageName = LanguageHelper.LanguageList[AppParameters.Config.SystemLang];
+            _mapName = MapTile.TileSourceList[AppParameters.Config.MapSource];
         }
 
         void ViewPage_Disappearing(object sender, EventArgs e)
@@ -34,6 +37,8 @@ namespace ScnDiscounts.ViewModels
             OnPropertyChanged("Title");
             OnPropertyChanged("CurrLanguageTitle");
             OnPropertyChanged("CurrLanguageName");
+            OnPropertyChanged("MapTitle");
+            OnPropertyChanged("MapName");
         }
 
         //------------------
@@ -60,6 +65,28 @@ namespace ScnDiscounts.ViewModels
             }
         }
         #endregion
+
+        #region MapTitle - map
+        public string MapTitle
+        {
+            get { return contentUI.TxtMap; }
+        }
+        #endregion
+
+        #region MapName - map name
+        private string _mapName;
+        public string MapName
+        {
+            get { return _mapName; }
+            set
+            {
+                _mapName = value;
+
+                UpdateProperty();
+            }
+        }
+        #endregion
+
 
         async public void LangSetting_Click(object sender, EventArgs e)
         {
@@ -91,6 +118,46 @@ namespace ScnDiscounts.ViewModels
                     AppParameters.Config.SystemLang = LanguageHelper.LangNameToEnum(selLang);
                     CurrLanguageName = selLang;
                 }
+            }
+        }
+
+        async internal void MapSetting_Click(object sender, EventArgs e)
+        {
+            var list = new List<string>(MapTile.TileSourceList.Values);
+            if (Device.OS == TargetPlatform.WinPhone)
+            {
+                var mapPage = new SelectionPage(contentUI.TxtMapSel, list);
+
+                mapPage.SelList.ItemSelected += (ss, ee) =>
+                {
+                    var selMap = ee.SelectedItem.ToString();
+                    SetMapSettings(selMap);
+                };
+
+                await ViewPage.Navigation.PushModalAsync(mapPage, true);
+            }
+            else
+            {
+                var selMap = await ViewPage.DisplayActionSheet(contentUI.TxtMapSel, null, null, list.ToArray());
+                SetMapSettings(selMap);
+            }
+        }
+
+        private void SetMapSettings(string mapName)
+        {
+            if (!String.IsNullOrEmpty(mapName))
+            {
+                MapTile.TileSourceEnum result = MapTile.TileSourceEnum.tsNative;
+                foreach (var item in MapTile.TileSourceList)
+                {
+                    if (String.Compare(item.Value, mapName, StringComparison.CurrentCultureIgnoreCase) == 0)
+                    {
+                        result = item.Key;
+                        break;
+                    }
+                }
+                AppParameters.Config.MapSource = result;
+                MapName = mapName;
             }
         }
     }

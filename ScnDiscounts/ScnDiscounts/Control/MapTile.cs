@@ -5,11 +5,20 @@ using ScnDiscounts.Models.Data;
 using ScnDiscounts.Views.ContentUI;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
+using System.Threading.Tasks;
 
 namespace ScnDiscounts.Control
 {
     public class MapTile : Map
     {
+        public enum TileSourceEnum { tsNative, tsGoogle, tsOSM };
+        static public Dictionary<TileSourceEnum, string> TileSourceList = new Dictionary<TileSourceEnum, string>
+        {
+            {TileSourceEnum.tsNative, Device.OnPlatform("", "Google", "Here") },
+            {TileSourceEnum.tsGoogle, "Google" },
+            {TileSourceEnum.tsOSM, "OpenStreetMap" }
+        };
+
         public MapTile()
         {
             _mapLayout = new AbsoluteLayout();
@@ -73,7 +82,7 @@ namespace ScnDiscounts.Control
             }
         }
 
-        public void ShowDetailInfo(string id)
+        public void ShowPinDetailInfo(string id)
         {
             MapPinData cutPinData = null;
             foreach (var item in PinList)
@@ -136,6 +145,17 @@ namespace ScnDiscounts.Control
             if (LocationUpdating != null) LocationUpdating(this, EventArgs.Empty);
         }
 
+        #endregion
+
+        #region MapTilesSource
+        public static readonly BindableProperty MapTilesSourceProperty =
+            BindableProperty.Create<MapTile, TileSourceEnum>(p => p.MapTilesSource, TileSourceEnum.tsNative);
+
+        public TileSourceEnum MapTilesSource
+        {
+            get { return (TileSourceEnum)GetValue(MapTilesSourceProperty); }
+            set { SetValue(MapTilesSourceProperty, value); }
+        }
         #endregion
     }
 

@@ -19,10 +19,8 @@ namespace ScnDiscounts.WinPhone
 
             global::Xamarin.Forms.Forms.Init();
 
-            //TODO: when
-            //string applicationId = "APP_ID_FROM_PORTAL", authToken = "AUTH_TOKEN_FROM_PORTAL";
-            //FormsMaps.Init(applicationId, authToken);
-            global::Xamarin.FormsMaps.Init();
+            string applicationId = "deede3e0-a6c7-4a26-84af-b6042b1ca302", authToken = "YVSma2K-u4Ctrd4IPdNvGw";
+            global::Xamarin.FormsMaps.Init(applicationId, authToken);
 
             LoadApplication(new ScnDiscounts.App());
         }

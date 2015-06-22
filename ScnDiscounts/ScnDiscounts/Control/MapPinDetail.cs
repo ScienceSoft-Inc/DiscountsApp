@@ -27,7 +27,7 @@ namespace ScnDiscounts.Control
 
             Grid gridDetail = new Grid
             {
-                Padding = new Thickness(6),
+                Padding = Device.OnPlatform(new Thickness(6), new Thickness(6), new Thickness(8)) ,
                 BackgroundColor = InfoPanelForegroundColor,
                 Opacity = InfoPanelOpacity,
 
@@ -38,7 +38,7 @@ namespace ScnDiscounts.Control
                 ColumnDefinitions = 
                     {
                         new ColumnDefinition { Width = new GridLength(10, GridUnitType.Star) },
-                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                     }
             };
 
@@ -52,19 +52,26 @@ namespace ScnDiscounts.Control
             txtCategory = new Label
             {
                 Text = CategoryName,
-                Style = (Style)App.Current.Resources[LabelStyles.DescriptionStyle]
-            };
-            var stackHeader = new StackLayout
-            {
-                Spacing = 3,
-                Orientation = StackOrientation.Horizontal,
-                Children =
-                {
-                    txtTitle,
-                    txtCategory
-                }
+                Style = (Style)App.Current.Resources[LabelStyles.DescriptionStyle],
             };
 
+            Grid gridHeader = new Grid
+            {
+                BackgroundColor = Color.Transparent,
+
+                RowDefinitions = 
+                    {
+                        new RowDefinition { Height = GridLength.Auto },
+                    },
+                ColumnDefinitions = 
+                    {
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = GridLength.Auto }//new GridLength(1, GridUnitType.Star) },
+                    }
+            };
+
+            gridHeader.Children.Add(txtTitle, 0, 0);
+            gridHeader.Children.Add(txtCategory, 1, 0);
             #endregion
 
             #region Info
@@ -99,7 +106,7 @@ namespace ScnDiscounts.Control
 
             var stackInfo = new StackLayout
             {
-                Spacing = 3,
+                Spacing = Device.OnPlatform(3, 3, 3),
                 Orientation = StackOrientation.Horizontal,
                 Children =
                 {
@@ -115,9 +122,10 @@ namespace ScnDiscounts.Control
 
             var stackDetail = new StackLayout
             {
+                Spacing = Device.OnPlatform (2, 4, 8),
                 Children =
                 {
-                    stackHeader,
+                    gridHeader,
                     stackInfo
                 }
             };
@@ -133,15 +141,15 @@ namespace ScnDiscounts.Control
 
             borderDetail = new BorderBox(BorderBox.BorderTypeEnum.btLabel);
 
-            borderDetail.HeightRequest = Device.OnPlatform(50, 58, 70);
-            borderDetail.WidthRequest = Device.OnPlatform(220, 210, 220);
+            borderDetail.HeightRequest = Device.OnPlatform(50, 58, 76);
+            borderDetail.WidthRequest = Device.OnPlatform(220, 210, 260);
             borderDetail.BorderWidth = 1;
             borderDetail.BorderColor = (Color)App.Current.Resources[MainStyles.ListBorderColor];
             borderDetail.Content = gridDetail;
 
             SetLayoutFlags(borderDetail, AbsoluteLayoutFlags.PositionProportional);
             SetLayoutBounds(borderDetail,
-                new Rectangle(0.5, 0.35, AutoSize, AutoSize)
+                new Rectangle(0.5, 0.365, AutoSize, AutoSize)
             );
             Children.Add(borderDetail);
         }
@@ -175,7 +183,7 @@ namespace ScnDiscounts.Control
             }
         }
 
-        private string _title = "title title title";
+        private string _title = "title";
         public string Title
         {
             get { return _title; }

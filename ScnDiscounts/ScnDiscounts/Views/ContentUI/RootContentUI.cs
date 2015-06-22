@@ -13,7 +13,6 @@ namespace ScnDiscounts.Views.ContentUI
 
             txtDistanceScaleCaption = new PropertyLang("km", "км", "км");
             txtDiscount = new PropertyLang("Discount", "Скидка", "Зніжка");
-
         }
 
         private PropertyLang txtCancel;
@@ -35,7 +34,7 @@ namespace ScnDiscounts.Views.ContentUI
 
         public string ImgDistance
         {
-            get { return Device.OnPlatform("Icon/ic_marker_distance.png", "ic_marker_distance.png", "Assets/Icon/ic_marker_distance.png"); }
+            get { return Device.OnPlatform("Icon/ic_marker_distance.png", "ic_marker_distance.png", "Assets/Icon/marker_distance.png"); }
         }
 
         public string ImgDetail

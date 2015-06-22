@@ -15,7 +15,6 @@ namespace ScnDiscounts.Models
             {
                 _discountCollection = new List<DiscountData>();
                 _mapPinCollection = new ObservableCollection<MapPinData>();
-                _branchCollection = new ObservableCollection<BranchData>();
             }
 
             private bool isConnected;
@@ -23,16 +22,6 @@ namespace ScnDiscounts.Models
 
             private List<DiscountData> _discountCollection;
             public List<DiscountData> DiscountCollection { get { return _discountCollection; } }
-
-            private ObservableCollection<BranchData> _branchCollection;
-            public ObservableCollection<BranchData> BranchCollection { get { return _branchCollection; } }
-
-            private string _previewImage = "";
-            public string PreviewImage
-            {
-                get { return _previewImage; }
-                set { _previewImage = value; }
-            }
 
             private string _activeMapPinId = "";
             public string ActiveMapPinId
@@ -115,7 +104,7 @@ namespace ScnDiscounts.Models
                 
                 try
                 {
-                    if ((isConnected) && (discountData != null))
+                    if ((isConnected) && (discountData != null) && (discountData.BranchList.Count == 0))
                         isSuccess = await ServiceProvider.GetPartnerDetail(discountData);
                 }
                 catch (Exception)

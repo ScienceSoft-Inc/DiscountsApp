@@ -4,6 +4,7 @@ using ScnDiscounts.ValueConverter;
 using ScnDiscounts.ViewModels;
 using ScnDiscounts.Views.ContentUI;
 using ScnDiscounts.Views.Styles;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace ScnDiscounts.Views
@@ -19,6 +20,9 @@ namespace ScnDiscounts.Views
         {
             get { return (DiscountContentUI)ContentUI; }
         }
+
+        public ListViewAnimation DiscountListView;
+        private StackLayout discountLayout;
 
         public DiscountPage()
             : base(typeof(DiscountViewModel), typeof(DiscountContentUI))
@@ -36,25 +40,33 @@ namespace ScnDiscounts.Views
 
             ContentLayout.Children.Add(appBar);
 
-            var discountListView = new ListView();
-            discountListView.RowHeight = Device.OnPlatform(100, 108, 110);
-            discountListView.SetBinding(ListView.ItemsSourceProperty, "DiscountItems");
-            discountListView.ItemTemplate = new DataTemplate(() => new DiscountTemplate(contentUI)); ;
-            discountListView.ItemTapped += viewModel.OnDiscountItemTapped;
-
-            var stackDiscount = new StackLayout
+            DiscountListView = new ListViewAnimation();
+            DiscountListView.RowHeight = Device.OnPlatform(100, 108, 136);
+            DiscountListView.SeparatorVisibility = SeparatorVisibility.None;
+            DiscountListView.SetBinding(ListView.ItemsSourceProperty, "DiscountItems");
+            DiscountListView.ItemTemplate = new DataTemplate(() => new DiscountTemplate(DiscountListView, DiscountListView.RowHeight)); ;
+            DiscountListView.ItemTapped += viewModel.OnDiscountItemTapped;
+            DiscountListView.IsEnabled = false;
+            DiscountListView.AnimationFinished += async (s, e) => 
             {
-                Padding = new Thickness(0, 4),
-                Children = { discountListView }
+                await Task.Delay(100);
+                DiscountListView.IsEnabled = true; 
             };
+            DiscountListView.AnimationFinished += viewModel.BranchView_AnimationFinished;
 
-            ContentLayout.Children.Add(stackDiscount);
+            discountLayout = new StackLayout
+            {
+                Padding = Device.OnPlatform(new Thickness(0, 4), new Thickness(0, 4), new Thickness(0, 4, -12, 0)),
+            };
+            discountLayout.Children.Add(DiscountListView);
+            ContentLayout.Children.Add(discountLayout);
         }
 
         class DiscountTemplate : ViewCell
         {
-            public DiscountTemplate(DiscountContentUI parentcontentUI)
+            public DiscountTemplate(ListViewAnimation parentListView, int rowHeight)
             {
+
                 Grid gridDiscountItem = new Grid
                 {
                     Padding = new Thickness (10),
@@ -78,7 +90,7 @@ namespace ScnDiscounts.Views
                     HeightRequest = Device.OnPlatform(64, 64, 64),
                     Aspect = Aspect.AspectFit
                 };
-                imgCompanyLogo.SetBinding(Image.SourceProperty, new Binding("Icon", BindingMode.Default, new FileStreamToImageSource(), FileStreamToImageSource.SizeImage.siBig));
+                imgCompanyLogo.SetBinding(Image.SourceProperty, new Binding("Icon", BindingMode.Default, new FileStreamToImageSource(), FileStreamToImageSource.SizeImage.siSmall));
 
                 var stackCompanyLogo = new StackLayout
                 {
@@ -93,7 +105,7 @@ namespace ScnDiscounts.Views
                     Padding = new Thickness(2, 0, 0, 0),
                     RowDefinitions = 
                     {
-                        new RowDefinition { Height =  GridLength.Auto }
+                        new RowDefinition { Height = GridLength.Auto }
                     },
                     ColumnDefinitions = 
                     {
@@ -111,11 +123,12 @@ namespace ScnDiscounts.Views
                 txtTitle.SetBinding(Label.TextProperty, "Name");
 
                 headerLayout.Children.Add(txtTitle, 0, 0);
-
+                
                 #region Percent label
                 var txtPercent = new Label
                 {
-                    Style = (Style)App.Current.Resources[LabelStyles.ListPercentStyle]
+                    Style = (Style)App.Current.Resources[LabelStyles.ListPercentStyle],
+                    VerticalOptions = LayoutOptions.End
                 };
                 txtPercent.SetBinding(Label.TextProperty, "DiscountPercent");
 
@@ -147,7 +160,7 @@ namespace ScnDiscounts.Views
 
                 var categoryLayout = new StackLayout
                 {
-                    Padding = new Thickness (4),
+                    Padding = Device.OnPlatform(new Thickness(4), new Thickness(4), new Thickness(6)),
                     VerticalOptions = LayoutOptions.Center,
                     HorizontalOptions = LayoutOptions.Center,
                     Children =
@@ -168,7 +181,7 @@ namespace ScnDiscounts.Views
 
                 var stackCategoryMore = new StackLayout
                 {
-                    Padding = new Thickness(4),
+                    Padding = Device.OnPlatform(new Thickness(4), new Thickness(4), new Thickness(6)),
                     VerticalOptions = LayoutOptions.Center,
                     HorizontalOptions = LayoutOptions.Center,
                     Children =
@@ -194,16 +207,15 @@ namespace ScnDiscounts.Views
 
                 headerLayout.Children.Add(infoDiscountLayout, 1, 0);
                 gridDiscountItem.Children.Add(headerLayout, 1, 2, 0, 1);
-
+                
                 #region Description
                 var txtDescription = new LabelExtended 
                 { 
                     IsWrapped = true,
                     Style = (Style)App.Current.Resources[LabelStyles.DescriptionStyle],
-                    LineBreakMode = LineBreakMode.WordWrap,
-                    InputTransparent = true
                 };
-                txtDescription.SetBinding(LabelExtended.TextProperty, "Description");
+                txtDescription.GestureRecognizers.Clear();
+                txtDescription.SetBinding(LabelExtended.TextProperty, new Binding("Description", BindingMode.Default, new TextHeightLimitation()));
 
                 var layoutDescription = new RelativeLayout();
                 layoutDescription.Children.Add(txtDescription,
@@ -217,17 +229,19 @@ namespace ScnDiscounts.Views
 
                 var boxBorder = new BorderBox
                 {
-                    Padding = new Thickness(8, 4)
+                    Padding = new Thickness(8, 4),
+                    HeightRequest = rowHeight - 16,
                 };
                 boxBorder.BorderColor = (Color)App.Current.Resources[MainStyles.ListBorderColor];
                 boxBorder.BorderWidth = 1;
                 boxBorder.Content = gridDiscountItem;
-
+                
                 var layout = new AbsoluteLayout
                 {
-                    Padding = new Thickness (8, 4)
+                    Padding = new Thickness (8, 4),
                 };
-
+                parentListView.AnimationListAdd(layout);
+                
                 AbsoluteLayout.SetLayoutFlags(boxBorder, AbsoluteLayoutFlags.All);
                 AbsoluteLayout.SetLayoutBounds(boxBorder, new Rectangle(0f, 0f, 1f, 1f));
                 layout.Children.Add(boxBorder);

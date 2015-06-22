@@ -39,7 +39,8 @@ namespace ScnDiscounts.Views
             #region Logo
             var imgLogo = new Image
             {
-                Source = contentUI.ImgLogo
+                Source = contentUI.ImgLogo,
+                HeightRequest = Device.OnPlatform(-1, -1, 150),
             };
             #endregion
 

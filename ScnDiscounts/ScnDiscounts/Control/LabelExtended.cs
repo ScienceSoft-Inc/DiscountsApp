@@ -57,6 +57,9 @@ namespace ScnDiscounts.Control
             {
                 case "Tag":
                     break;
+                case "IsWrapped":
+                    LineBreakMode = LineBreakMode.WordWrap;
+                    break;
             }
         }
 

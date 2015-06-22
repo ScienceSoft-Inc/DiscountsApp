@@ -11,6 +11,9 @@ namespace ScnDiscounts.Views.ContentUI
 
             _txtLanguage = new PropertyLang("Language", "Язык", "Мова");
             _txtLanguageSel = new PropertyLang("Choose language", "Выберите язык", "Выберыце мову");
+
+            _txtMap = new PropertyLang("Map", "Карта");
+            _txtMapSel = new PropertyLang("Choose map", "Выберите карту");
         }
 
         public string Icon
@@ -28,6 +31,18 @@ namespace ScnDiscounts.Views.ContentUI
         public string TxtLanguage
         {
             get { return _txtLanguage.ActualValue(); }
+        }
+
+        private PropertyLang _txtMap;
+        public string TxtMap
+        {
+            get { return _txtMap.ActualValue(); }
+        }
+
+        private PropertyLang _txtMapSel;
+        public string TxtMapSel
+        {
+            get { return _txtMapSel.ActualValue(); }
         }
     }
 }

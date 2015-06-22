@@ -29,7 +29,7 @@ namespace ScnDiscounts.Control
             cbBackRightLeftLeft = cbBackRight | cbLeftLeft
         }
 
-        private int HeightBar = Device.OnPlatform(48, 48, 48);
+        private int HeightBar = Device.OnPlatform(48, 48, 64);
 
         public CustomAppBar(Page page, CustomBarBtnEnum customBarBtn = CustomBarBtnEnum.cbNone)
         {

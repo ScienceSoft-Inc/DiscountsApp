@@ -16,6 +16,7 @@ using ScnDiscounts.Models.Data;
 using System.Windows.Media.Imaging;
 using ScnDiscounts.Models;
 using ScnDiscounts.Helpers;
+using System.ComponentModel;
 
 [assembly: ExportRenderer(typeof(MapTile), typeof(MapTileWP))]
 
@@ -27,17 +28,41 @@ namespace ScnDiscounts.WinPhone.Renderers
         {
             base.OnElementChanged(e);
 
-            if (e.OldElement == null)
-            {
-                var map = Control;
-                map.TileSources.Add(new GoogleTileSource());
-            }
-
             var mapTile = (MapTile)Element;
+
+            if (e.OldElement == null)
+                SetMapTilesSource();
+
             if (mapTile != null)
             {
                 mapTile.PinUpdating += (ss, ee) => { UpdatePins(); };
                 mapTile.LocationUpdating += mapTile_LocationUpdating;
+            }
+        }
+
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+
+            if (String.Compare("MapTilesSource", e.PropertyName, StringComparison.CurrentCultureIgnoreCase) == 0)
+                SetMapTilesSource();
+        }
+
+        private void SetMapTilesSource()
+        {
+            var mapTile = (MapTile)Element;
+            var map = Control;
+            
+            if (mapTile != null)
+            {
+                map.TileSources.Clear();
+
+                if (mapTile.MapTilesSource == MapTile.TileSourceEnum.tsGoogle)
+                    map.TileSources.Add(new GoogleTileSource());
+                else
+                    if (mapTile.MapTilesSource == MapTile.TileSourceEnum.tsOSM)
+                        map.TileSources.Add(new OSMTileSource());
             }
         }
 
@@ -114,21 +139,41 @@ namespace ScnDiscounts.WinPhone.Renderers
             }
         }
 
+        private PinMarker tapMarker;
+
         void pinMarker_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             var map = Control;
             var mapTile = (MapTile)Element;
 
             PinMarker pinMarker = sender as PinMarker;
+            tapMarker = pinMarker;
             MapPinData data = pinMarker.DataContext as MapPinData;
-            map.Center = new System.Device.Location.GeoCoordinate(data.Latitude, data.Longitude);
-            mapTile.ShowDetailInfo(data.Id);
-            //map.SetView(new GeoCoordinate(data.Latitude, data.Longitude), map.ZoomLevel);
 
-            map.ViewChanged += (ss, ee) =>
+            var centerLocation = new System.Device.Location.GeoCoordinate(Math.Round(map.Center.Latitude, 4), Math.Round(map.Center.Longitude, 4));
+            var pinLocation = new System.Device.Location.GeoCoordinate(Math.Round(data.Latitude, 4), Math.Round(data.Longitude, 4));
+            //map.Center = pinLocation;
+            //mapTile.ShowDetailInfo(data.Id);
+            if (centerLocation == pinLocation)
+                mapTile.ShowPinDetailInfo(data.Id);
+            else
             {
-                mapTile.ShowDetailInfo(data.Id);
-            };
+                map.ViewChanged += map_ViewChanged;
+                map.SetView(pinLocation, map.ZoomLevel, MapAnimationKind.Linear);
+            }
+        }
+
+        void map_ViewChanged(object sender, MapViewChangedEventArgs e)
+        {
+            (sender as Map).ViewChanged -= map_ViewChanged;
+            var map = Control;
+            var mapTile = (MapTile)Element;
+            MapPinData data = tapMarker.DataContext as MapPinData;
+
+            var centerLocation = new System.Device.Location.GeoCoordinate(Math.Round(map.Center.Latitude, 4), Math.Round(map.Center.Longitude, 4));
+            var pinLocation = new System.Device.Location.GeoCoordinate(Math.Round(data.Latitude, 4), Math.Round(data.Longitude, 4));
+            if (centerLocation == pinLocation)
+                mapTile.ShowPinDetailInfo(data.Id);
         }
 
         public class GoogleTileSource : TileSource
@@ -157,6 +202,26 @@ namespace ScnDiscounts.WinPhone.Renderers
                 return new Uri(
                   string.Format(UriFormat, (x % 2) + (2 * (y % 2)),
                   (char)MapType, zoomLevel, x, y));
+            }
+        }
+
+        public class OSMTileSource : TileSource
+        {
+            public OSMTileSource()
+            {
+                UriFormat = "http://{0}.tile.openstreetmap.org/{1}/{2}/{3}.png";
+            }
+
+            private readonly static string[] TilePathPrefixes = new[] { "a", "b", "c" };
+
+            public override Uri GetUri(int x, int y, int zoomLevel)
+            {
+                if (zoomLevel > 0)
+                {
+                    var url = string.Format(UriFormat, TilePathPrefixes[y % 3], zoomLevel, x, y);
+                    return new Uri(url);
+                }
+                return null;
             }
         }
 

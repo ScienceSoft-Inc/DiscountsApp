@@ -17,7 +17,7 @@
     </SupportedCultures>
     <XapOutputs>true</XapOutputs>
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
-    <XapFilename>PhoneApp1_$(Configuration)_$(Platform).xap</XapFilename>
+    <XapFilename>ScnDiscounts.xap</XapFilename>
     <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
     <SilverlightAppEntry>ScnDiscounts.WinPhone.App</SilverlightAppEntry>
     <ValidateXaml>true</ValidateXaml>
@@ -129,9 +129,9 @@
   <ItemGroup>
     <Content Include="Assets\Icon\about.png" />
     <Content Include="Assets\Icon\back.png" />
-    <Content Include="Assets\Icon\empty.png" />
+    <Content Include="Assets\Icon\detail.png" />
     <Content Include="Assets\Icon\location.png" />
-    <Content Include="Assets\Icon\map.png" />
+    <Content Include="Assets\Icon\marker_distance.png" />
     <Content Include="Assets\Icon\menu.png" />
     <Content Include="Assets\Icon\phone.png" />
     <Content Include="Assets\Icon\pin.png" />
@@ -221,7 +221,9 @@
       <HintPath>..\..\packages\Xamarin.Forms.1.4.2.6359\lib\WP80\Xamarin.Forms.Xaml.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <Import Project="..\ScnDiscounts\ScnDiscounts.projitems" Label="Shared" Condition="Exists('..\ScnDiscounts\ScnDiscounts.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />

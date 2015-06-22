@@ -13,7 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Control\BorderBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\CustomAppBar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\ImageButton.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Control\LabelEx.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Control\ListViewAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\MapPinDetail.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\MapTile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\Pages\BaseContentPage.cs" />
@@ -45,7 +45,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\WebService\MongoDB\Client.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\WebService\MongoDB\DeserializeBranchItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueConverter\FileStreamToImageSource.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ValueConverter\ListViewHeight.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueConverter\ListViewHeightConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueConverter\TextHeightLimitation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\AboutViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\DiscountDetailViewModel.cs" />

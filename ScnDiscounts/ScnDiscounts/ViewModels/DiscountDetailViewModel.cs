@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using ScnDiscounts.Control;
 using ScnDiscounts.Control.Pages;
 using ScnDiscounts.DependencyInterface;
@@ -8,6 +9,8 @@ using ScnDiscounts.Models;
 using ScnDiscounts.Models.Data;
 using ScnDiscounts.Views.ContentUI;
 using Xamarin.Forms;
+using System.Threading.Tasks;
+using ScnDiscounts.Views;
 
 namespace ScnDiscounts.ViewModels
 {
@@ -20,14 +23,37 @@ namespace ScnDiscounts.ViewModels
 
         protected override void InitProperty()
         {
+            _branchItems = new ObservableCollection<BranchData>();
+
             ViewPage.Appearing += ViewPage_Appearing;
+            ViewPage.Appearing += InitListView_Appearing;
             ViewPage.Disappearing += ViewPage_Disappearing;
-            //BranchItems = new ObservableCollection<BranchData>(AppData.Discount.BranchCollection);
         }
 
+        private int previewItemsCount = 2;
         void ViewPage_Appearing(object sender, EventArgs e)
         {
             AppMobileService.Locaion.PositionUpdated += MapLocation_Position;
+        }
+
+        async void InitListView_Appearing(object sender, EventArgs e)
+        {
+            (ViewPage as DiscountDetailPage).InitBranchListView();
+
+            if (Device.OS == TargetPlatform.Android)
+            {
+                await Task.Delay(1000); //waiting init listview control
+
+                var skipCount = (currentDiscount.BranchList.Count > previewItemsCount) ? previewItemsCount : 0;
+                if (skipCount > 0)
+                {
+                    int count = currentDiscount.BranchList.Count - skipCount;
+                    currentDiscount.BranchList.Skip(skipCount).Take(count).ToList().ForEach(BranchItems.Add);
+                    OnPropertyChanged("BranchItemsCount");
+
+                    CalculateDistance();
+                }
+            }
         }
 
         void ViewPage_Disappearing(object sender, EventArgs e)
@@ -44,6 +70,15 @@ namespace ScnDiscounts.ViewModels
         public void SetDiscount(DiscountData discountData)
         {
             currentDiscount = discountData;
+
+            if (Device.OS == TargetPlatform.Android)
+            {
+                var count = (currentDiscount.BranchList.Count > previewItemsCount) ? previewItemsCount : currentDiscount.BranchList.Count;
+                currentDiscount.BranchList.Take(count).ToList().ForEach(BranchItems.Add);
+            }
+            else if (Device.OS == TargetPlatform.WinPhone)
+                BranchItems = currentDiscount.BranchList;
+
             CalculateDistance();
         }
 
@@ -61,7 +96,7 @@ namespace ScnDiscounts.ViewModels
         {
             get 
             {
-                return AppData.Discount.PreviewImage; 
+                return currentDiscount.Image; 
             }
         }
         #endregion
@@ -170,24 +205,49 @@ namespace ScnDiscounts.ViewModels
         #endregion
 
         #region BranchItems - property
+        private ObservableCollection<BranchData> _branchItems;
         public ObservableCollection<BranchData> BranchItems
         {
-            get { return AppData.Discount.BranchCollection; }
+            get { return _branchItems; }
+            set
+            {
+                _branchItems = value;
+                OnPropertyChanged();
+            }
         }
         #endregion
 
+        public int BranchItemsCount
+        {
+            get { return BranchItems.Count; }
+        }
+
+        //------------------
+        // Command
+        //------------------
+
+        #region CallCommand
+        private Command callCommand;
+        public Command CallCommand
+        {
+            get
+            {
+                return callCommand ??
+                    (callCommand = new Command(ExecuteCall));
+            }
+        }
+
+        private void ExecuteCall(object callNumber)
+        {
+            string phoneNumber = callNumber as String;
+            if (!String.IsNullOrWhiteSpace(phoneNumber))
+                DependencyService.Get<IPhoneService>().DialNumber(phoneNumber, NameCompany);
+        }
+        #endregion
+        
         //------------------
         // Methods
         //------------------
-
-        public void OnPhoneViewItemTapped(object sender, ItemTappedEventArgs e)
-        {
-            string phoneNumber = e.Item as string;
-            if (!String.IsNullOrWhiteSpace(phoneNumber))
-                DependencyService.Get<IPhoneService>().DialNumber(phoneNumber, NameCompany);
-            ((ListView)sender).SelectedItem = null;
-        }
-   
         async internal void txtShowOnMap_Click(object sender, EventArgs e)
         {
             AppData.Discount.ActiveMapPinId = (sender as LabelExtended).Tag;
@@ -204,6 +264,11 @@ namespace ScnDiscounts.ViewModels
         internal void OnBranchViewItemTapped(object sender, ItemTappedEventArgs e)
         {
             ((ListView)sender).SelectedItem = null;
+        }
+
+        internal void BranchView_AnimationFinished(object sender, EventArgs e)
+        {
+            //IsLoadBusy = false;
         }
     }
 }

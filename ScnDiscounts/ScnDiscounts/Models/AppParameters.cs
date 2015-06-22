@@ -1,6 +1,7 @@
 ﻿using System;
 using ScnDiscounts.Helpers;
 using Xamarin.Forms;
+using ScnDiscounts.Control;
 
 namespace ScnDiscounts.Models
 {
@@ -17,13 +18,14 @@ namespace ScnDiscounts.Models
                 set { _systemLang = value; } 
             }
 
-            //push notification
-            /*private bool _isGetPushNotification = false;
-            public bool IsGetPushNotification 
+            //map source
+            private string MapSourceParamName = "MapSource";
+            private MapTile.TileSourceEnum _mapSource = MapTile.TileSourceEnum.tsNative;
+            public MapTile.TileSourceEnum MapSource
             {
-                get { return _isGetPushNotification; }
-                set { _isGetPushNotification = value; }
-            }*/
+                get { return _mapSource; }
+                set { _mapSource = value; }
+            }
 
             public void Init()
             {
@@ -32,17 +34,26 @@ namespace ScnDiscounts.Models
 
             public void SaveValue()
             {
-                Application.Current.Properties["SystemLangParamName"] = SystemLang.ToString();
+                Application.Current.Properties[SystemLangParamName] = SystemLang.ToString();
+                Application.Current.Properties[MapSourceParamName] = MapSource.ToString();
             }
 
             public void LoadValue()
             {
-                if (Application.Current.Properties.ContainsKey("SystemLangParamName"))
+                if (Application.Current.Properties.ContainsKey(SystemLangParamName))
                 {
-                    string lang = Application.Current.Properties["SystemLangParamName"] as string;
+                    string lang = Application.Current.Properties[SystemLangParamName] as string;
                     LanguageHelper.LangTypeEnum tmpLang;
                     if (Enum.TryParse(lang, out tmpLang))
                         SystemLang = tmpLang;
+                }
+
+                if (Application.Current.Properties.ContainsKey(MapSourceParamName))
+                {
+                    string map = Application.Current.Properties[MapSourceParamName] as string;
+                    MapTile.TileSourceEnum tmpMap;
+                    if (Enum.TryParse(map, out tmpMap))
+                        MapSource = tmpMap;
                 }
             }
         }

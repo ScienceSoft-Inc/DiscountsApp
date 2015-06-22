@@ -39,6 +39,7 @@ namespace ScnDiscounts.Views
 
             var stackSettings = new StackLayout
             {
+                Spacing = Device.OnPlatform(6, 6, 32),
                 Padding = new Thickness(32)
             };
 
@@ -66,6 +67,35 @@ namespace ScnDiscounts.Views
                 }
             };
             stackSettings.Children.Add(stackLang);
+            #endregion
+
+            #region Map setting
+            var txtMapTitle = new LabelExtended
+            {
+                Style = (Style)App.Current.Resources[LabelStyles.SettingStyle]
+            };
+            txtMapTitle.SetBinding(Label.TextProperty, "MapTitle");
+            txtMapTitle.Click += viewModel.MapSetting_Click;
+
+            var txtMapValue = new LabelExtended
+            {
+                Style = (Style)App.Current.Resources[LabelStyles.SettingHintStyle]
+            };
+            txtMapValue.SetBinding(Label.TextProperty, "MapName");
+            txtMapValue.Click += viewModel.MapSetting_Click;
+
+            var stackMap = new StackLayout
+            {
+                Children = 
+                {
+                    txtMapTitle,
+                    txtMapValue
+                }
+            };
+
+            stackSettings.Children.Add(stackLang);
+            if (Device.OS == TargetPlatform.WinPhone)
+                stackSettings.Children.Add(stackMap);
             #endregion
 
             ContentLayout.Children.Add(stackSettings);

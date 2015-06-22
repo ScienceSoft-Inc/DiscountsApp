@@ -5,14 +5,14 @@ using Xamarin.Forms;
 
 namespace ScnDiscounts.ValueConverter
 {
-    public class ListViewHeight : IValueConverter
+    public class ListViewHeightConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var items = (List<String>)value;
+            int count = (int)value;
             int itemHeight = (int)parameter;
 
-            return items.Count * itemHeight;
+            return count * itemHeight;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

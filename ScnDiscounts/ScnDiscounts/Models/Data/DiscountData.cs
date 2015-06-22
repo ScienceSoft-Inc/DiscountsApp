@@ -2,10 +2,11 @@
 using ScnDiscounts.Helpers;
 using ScnDiscounts.Models.WebService.MongoDB;
 using Xamarin.Forms;
+using System.Collections.ObjectModel;
 
 namespace ScnDiscounts.Models.Data
 {
-    public class DiscountData
+    public class DiscountData : NotifyPropertyChanged
     {
         public DiscountData(DeserializeBranchItem branchItem)
         {
@@ -53,7 +54,7 @@ namespace ScnDiscounts.Models.Data
 
             _icon = branchItem.Icon;
 
-            //_image = branchItem.Image;
+            _branchList = new ObservableCollection<BranchData>();
         }
 
         #region Id
@@ -239,6 +240,14 @@ namespace ScnDiscounts.Models.Data
         }
         #endregion
 
+        #region Branchs
+        private ObservableCollection<BranchData> _branchList;
+        public ObservableCollection<BranchData> BranchList 
+        {
+            get { return _branchList; } 
+        }
+        #endregion
+
         public class Categorie
         {
             public Categorie ()
@@ -299,8 +308,5 @@ namespace ScnDiscounts.Models.Data
             }
             #endregion
         }
-
     }
-
-
 }

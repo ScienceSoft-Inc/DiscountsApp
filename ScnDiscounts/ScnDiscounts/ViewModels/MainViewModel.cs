@@ -9,6 +9,7 @@ using ScnDiscounts.Views;
 using ScnDiscounts.Views.ContentUI;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
+using System.Threading.Tasks;
 
 namespace ScnDiscounts.ViewModels
 {
@@ -25,9 +26,6 @@ namespace ScnDiscounts.ViewModels
             ViewPage.Appearing += ViewPage_InitAfterAppearing;
             _menuItemList = new ObservableCollection<MenuSideBarItem>();
             InitMenuItem();
-
-            AppMobileService.Locaion.StartListening();
-            AppMobileService.Locaion.PositionUpdated += MapLocation_Position;
         }
 
         private void ViewPage_InitAfterAppearing(object sender, EventArgs e)
@@ -39,10 +37,21 @@ namespace ScnDiscounts.ViewModels
             (ViewPage as MainPage).MapLocation.MoveToRegion(MapSpan.FromCenterAndRadius(
                                                        new Position(minskLat, minskLong),
                                                        Distance.FromMiles(4)));
-            (ViewPage as MainPage).IsShowRightPanel = true;
+
             (ViewPage as MainPage).MapLocation.OnPinUpdate();
+            DelayInit();
         }
-      
+
+        async private void DelayInit()
+        {
+            await Task.Delay(1000); //wait full appearing
+
+            (ViewPage as MainPage).IsShowRightPanel = true;
+
+            AppMobileService.Locaion.StartListening();
+            AppMobileService.Locaion.PositionUpdated += MapLocation_Position;
+        }
+
         private void ViewPage_Appearing(object sender, EventArgs e)
         {
             if (langInit != AppParameters.Config.SystemLang)
@@ -50,6 +59,8 @@ namespace ScnDiscounts.ViewModels
 
             if (!String.IsNullOrWhiteSpace(AppData.Discount.ActiveMapPinId))
                 ActivateMapPin();
+
+            (ViewPage as MainPage).MapLocation.MapTilesSource = AppParameters.Config.MapSource;
         }
 
         private LanguageHelper.LangTypeEnum langInit;
@@ -92,27 +103,50 @@ namespace ScnDiscounts.ViewModels
         public void OnMenuViewItemTapped(object sender, SelectedItemChangedEventArgs e)
         {
             MenuSideBarItem menuItem = e.SelectedItem as MenuSideBarItem;
+            ((ListView)sender).SelectedItem = null;
 
-            if (menuItem != null)
+            if ((menuItem != null) && (!IsOpenning))
             {
+                ((MainPage)ViewPage).ClosePanel();
                 OpenPage(menuItem.MenuPage);
-                ((ListView)sender).SelectedItem = null;
             }
-
-            ((MainPage)ViewPage).ClosePanel();
         }
 
-        public void OpenPage(Type typePage)
+        #region OpenningLocker
+        static object OpenningLocker = new object();
+        private bool _isOpenning = false;
+        private bool IsOpenning
         {
-            //Map is always opened on MainPage therefore haven't to open it again. GTFO!
-            if (typePage == typeof(MainPage))
+            get
             {
-                //((MainPage)ViewPage).MapLocation.OnPinUpdate();
-                return;
+                lock (OpenningLocker)
+                    return _isOpenning;
             }
+            set
+            {
+                lock (OpenningLocker)
+                    _isOpenning = value;
+            }
+        }
+        #endregion
 
-            var page = (Page)Activator.CreateInstance(typePage);
-            ViewPage.Navigation.PushAsync((BaseContentPage)page, true);
+        async public void OpenPage(Type typePage)
+        {
+            try
+            {
+                IsOpenning = true;
+
+                //Map is always opened on MainPage therefore haven't to open it again.
+                if (typePage == typeof(MainPage))
+                    return;
+
+                var page = (Page)Activator.CreateInstance(typePage);
+                await ViewPage.Navigation.PushAsync((BaseContentPage)page);
+            }
+            finally
+            {
+                IsOpenning = false;
+            }
         }
 
         async public void MapLocation_ClickPinDetail(object sender, MapPinDataEventArgs e)
@@ -122,22 +156,17 @@ namespace ScnDiscounts.ViewModels
 
             if (discountData != null)
             {
-                BaseContentPage page = null;
-
-                IsLoadActivity = true;
                 try
                 {
-                    //Load branch
+                    IsLoadActivity = true;
                     await AppData.Discount.LoadBranchList(discountData);
-                    page = new DiscountDetailPage(discountData);
                 }
                 finally
                 {
                     IsLoadActivity = false;
                 }
 
-                if (page != null)
-                    await ViewPage.Navigation.PushAsync(page, true);
+                await ViewPage.Navigation.PushAsync(new DiscountDetailPage(discountData), true);
             }
         }
 
@@ -173,15 +202,23 @@ namespace ScnDiscounts.ViewModels
             (ViewPage as MainPage).MapLocation.MoveToRegion(MapSpan.FromCenterAndRadius(
                                                        new Position(pinData.Latitude, pinData.Longitude),
                                                        Distance.FromMiles(1)));
-            (ViewPage as MainPage).MapLocation.ShowDetailInfo(pinData.Id);
+            (ViewPage as MainPage).MapLocation.ShowPinDetailInfo(pinData.Id);
         }
 
         internal void AppBar_BtnLeftClick(object sender, EventArgs e)
         {
+            (ViewPage as MainPage).MapLocation.CloseDetailInfo();
+
             if (AppMobileService.Locaion.IsAvailable())
-                (ViewPage as MainPage).MapLocation.MoveToRegion(MapSpan.FromCenterAndRadius(
-                                                           new Position(AppMobileService.Locaion.CurrentLocation.Latitude, AppMobileService.Locaion.CurrentLocation.Longitude),
-                                                           Distance.FromMiles(2)));
+            {
+                AppMobileService.Locaion.UpdateCurrentLocation();
+                if ((AppMobileService.Locaion.CurrentLocation.Latitude != 0) && (AppMobileService.Locaion.CurrentLocation.Longitude != 0))
+                    (ViewPage as MainPage).MapLocation.MoveToRegion(MapSpan.FromCenterAndRadius(
+                                                               new Position(AppMobileService.Locaion.CurrentLocation.Latitude, AppMobileService.Locaion.CurrentLocation.Longitude),
+                                                               Distance.FromMiles(2)));
+            }
+            else
+                ViewPage.DisplayAlert(contentUI.MsgTitleNoGPS, contentUI.MsgTxtNoGPS, contentUI.TxtOk);
         }
     }
 

@@ -26,6 +26,11 @@ namespace ScnDiscounts.Models
                 DependencyService.Get<IGeolocator>().StopListening();
             }
 
+            public void UpdateCurrentLocation()
+            {
+                DependencyService.Get<IGeolocator>().GetPositionAsync(5000);
+            }
+
             private GeoCoordinate _currentLocation = new GeoCoordinate(0, 0);
             public GeoCoordinate CurrentLocation
             {

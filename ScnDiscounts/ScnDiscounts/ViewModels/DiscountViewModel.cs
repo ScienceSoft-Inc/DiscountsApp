@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using Xamarin.Forms;
+using System.Threading.Tasks;
+using ScnDiscounts.Views.Styles;
 using ScnDiscounts.Control.Pages;
 using ScnDiscounts.Models;
 using ScnDiscounts.Models.Data;
 using ScnDiscounts.Views;
-using Xamarin.Forms;
 
 namespace ScnDiscounts.ViewModels
 {
@@ -12,13 +15,35 @@ namespace ScnDiscounts.ViewModels
     {
         protected override void InitProperty()
         {
-            ViewPage.Appearing += ViewPage_Appearing;
-            _discountItems = new ObservableCollection<DiscountData>(AppData.Discount.DiscountCollection);
+            ViewPage.Appearing += AnimateListView_Appearing;
+
+            int count = (AppData.Discount.DiscountCollection.Count > previewItemsCount) ? previewItemsCount : AppData.Discount.DiscountCollection.Count;
+            _discountItems = new ObservableCollection<DiscountData>(AppData.Discount.DiscountCollection.Take(count));
         }
 
-        void ViewPage_Appearing(object sender, EventArgs e)
+        private int previewItemsCount = 7; //count items for preview fast render
+        private bool isFullInit = false;
+        async void AnimateListView_Appearing(object sender, EventArgs e)
         {
-            //throw new NotImplementedException();
+            IsLoadBusy = true;
+            ViewPage.Appearing -= AnimateListView_Appearing;
+
+            await Task.Delay(300); //waiting appearing page
+            await (ViewPage as DiscountPage).DiscountListView.ShowAnimation();
+
+            if (!isFullInit)
+            {
+                await Task.Delay(100); //waiting full render after animation
+                var skipCount = (AppData.Discount.DiscountCollection.Count > previewItemsCount) ? previewItemsCount : 0;
+
+                if (skipCount > 0)
+                {
+                    int count = AppData.Discount.DiscountCollection.Count - skipCount;
+                    AppData.Discount.DiscountCollection.Skip(skipCount).Take(count).ToList().ForEach(DiscountItems.Add);
+                }
+
+                isFullInit = true;
+            }
         }
 
         //------------------
@@ -41,24 +66,29 @@ namespace ScnDiscounts.ViewModels
         public async void OnDiscountItemTapped(object sender, ItemTappedEventArgs e)
         {
             DiscountData discountData = e.Item as DiscountData;
-            BaseContentPage page = null;
 
-            IsLoadActivity = true;
+            ViewPage.Appearing += AnimateListView_Appearing;
+            if (Device.OS != TargetPlatform.Android)
+                (ViewPage as DiscountPage).DiscountListView.HideAnimation();
+
             try
             {
-                //Load branch
+                IsLoadActivity = true;
                 await AppData.Discount.LoadBranchList(discountData);
-                page = new DiscountDetailPage(discountData);
             }
             finally
             {
                 IsLoadActivity = false;
             }
 
-            if (page != null)
-                await ViewPage.Navigation.PushAsync(page, true);
-
             ((ListView)sender).SelectedItem = null;
+
+            await ViewPage.Navigation.PushAsync(new DiscountDetailPage(discountData), true);
+        }
+
+        internal void BranchView_AnimationFinished(object sender, EventArgs e)
+        {
+            IsLoadBusy = false;
         }
     }
 }

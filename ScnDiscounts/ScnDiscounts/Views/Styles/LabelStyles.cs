@@ -31,7 +31,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(21, 21, 21) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(21, 21, 25) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(255, 255, 255) },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.TailTruncation }
                 }
@@ -44,7 +44,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(14, 14, 14) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(14, 14, 18) },
                     new Setter { Property = Label.FontAttributesProperty, Value = FontAttributes.Bold },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("444") },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.TailTruncation }
@@ -58,7 +58,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(13, 13, 13) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(13, 13, 17) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("444") },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.TailTruncation }
                 }
@@ -71,7 +71,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(15, 15, 15) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(15, 15, 19) },
                     new Setter { Property = Label.FontAttributesProperty, Value = FontAttributes.Bold },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("444") },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.TailTruncation }
@@ -85,7 +85,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters = 
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(18, 18, 18) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(18, 18, 22) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(206, 58, 24) },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
                 }
@@ -100,7 +100,7 @@ namespace ScnDiscounts.Views.Styles
                     new Setter { Property = Label.TextProperty, Value = "%" },
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
                     new Setter { Property = Label.FontAttributesProperty, Value = FontAttributes.Bold },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(12, 12, 12) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(12, 12, 16) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(206, 58, 24) },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap },
                     new Setter { Property = Label.TranslationYProperty, Value = -2 }
@@ -114,7 +114,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters = 
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(21, 21, 21) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(21, 21, 25) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(255, 255, 255) },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
                 }
@@ -128,7 +128,7 @@ namespace ScnDiscounts.Views.Styles
                 {
                     new Setter { Property = Label.TextProperty, Value = "%" },
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(11, 11, 11) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(11, 11, 15) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(255, 255, 255) },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap },
                     new Setter { Property = Label.TranslationYProperty, Value = -2 }
@@ -142,7 +142,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(13, 13, 13) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(13, 13, 17) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("005EB8") },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.TailTruncation }
                 }
@@ -155,7 +155,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(15, 15, 15) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(15, 15, 20) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("EEE") },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
                 }
@@ -169,7 +169,7 @@ namespace ScnDiscounts.Views.Styles
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
                     new Setter { Property = Label.FontAttributesProperty, Value = FontAttributes.Bold },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(11, 11, 11) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(11, 11, 15) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(255, 255, 255) },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
                 }
@@ -182,7 +182,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(21, 21, 21) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(21, 21, 25) },
                     new Setter { Property = Label.FontAttributesProperty, Value = FontAttributes.Bold },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(68, 68, 68) },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.TailTruncation }
@@ -196,7 +196,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(42, 42, 42) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(42, 42, 46) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(68, 68, 68) },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
                 }
@@ -209,7 +209,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(22, 22, 22) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(22, 22, 26) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(0, 94, 184) },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
                 }
@@ -222,7 +222,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(17, 17, 17) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(17, 17, 21) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(255, 255, 255) },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
                 }
@@ -235,7 +235,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(13, 13, 13) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(13, 13, 17) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(255, 255, 255) },
                     new Setter { Property = Label.OpacityProperty, Value = 0.5 },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
@@ -249,7 +249,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(13, 13, 13) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(13, 13, 17) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(255, 255, 255) },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.WordWrap }
                 }
@@ -262,7 +262,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(28, 28, 28) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(28, 28, 32) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(255, 255, 255) },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
                 }
