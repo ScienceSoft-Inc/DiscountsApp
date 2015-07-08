@@ -30,7 +30,7 @@ namespace ScnDiscounts.Control.SideBar
                     Constraint.RelativeToParent(parent =>
                     {
                         if (_leftPanelWidth == 0)
-                            _leftPanelWidth = parent.Width - Device.OnPlatform(50, 48, 64);
+                            _leftPanelWidth = parent.Width - Device.OnPlatform(48, 48, 64);
 
                         return 0 - _leftPanelWidth;
                     }),
@@ -88,7 +88,7 @@ namespace ScnDiscounts.Control.SideBar
                     Constraint.RelativeToParent(parent =>
                     {
                         if (_rightPanelWidth == 0)
-                            _rightPanelWidth = parent.Width - Device.OnPlatform(50, 48, 64);
+                            _rightPanelWidth = parent.Width - Device.OnPlatform(48, 48, 64);
 
                         return _rightPanelWidth;
                     }),

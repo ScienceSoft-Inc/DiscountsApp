@@ -34,7 +34,7 @@ namespace ScnDiscounts.Views.ContentUI
 
         public string ImgDistance
         {
-            get { return Device.OnPlatform("Icon/ic_marker_distance.png", "ic_marker_distance.png", "Assets/Icon/marker_distance.png"); }
+            get { return Device.OnPlatform("Icon/marker_distance.png", "ic_marker_distance.png", "Assets/Icon/marker_distance.png"); }
         }
 
         public string ImgDetail

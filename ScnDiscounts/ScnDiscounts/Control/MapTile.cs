@@ -35,19 +35,39 @@ namespace ScnDiscounts.Control
             _mapLayout.Children.Add(mapPinDetail);
         }
 
+        public new void MoveToRegion(MapSpan mapSpan)
+        {
+            if (Device.OS != TargetPlatform.iOS)
+                base.MoveToRegion(mapSpan);
+            Console.WriteLine(mapSpan.Radius.Kilometers.ToString());
+            OnRegionMoved(new MapRegionMoveEventArgs(mapSpan.Center.Latitude, mapSpan.Center.Longitude, (mapSpan.Radius.Kilometers == 2) ? 13 : 11));
+        }
+
         public List<MapPinData> PinList = new List<MapPinData>();
 
+        #region Event OnPinUpdate
+        public event EventHandler PinUpdating;
         public void OnPinUpdate()
         {
             if (PinUpdating != null) PinUpdating(this, EventArgs.Empty);
         }
-        public event EventHandler PinUpdating;
+        #endregion
 
+        #region Event OnClickPinDetail
         public event EventHandler<MapPinDataEventArgs> ClickPinDetail;
         public void OnClickPinDetail(MapPinDataEventArgs e)
         {
             if (ClickPinDetail != null) ClickPinDetail(this, e);
         }
+        #endregion
+
+        #region Event OnRegionMoved
+        public event EventHandler<MapRegionMoveEventArgs> RegionMoved;
+        public void OnRegionMoved(MapRegionMoveEventArgs e)
+        {
+            if (RegionMoved != null) RegionMoved(this, e);
+        }
+        #endregion
 
         private AbsoluteLayout _mapLayout;
         public AbsoluteLayout MapLayout
@@ -168,4 +188,19 @@ namespace ScnDiscounts.Control
             PinData = pinData;
         } 
     }
+
+    public class MapRegionMoveEventArgs : EventArgs
+    {
+        public readonly double Latitude;
+        public readonly double Longitude;
+        public readonly double Zoom;
+
+        public MapRegionMoveEventArgs(double latitude, double longitude, double zoom)
+        {
+            Latitude = latitude;
+            Longitude = longitude;
+            Zoom = zoom;
+        }
+    }
+
 }

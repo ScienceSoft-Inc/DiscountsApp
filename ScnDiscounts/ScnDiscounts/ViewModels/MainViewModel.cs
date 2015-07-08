@@ -36,8 +36,8 @@ namespace ScnDiscounts.ViewModels
             double minskLong = 27.55327;
             (ViewPage as MainPage).MapLocation.MoveToRegion(MapSpan.FromCenterAndRadius(
                                                        new Position(minskLat, minskLong),
-                                                       Distance.FromMiles(4)));
-
+                                                       Distance.FromKilometers(5)));
+            
             (ViewPage as MainPage).MapLocation.OnPinUpdate();
             DelayInit();
         }
@@ -201,21 +201,20 @@ namespace ScnDiscounts.ViewModels
 
             (ViewPage as MainPage).MapLocation.MoveToRegion(MapSpan.FromCenterAndRadius(
                                                        new Position(pinData.Latitude, pinData.Longitude),
-                                                       Distance.FromMiles(1)));
+                                                       Distance.FromKilometers(2)));
             (ViewPage as MainPage).MapLocation.ShowPinDetailInfo(pinData.Id);
         }
 
         internal void AppBar_BtnLeftClick(object sender, EventArgs e)
         {
             (ViewPage as MainPage).MapLocation.CloseDetailInfo();
-
             if (AppMobileService.Locaion.IsAvailable())
             {
                 AppMobileService.Locaion.UpdateCurrentLocation();
                 if ((AppMobileService.Locaion.CurrentLocation.Latitude != 0) && (AppMobileService.Locaion.CurrentLocation.Longitude != 0))
                     (ViewPage as MainPage).MapLocation.MoveToRegion(MapSpan.FromCenterAndRadius(
                                                                new Position(AppMobileService.Locaion.CurrentLocation.Latitude, AppMobileService.Locaion.CurrentLocation.Longitude),
-                                                               Distance.FromMiles(2)));
+                                                               Distance.FromKilometers(2)));
             }
             else
                 ViewPage.DisplayAlert(contentUI.MsgTitleNoGPS, contentUI.MsgTxtNoGPS, contentUI.TxtOk);

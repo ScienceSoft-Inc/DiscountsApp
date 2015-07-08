@@ -83,6 +83,17 @@ namespace ScnDiscounts.Control
 
         private BorderTypeEnum BorderType;
 
+        #region TagProperty
+        public static readonly BindableProperty TagProperty =
+            BindableProperty.Create<BorderBox, string>(p => p.Tag, "");
+
+        public string Tag
+        {
+            get { return (string)GetValue(TagProperty); }
+            set { SetValue(TagProperty, value); }
+        }
+        #endregion
+
         private TapGestureRecognizer _tapGesture;
         public TapGestureRecognizer TapGesture
         {

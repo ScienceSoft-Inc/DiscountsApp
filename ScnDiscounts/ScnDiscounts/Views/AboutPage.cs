@@ -25,14 +25,14 @@ namespace ScnDiscounts.Views
         {
             BackgroundColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor];
 
-            var appBar = new CustomAppBar(this, CustomAppBar.CustomBarBtnEnum.cbBack)
+            var appBar = new CustomAppBar(this, CustomAppBar.BarBtnEnum.bbBack)
             {
                 BarColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor]
             };
             appBar.BtnBack.BackgroundColor = Color.Transparent;
             appBar.BtnBack.Source = contentUI.IconBack;
-            appBar.BtnBack.WidthRequest = appBar.HeightRequest;
-            appBar.BtnBack.HeightRequest = appBar.HeightRequest;
+            appBar.BtnBack.WidthRequest = appBar.HeightBar;
+            appBar.BtnBack.HeightRequest = appBar.HeightBar;
 
             ContentLayout.Children.Add(appBar);
 
@@ -117,15 +117,6 @@ namespace ScnDiscounts.Views
                 }
             };
 
-            var txtDescriptionLink = new LabelExtended
-            {
-                Text = contentUI.TxtDescriptionLink,
-                Style = (Style)App.Current.Resources[LabelStyles.LinkStyle],
-                TextColor = (Color)App.Current.Resources[MainStyles.LightTextColor],
-                LineBreakMode = LineBreakMode.WordWrap,
-                IsUnderline = true
-            };
-            txtDescriptionLink.Click += viewModel.txtLink_Click;
 
             var stackDescription = new StackLayout
             {
@@ -134,11 +125,34 @@ namespace ScnDiscounts.Views
                     txtDescription,
                     stackDescriptionBullet1,
                     stackDescriptionBullet2,
-                    stackDescriptionBullet3,
-                    txtDescriptionLink
+                    stackDescriptionBullet3
                 }
             };
 
+            var txtDescriptionLink = new LabelExtended
+            {
+                Text = contentUI.TxtDescriptionLink,
+                Style = (Style)App.Current.Resources[LabelStyles.LinkStyle],
+                TextColor = (Color)App.Current.Resources[MainStyles.LightTextColor],
+                LineBreakMode = LineBreakMode.WordWrap,
+                IsUnderline = true
+            };
+
+            if (Device.OS == TargetPlatform.iOS)
+            {
+                var viewGesture = new ViewGesture
+                {
+                    Content = txtDescriptionLink,
+                    DeformationValue = -5,
+                };
+                viewGesture.Gesture.Tap += viewModel.txtLink_Click;
+                stackDescription.Children.Add(viewGesture);
+            }
+            else
+            {
+                txtDescriptionLink.Click += viewModel.txtLink_Click;
+                stackDescription.Children.Add(txtDescriptionLink);
+            }
             #endregion
 
             #region Version info
@@ -167,6 +181,8 @@ namespace ScnDiscounts.Views
             #endregion
 
             #region Developer info
+            var stackDeveloper = new StackLayout();
+
             var txtTitleDeveloper = new Label
             {
                 Text = contentUI.TitleDeveloper,
@@ -174,6 +190,7 @@ namespace ScnDiscounts.Views
                 TextColor = (Color)App.Current.Resources[MainStyles.LightTextColor],
                 Opacity = 0.5
             };
+            stackDeveloper.Children.Add(txtTitleDeveloper);
 
             var txtPhone = new LabelExtended
             {
@@ -181,7 +198,22 @@ namespace ScnDiscounts.Views
                 Style = (Style)App.Current.Resources[LabelStyles.DescriptionStyle],
                 TextColor = (Color)App.Current.Resources[MainStyles.LightTextColor]
             };
-            txtPhone.Click += viewModel.txtPhone_Click;
+            
+            if (Device.OS == TargetPlatform.iOS)
+            {
+                var viewGesture = new ViewGesture
+                {
+                    Content = txtPhone,
+                    DeformationValue = -5,
+                };
+                viewGesture.Gesture.Tap += viewModel.txtPhone_Click;
+                stackDeveloper.Children.Add(viewGesture);
+            }
+            else
+            {
+                txtPhone.Click += viewModel.txtPhone_Click;
+                stackDeveloper.Children.Add(txtPhone);
+            }
 
             var txtEmail = new Label
             {
@@ -189,6 +221,7 @@ namespace ScnDiscounts.Views
                 Style = (Style)App.Current.Resources[LabelStyles.DescriptionStyle],
                 TextColor = (Color)App.Current.Resources[MainStyles.LightTextColor]
             };
+            stackDeveloper.Children.Add(txtEmail);
 
             var txtHttp = new LabelExtended
             {
@@ -197,18 +230,23 @@ namespace ScnDiscounts.Views
                 TextColor = (Color)App.Current.Resources[MainStyles.LightTextColor],
                 IsUnderline = true
             };
-            txtHttp.Click += viewModel.txtLink_Click;
 
-            var stackDeveloper = new StackLayout
+            if (Device.OS == TargetPlatform.iOS)
             {
-                Children =
+                var viewGesture = new ViewGesture
                 {
-                    txtTitleDeveloper,
-                    txtPhone,
-                    txtEmail,
-                    txtHttp
-                }
-            };
+                    Content = txtHttp,
+                    DeformationValue = -5,
+                };
+                viewGesture.Gesture.Tap += viewModel.txtLink_Click;
+                stackDeveloper.Children.Add(viewGesture);
+            }
+            else
+            {
+                txtHttp.Click += viewModel.txtLink_Click;
+                stackDeveloper.Children.Add(txtHttp);
+            }
+
             #endregion
 
             var stackAbout = new StackLayout

@@ -11,8 +11,10 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\BorderBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Control\BoxViewGesture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\CustomAppBar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\ImageButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Control\ListViewExtended.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\ListViewAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\MapPinDetail.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\MapTile.cs" />
@@ -24,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Control\SideBar\SideBarPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\LabelExtended.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\ViewCellExtended.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Control\ViewGesture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyInterface\GeoLocation\IGeolocator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyInterface\GeoLocation\Position.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyInterface\GeoLocation\PositionExtensions.cs" />

@@ -50,7 +50,7 @@ namespace ScnDiscounts.Views
 
             var actIndicator = new ActivityIndicator
             {
-                Color = Device.OnPlatform(Color.Black, Color.Default, Color.Accent),
+                Color = Device.OnPlatform(Color.White, Color.White, Color.White),
                 WidthRequest = Device.OnPlatform(-1, -1, 480)
             };
             actIndicator.SetBinding(IsVisibleProperty, "IsShowLoading");
@@ -64,7 +64,8 @@ namespace ScnDiscounts.Views
             #region Retry button
             var btnRetry = new Button
             {
-                Command = viewModel.RetryCommand
+                Command = viewModel.RetryCommand,
+                TextColor = Color.White,
             };
             btnRetry.SetBinding(Button.TextProperty, "BtnRetryText");
             btnRetry.SetBinding(IsVisibleProperty, "IsRetry");

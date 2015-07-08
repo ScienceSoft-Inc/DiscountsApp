@@ -10,10 +10,13 @@ namespace ScnDiscounts.Control.SideBar
             BackgroundColor = Color.White;
             VerticalOptions = LayoutOptions.FillAndExpand;
             HorizontalOptions = LayoutOptions.EndAndExpand;
-            
-            var tapSideBar = new TapGestureRecognizer();
-            tapSideBar.Tapped += (sender, e) => { OnClick(); };
-            GestureRecognizers.Add(tapSideBar);
+
+            if (Device.OS != TargetPlatform.iOS)
+            {
+                var tapSideBar = new TapGestureRecognizer();
+                tapSideBar.Tapped += (sender, e) => { OnClick(); };
+                GestureRecognizers.Add(tapSideBar);
+            }
         }
 
         public event EventHandler Click;
@@ -29,7 +32,6 @@ namespace ScnDiscounts.Control.SideBar
             set
             {
                 context = value;
-
                 Children.Clear();
 
                 SetLayoutFlags(context, AbsoluteLayoutFlags.All);

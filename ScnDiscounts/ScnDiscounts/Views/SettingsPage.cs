@@ -24,7 +24,7 @@ namespace ScnDiscounts.Views
         {
             BackgroundColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor];
 
-            var appBar = new CustomAppBar(this, CustomAppBar.CustomBarBtnEnum.cbBack)
+            var appBar = new CustomAppBar(this, CustomAppBar.BarBtnEnum.bbBack)
             {
                 BarColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor],
                 Title = contentUI.Title,
@@ -32,8 +32,8 @@ namespace ScnDiscounts.Views
             };
             appBar.BtnBack.BackgroundColor = Color.Transparent;
             appBar.BtnBack.Source = contentUI.IconBack;
-            appBar.BtnBack.WidthRequest = appBar.HeightRequest;
-            appBar.BtnBack.HeightRequest = appBar.HeightRequest;
+            appBar.BtnBack.WidthRequest = appBar.HeightBar;
+            appBar.BtnBack.HeightRequest = appBar.HeightBar;
 
             ContentLayout.Children.Add(appBar);
 
@@ -44,28 +44,45 @@ namespace ScnDiscounts.Views
             };
 
             #region Language setting
+            var stackLang = new StackLayout();
+
             var txtLangTitle = new LabelExtended
             {
                 Style = (Style)App.Current.Resources[LabelStyles.SettingStyle]
             };
             txtLangTitle.SetBinding(Label.TextProperty, "CurrLanguageTitle");
-            txtLangTitle.Click += viewModel.LangSetting_Click;
+
+            if (Device.OS == TargetPlatform.iOS)
+            {
+                var viewGesture = new ViewGesture
+                {
+                    Content = txtLangTitle,
+                    DeformationValue = -5,
+                };
+                viewGesture.Gesture.Tap += viewModel.LangSetting_Click;
+                stackLang.Children.Add(viewGesture);
+            }
+            else
+                stackLang.Children.Add(txtLangTitle);
 
             var txtLangValue = new LabelExtended
             {
                 Style = (Style)App.Current.Resources[LabelStyles.SettingHintStyle]
             };
             txtLangValue.SetBinding(Label.TextProperty, "CurrLanguageName");
-            txtLangValue.Click += viewModel.LangSetting_Click;
-
-            var stackLang = new StackLayout
+            if (Device.OS == TargetPlatform.iOS)
             {
-                Children = 
+                var viewGesture = new ViewGesture
                 {
-                    txtLangTitle,
-                    txtLangValue
-                }
-            };
+                    Content = txtLangValue,
+                    DeformationValue = -5,
+                };
+                viewGesture.Gesture.Tap += viewModel.LangSetting_Click;
+                stackLang.Children.Add(viewGesture);
+            }
+            else
+                stackLang.Children.Add(txtLangValue);
+
             stackSettings.Children.Add(stackLang);
             #endregion
 

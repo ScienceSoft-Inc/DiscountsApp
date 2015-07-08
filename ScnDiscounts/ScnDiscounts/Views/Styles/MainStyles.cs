@@ -8,6 +8,7 @@ namespace ScnDiscounts.Views.Styles
         public static string MainLightBackgroundColor = "MainLightBackgroundColor";
         public static string ListBorderColor = "ListBorderColor";
         public static string ListBackgroundColor = "ListBackgroundColor";
+        public static string ListSelectColor = "ListSelectColor";
         public static string LightTextColor = "LightTextColor";
 
         public override void Load()
@@ -16,12 +17,14 @@ namespace ScnDiscounts.Views.Styles
             Color mainLightBackgroundColor = Color.FromRgb(238, 238, 238);
             Color listBorderColor = Color.FromRgb(204, 204, 204);
             Color listBackgroundColor = Color.FromRgb(255, 255, 255);
+            Color listSelectColor = Color.FromRgb(100, 194, 255);
             Color lightTextColor = Color.FromRgb(255, 255, 255);
 
             Resources.Add(MainBackgroundColor, mainBackgroundColor);
             Resources.Add(MainLightBackgroundColor, mainLightBackgroundColor);
             Resources.Add(ListBorderColor, listBorderColor);
             Resources.Add(ListBackgroundColor, listBackgroundColor);
+            Resources.Add(ListSelectColor, listSelectColor);
             Resources.Add(LightTextColor, lightTextColor);
         }
     }

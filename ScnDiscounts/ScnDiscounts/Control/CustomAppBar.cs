@@ -3,43 +3,62 @@ using Xamarin.Forms;
 
 namespace ScnDiscounts.Control
 {
-    public class CustomAppBar : AbsoluteLayout
+    public class CustomAppBar : AbsoluteLayout 
     {
         [Flags]
-        public enum CustomBarBtnEnum
+        public enum BarBtnEnum
         {
-            cbNone = 0,
-            cbBack = 1,
-            cbRight = 2,
-            cbRightRight = 4,
-            cbLeft = 8,
-            cbLeftLeft = 16,
-            cbMore = 32, //TODO
+            bbNone = 0,
+            bbBack = 1,
+            bbRight = 2,
+            bbRightRight = 4,
+            bbLeft = 8,
+            bbLeftLeft = 16,
+            bbMore = 32, //TODO
 
-            cbRightLeft = cbRight | cbLeft,
-            cbRightRightLeft = cbRightRight | cbLeft,
-            cbRightLeftLeft = cbRight | cbLeftLeft,
-            cbRightRightLeftLeft = cbRightRight | cbLeftLeft,
+            bbRightLeft = bbRight | bbLeft,
+            bbRightRightLeft = bbRightRight | bbLeft,
+            bbRightLeftLeft = bbRight | bbLeftLeft,
+            bbRightRightLeftLeft = bbRightRight | bbLeftLeft,
             
-            cbBackRight = cbBack | cbRight,
-            cbBackLeft = cbBack | cbLeft,
-            cbBackLeftLeft = cbBack | cbLeftLeft,
+            bbBackRight = bbBack | bbRight,
+            bbBackLeft = bbBack | bbLeft,
+            bbBackLeftLeft = bbBack | bbLeftLeft,
             
-            cbBackRightLeft = cbBackRight | cbLeft,
-            cbBackRightLeftLeft = cbBackRight | cbLeftLeft
+            bbBackRightLeft = bbBackRight | bbLeft,
+            bbBackRightLeftLeft = bbBackRight | bbLeftLeft
         }
 
-        private int HeightBar = Device.OnPlatform(48, 48, 64);
+        [Flags]
+        public enum BarAlignEnum
+        {
+            baTop = 0,
+            baBottom = 1
+        }
 
-        public CustomAppBar(Page page, CustomBarBtnEnum customBarBtn = CustomBarBtnEnum.cbNone)
+        public int HeightBar = Device.OnPlatform(48, 48, 64);
+        private int PaddingBar = 0;
+
+        public CustomAppBar(Page page, BarBtnEnum barBtn = BarBtnEnum.bbNone, BarAlignEnum barAlign = BarAlignEnum.baTop)
         {
             NavigationPage.SetHasNavigationBar(page, false);
+            NavigationPage.SetHasBackButton(page, false);
+            page.Title = "";
+            page.Appearing += (s, e) => { NavigationPage.SetHasNavigationBar(page, false); };
+            page.Disappearing += (s, e) => { NavigationPage.SetHasNavigationBar(page, false); };
 
-            HeightRequest = HeightBar;
+            if ((Device.OS == TargetPlatform.iOS) && (barAlign == BarAlignEnum.baTop))
+                PaddingBar = 20;
+
             BackgroundColor = barColor;
+            MinimumHeightRequest = HeightBar + PaddingBar;
+            HeightRequest = HeightBar + PaddingBar;
+            appBar.BackgroundColor = barColor;
+            appBar.Padding = new Thickness(0, PaddingBar, 0, 0);
+            appBar.MinimumHeightRequest = HeightRequest;
+            appBar.HeightRequest = HeightRequest;
             
-            if (Device.OS == TargetPlatform.iOS)
-                Padding = new Thickness(0, 14, 0, 0);
+            boxPadding.BackgroundColor = barColor;
 
             #region Title create
             txtTitle = new Label 
@@ -47,11 +66,11 @@ namespace ScnDiscounts.Control
                 VerticalOptions = LayoutOptions.CenterAndExpand,
                 HorizontalOptions = LayoutOptions.CenterAndExpand
             };
-            SetLayoutFlags(txtTitle, AbsoluteLayoutFlags.PositionProportional);
-            SetLayoutBounds(txtTitle,
-                new Rectangle(0.5, 0.5, AutoSize, AutoSize)
+            AbsoluteLayout.SetLayoutFlags(txtTitle, AbsoluteLayoutFlags.PositionProportional);
+            AbsoluteLayout.SetLayoutBounds(txtTitle,
+                new Rectangle(0.5, 0.5, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize)
             );
-            Children.Add(txtTitle);
+            appBar.Children.Add(txtTitle);
             #endregion
 
             #region Panel for left buttons
@@ -63,8 +82,8 @@ namespace ScnDiscounts.Control
             };
             SetLayoutFlags(stackLeftBtn, AbsoluteLayoutFlags.PositionProportional);
             SetLayoutBounds(stackLeftBtn,
-                new Rectangle(0, 0.5, AutoSize, AutoSize));
-            Children.Add(stackLeftBtn);
+                new Rectangle(0, 0.5, HeightBar, AbsoluteLayout.AutoSize));
+            appBar.Children.Add(stackLeftBtn);
             #endregion
 
             #region Panel for right buttons
@@ -74,16 +93,16 @@ namespace ScnDiscounts.Control
                 Orientation = StackOrientation.Horizontal,
                 HorizontalOptions = LayoutOptions.End
             };
-            SetLayoutFlags(stackRightBtn, AbsoluteLayoutFlags.PositionProportional);
-            SetLayoutBounds(stackRightBtn,
-                new Rectangle(1, 0.5, AutoSize, AutoSize));
-            Children.Add(stackRightBtn);
+            AbsoluteLayout.SetLayoutFlags(stackRightBtn, AbsoluteLayoutFlags.PositionProportional);
+            AbsoluteLayout.SetLayoutBounds(stackRightBtn,
+                new Rectangle(1, 0.5, HeightBar, AbsoluteLayout.AutoSize));
+            appBar.Children.Add(stackRightBtn);
             #endregion
 
             #region Back button create
             BtnBack = new BackImageButton(page);
 
-            if ((customBarBtn & CustomBarBtnEnum.cbBack) != 0)
+            if ((barBtn & BarBtnEnum.bbBack) != 0)
                 stackLeftBtn.Children.Add(BtnBack);
 
             #endregion
@@ -91,17 +110,33 @@ namespace ScnDiscounts.Control
             #region Right button create
             BtnRight = new ImageButton();
 
-            if ((customBarBtn & CustomBarBtnEnum.cbRight) != 0)
+            if ((barBtn & BarBtnEnum.bbRight) != 0)
                 stackRightBtn.Children.Add(BtnRight);
             #endregion
 
             #region Left button create
             BtnLeft = new ImageButton();
 
-            if ((customBarBtn & CustomBarBtnEnum.cbLeft) != 0)
+            if ((barBtn & BarBtnEnum.bbLeft) != 0)
                 stackLeftBtn.Children.Add(BtnLeft);
             #endregion
+
+            AbsoluteLayout.SetLayoutFlags(appBar, AbsoluteLayoutFlags.All);
+            AbsoluteLayout.SetLayoutBounds(appBar, new Rectangle(0f, 0f, 1f, 1f));
+            Children.Add(appBar);
+
+            if ((Device.OS == TargetPlatform.iOS) && (barAlign == BarAlignEnum.baTop))
+            {
+                AbsoluteLayout.SetLayoutFlags(boxPadding, AbsoluteLayoutFlags.PositionProportional);
+                AbsoluteLayout.SetLayoutBounds(boxPadding,
+                    new Rectangle(0, 0, 600, PaddingBar));
+                Children.Add(boxPadding);
+            }
         }
+
+        private AbsoluteLayout appBar = new AbsoluteLayout();
+        private BoxView boxPadding = new BoxView();
+        public BoxView BoxPadding { get { return boxPadding; } }
 
         #region Background color
         private Color barColor = Color.White;
@@ -112,6 +147,8 @@ namespace ScnDiscounts.Control
             {
                 barColor = value;
                 BackgroundColor = barColor;
+                appBar.BackgroundColor = barColor;
+                boxPadding.BackgroundColor = barColor;
             }
         }
         #endregion

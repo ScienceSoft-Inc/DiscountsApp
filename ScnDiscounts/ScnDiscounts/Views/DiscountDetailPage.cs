@@ -33,18 +33,22 @@ namespace ScnDiscounts.Views
 
             var mainLayout = new AbsoluteLayout();
 
-            var appBar = new CustomAppBar(this, CustomAppBar.CustomBarBtnEnum.cbBack)
+            var appBar = new CustomAppBar(this, CustomAppBar.BarBtnEnum.bbBack)
             {
-                BackgroundColor = Color.Transparent
+                BarColor = Color.Transparent
             };
+            appBar.BoxPadding.Color = Color.Black;
+            appBar.BoxPadding.Opacity = 0.4;
+
             appBar.BtnBack.BackgroundColor = Color.Black;
-            appBar.BtnBack.Opacity = 0.6;
+            appBar.BtnBack.Opacity = 0.4;
             appBar.BtnBack.Source = contentUI.IconBack;
-            appBar.BtnBack.WidthRequest = appBar.HeightRequest;
-            appBar.BtnBack.HeightRequest = appBar.HeightRequest;
+            appBar.BtnBack.WidthRequest = appBar.HeightBar;
+            appBar.BtnBack.HeightRequest = appBar.HeightBar;
 
             discountLayout = new StackLayout
-            { 
+            {
+                VerticalOptions = LayoutOptions.Start,
                 Spacing = Device.OnPlatform(0, 0, 4),
             };
 
@@ -216,8 +220,24 @@ namespace ScnDiscounts.Views
                 HorizontalOptions = LayoutOptions.Start
             };
             txtUrlAddress.SetBinding(Label.TextProperty, "UrlAddress");
-            txtUrlAddress.Click += viewModel.txtUrlAddress_Click;
-            titleDetailLayout.Children.Add(txtUrlAddress);
+            
+            //TODO
+            if (Device.OS == TargetPlatform.iOS)
+            {
+                var viewGesture = new ViewGesture
+                {
+                    Content = txtUrlAddress,
+                    DeformationValue = -5,
+                };
+                viewGesture.Gesture.Tap += viewModel.txtUrlAddress_Click;
+                titleDetailLayout.Children.Add(viewGesture);
+            }
+            else
+            {
+                txtUrlAddress.Click += viewModel.txtUrlAddress_Click;
+                titleDetailLayout.Children.Add(txtUrlAddress);
+            }
+            
             #endregion
 
             gridHeader.Children.Add(titleDetailLayout, 1, 0);
@@ -246,6 +266,7 @@ namespace ScnDiscounts.Views
 
             var scrollDiscount = new ScrollView
             {
+                HeightRequest = 700,
                 Content = discountLayout,
             };
 
@@ -259,6 +280,9 @@ namespace ScnDiscounts.Views
             mainLayout.Children.Add(appBar);
 
             ContentLayout.Children.Add(mainLayout);
+
+            if (Device.OS == TargetPlatform.iOS)
+                InitBranchListView();
         }
 
         public void InitBranchListView()
@@ -270,7 +294,8 @@ namespace ScnDiscounts.Views
             BranchListView.ItemTapped += viewModel.OnBranchViewItemTapped;
             BranchListView.SetBinding(ListView.ItemsSourceProperty, "BranchItems");
             BranchListView.ItemTemplate = new DataTemplate(() => new BranchInfoViewTemplate(BranchListView, contentUI, viewModel));
-            BranchListView.SetBinding(ListView.HeightRequestProperty, new Binding("BranchItemsCount", BindingMode.Default, new ListViewHeightConverter(), (Device.OnPlatform(200, 190, 250))));
+            BranchListView.SetBinding(ListView.HeightRequestProperty, new Binding("BranchItemsCount", BindingMode.Default, new ListViewHeightConverter(), (Device.OnPlatform(160, 190, 250))));
+            BranchListView.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
 
             var stackBranchView = new StackLayout
             {
@@ -286,7 +311,7 @@ namespace ScnDiscounts.Views
         {
             public BranchInfoViewTemplate(ListView parentListView, DiscountDetailContentUI parentContentUI, DiscountDetailViewModel parentViewModel)
             {
-                HighlightSelection = false;
+                IsHighlightSelection = false;
 
                 var stackBranch = new StackLayout
                 {
@@ -304,8 +329,9 @@ namespace ScnDiscounts.Views
                     },
                     ColumnDefinitions = 
                     {
-                        new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
-                        new ColumnDefinition { Width = new GridLength(4, GridUnitType.Star) }
+                        new ColumnDefinition { Width = GridLength.Auto },
+                        new ColumnDefinition { Width = GridLength.Auto },
+                        new ColumnDefinition  { Width = new GridLength(1, GridUnitType.Star) }
                     }
                 };
 
@@ -335,24 +361,8 @@ namespace ScnDiscounts.Views
                     }
                 };
 
-                var stackDistance = new StackLayout
-                {
-                    Orientation = StackOrientation.Horizontal,
-                    VerticalOptions = LayoutOptions.Center,
-                    Spacing = 3,
-                    Children =
-                    {
-                        new ScrollView 
-                        {
-                            Orientation = ScrollOrientation.Horizontal,
-                            Content = txtDistanceValue
-                        },
-                    
-                        distanceLabel
-                    }
-                };
-
-                gridLocation.Children.Add(stackDistance, 0, 0);
+                gridLocation.Children.Add(txtDistanceValue, 0, 0);
+                gridLocation.Children.Add(distanceLabel, 1, 0);
 
                 var txtPartnerAddress = new Label
                 {
@@ -367,7 +377,6 @@ namespace ScnDiscounts.Views
                     Style = (Style)App.Current.Resources[LabelStyles.LinkStyle],
                     IsUnderline = true
                 };
-                txtShowOnMap.Click += parentViewModel.txtShowOnMap_Click;
                 txtShowOnMap.SetBinding(LabelExtended.TagProperty, "Id");
 
                 var locationLayout = new StackLayout
@@ -377,58 +386,86 @@ namespace ScnDiscounts.Views
                     Children =
                     {
                         txtPartnerAddress,
-                        txtShowOnMap
                     }
                 };
-                gridLocation.Children.Add(locationLayout, 1, 0);
+                
+                //TODO
+                if (Device.OS == TargetPlatform.iOS)
+                {
+                    var viewGesture = new ViewGesture
+                    {
+                        Content = txtShowOnMap,
+                        DeformationValue = -5,
+                    };
+                    viewGesture.Gesture.Tap += parentViewModel.txtShowOnMap_Click;
+                    locationLayout.Children.Add(viewGesture);
+                }
+                else
+                {
+                    txtShowOnMap.Click += parentViewModel.txtShowOnMap_Click;
+                    locationLayout.Children.Add(txtShowOnMap);
+                };
+
+                var scroll = new ScrollView
+                {
+                    Orientation = ScrollOrientation.Horizontal,
+                    Content = locationLayout
+                };
+
+                gridLocation.Children.Add(scroll, 2, 0);
 
                 stackBranch.Children.Add(gridLocation);
 
                 #endregion
 
                 #region Phone list
-                var phone1 = CreateCallButton(parentContentUI, "Phone1");
-                phone1.SetBinding(BorderBox.IsVisibleProperty, "IsPhone1FillIn");
-                var tapGesture1 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
-                tapGesture1.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone1");
-                phone1.TapGesture = tapGesture1;
-
-                var phone2 = CreateCallButton(parentContentUI, "Phone2");
-                phone2.SetBinding(BorderBox.IsVisibleProperty, "IsPhone2FillIn");
-                var tapGesture2 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
-                tapGesture2.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone2");
-                phone2.TapGesture = tapGesture2;
-
-                //var phone3 = CreateCallButton(parentContentUI, "Phone3");
-                //phone3.SetBinding(StackLayout.IsVisibleProperty, "IsPhone3FillIn");
-                //var tapGesture3 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
-                //tapGesture3.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone3");
-                //phone3.TapGesture = tapGesture3;
-
-                //var phone4 = CreateCallButton(parentContentUI, "Phone4");
-                //phone4.SetBinding(StackLayout.IsVisibleProperty, "IsPhone4FillIn");
-                //var tapGesture4 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
-                //tapGesture4.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone4");
-                //phone4.TapGesture = tapGesture4;
-
-                //var phone5 = CreateCallButton(parentContentUI, "Phone5");
-                //phone5.SetBinding(StackLayout.IsVisibleProperty, "IsPhone5FillIn");
-                //var tapGesture5 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
-                //tapGesture5.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone5");
-                //phone5.TapGesture = tapGesture5;
-
                 var stackPhoneView = new StackLayout
                 {
                     Padding = Device.OnPlatform(new Thickness(0, 4), new Thickness(0, 4), new Thickness(0, 4, -8, 4)),
-                    Children = 
-                    { 
-                        phone1,
-                        phone2,
-                        //phone3,
-                        //phone4,
-                        //phone5
-                    }
                 };
+
+                var phone1 = CreateCallButton(parentContentUI, "Phone1");
+                phone1.SetBinding(BorderBox.IsVisibleProperty, "IsPhone1FillIn");
+                phone1.SetBinding(BorderBox.TagProperty, "Phone1");
+                if (Device.OS == TargetPlatform.iOS)
+                {
+                    var viewGesture = new ViewGesture
+                    {
+                        Content = phone1,
+                        DeformationValue = 0,
+                    };
+                    viewGesture.Gesture.Tap += parentViewModel.BtnCall_Click;
+                    stackPhoneView.Children.Add(viewGesture);
+                }
+                else
+                {
+                    var tapGesture1 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
+                    tapGesture1.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone1");
+                    phone1.TapGesture = tapGesture1;
+                    stackPhoneView.Children.Add(phone1);
+                }
+
+                var phone2 = CreateCallButton(parentContentUI, "Phone2");
+                phone2.SetBinding(BorderBox.IsVisibleProperty, "IsPhone2FillIn");
+                phone2.SetBinding(BorderBox.TagProperty, "Phone2");
+                if (Device.OS == TargetPlatform.iOS)
+                {
+                    var viewGesture = new ViewGesture
+                    {
+                        Content = phone2,
+                        DeformationValue = 0,
+                    };
+                    viewGesture.Gesture.Tap += parentViewModel.BtnCall_Click;
+                    stackPhoneView.Children.Add(viewGesture);
+                }
+                else
+                {
+                    var tapGesture2 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
+                    tapGesture2.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone2");
+                    phone2.TapGesture = tapGesture2;
+                    stackPhoneView.Children.Add(phone2);
+                }
+
                 stackBranch.Children.Add(stackPhoneView);
                 #endregion
                 

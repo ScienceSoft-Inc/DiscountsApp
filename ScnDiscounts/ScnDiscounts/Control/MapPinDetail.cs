@@ -8,7 +8,7 @@ namespace ScnDiscounts.Control
         public MapPinDetail()
         {
             #region Back box
-            boxBack = new BoxView
+            boxBack = new BoxViewGesture(this)
             {
                 BackgroundColor = new Color(0, 0, 0, 0.01)
             };
@@ -17,12 +17,21 @@ namespace ScnDiscounts.Control
             SetLayoutBounds(boxBack, new Rectangle(0f, 0f, 1f, 1f));
             Children.Add(boxBack);
 
-            var tapClosePinDetail = new TapGestureRecognizer();
-            tapClosePinDetail.Tapped += (sender, e) =>
+            if (Device.OS == TargetPlatform.iOS)
             {
-                IsVisible = false;
-            };
-            boxBack.GestureRecognizers.Add(tapClosePinDetail);
+                boxBack.Tap += (s, e) => { Hide(); };
+                boxBack.Swipe += (s, e) => { Hide(); };
+            }
+            else
+            {
+                var tapClosePinDetail = new TapGestureRecognizer();
+                tapClosePinDetail.Tapped += (sender, e) =>
+                {
+                    Hide();
+                };
+                boxBack.GestureRecognizers.Add(tapClosePinDetail);
+            }
+
             #endregion
 
             Grid gridDetail = new Grid
@@ -142,20 +151,26 @@ namespace ScnDiscounts.Control
             borderDetail = new BorderBox(BorderBox.BorderTypeEnum.btLabel);
 
             borderDetail.HeightRequest = Device.OnPlatform(50, 58, 76);
-            borderDetail.WidthRequest = Device.OnPlatform(220, 210, 260);
+            borderDetail.WidthRequest = Device.OnPlatform(210, 210, 260);
             borderDetail.BorderWidth = 1;
             borderDetail.BorderColor = (Color)App.Current.Resources[MainStyles.ListBorderColor];
             borderDetail.Content = gridDetail;
 
             SetLayoutFlags(borderDetail, AbsoluteLayoutFlags.PositionProportional);
-            SetLayoutBounds(borderDetail,
-                new Rectangle(0.5, 0.365, AutoSize, AutoSize)
+            SetLayoutBounds(borderDetail, Device.OnPlatform(
+                new Rectangle(0.5, 0.385, AutoSize, AutoSize),
+                new Rectangle(0.5, 0.365, AutoSize, AutoSize),
+                new Rectangle(0.5, 0.365, AutoSize, AutoSize))
             );
+
+            borderDetail.Scale = 0;
+            borderDetail.AnchorY = 1;
+
             Children.Add(borderDetail);
         }
         
         private BorderBox borderDetail;
-        private BoxView boxBack;
+        private BoxViewGesture boxBack;
         private Label txtTitle;
         private Label txtCategory;
         private Label txtDiscountCaption;
@@ -272,13 +287,16 @@ namespace ScnDiscounts.Control
         }
 
 
-        public void Show()
+        async public void Show()
         {
             IsVisible = true;
+            await borderDetail.ScaleTo(1.1, 200, Easing.CubicIn);
+            await borderDetail.ScaleTo(1, 50, Easing.CubicIn);
         }
 
-        public void Hide()
+        async public void Hide()
         {
+            await borderDetail.ScaleTo(0, 100, Easing.CubicOut);
             IsVisible = false;
         }
 

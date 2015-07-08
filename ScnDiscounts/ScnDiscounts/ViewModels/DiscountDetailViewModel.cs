@@ -38,10 +38,10 @@ namespace ScnDiscounts.ViewModels
 
         async void InitListView_Appearing(object sender, EventArgs e)
         {
-            (ViewPage as DiscountDetailPage).InitBranchListView();
-
             if (Device.OS == TargetPlatform.Android)
             {
+                (ViewPage as DiscountDetailPage).InitBranchListView();
+
                 await Task.Delay(1000); //waiting init listview control
 
                 var skipCount = (currentDiscount.BranchList.Count > previewItemsCount) ? previewItemsCount : 0;
@@ -54,6 +54,8 @@ namespace ScnDiscounts.ViewModels
                     CalculateDistance();
                 }
             }
+            else if (Device.OS == TargetPlatform.WinPhone)
+                (ViewPage as DiscountDetailPage).InitBranchListView();
         }
 
         void ViewPage_Disappearing(object sender, EventArgs e)
@@ -76,7 +78,7 @@ namespace ScnDiscounts.ViewModels
                 var count = (currentDiscount.BranchList.Count > previewItemsCount) ? previewItemsCount : currentDiscount.BranchList.Count;
                 currentDiscount.BranchList.Take(count).ToList().ForEach(BranchItems.Add);
             }
-            else if (Device.OS == TargetPlatform.WinPhone)
+            else if ((Device.OS == TargetPlatform.WinPhone) || (Device.OS == TargetPlatform.iOS))
                 BranchItems = currentDiscount.BranchList;
 
             CalculateDistance();
@@ -251,6 +253,8 @@ namespace ScnDiscounts.ViewModels
         async internal void txtShowOnMap_Click(object sender, EventArgs e)
         {
             AppData.Discount.ActiveMapPinId = (sender as LabelExtended).Tag;
+            Console.WriteLine(AppData.Discount.ActiveMapPinId);
+
             await ViewPage.Navigation.PopToRootAsync(true);
         }
 
@@ -269,6 +273,20 @@ namespace ScnDiscounts.ViewModels
         internal void BranchView_AnimationFinished(object sender, EventArgs e)
         {
             //IsLoadBusy = false;
+        }
+
+        internal void BtnCall_Click(object sender, EventArgs e)
+        {
+            if (!(sender is BorderBox))
+                return;
+
+            string phoneNumber = (sender as BorderBox).Tag;
+            int index = phoneNumber.IndexOfAny("0123456789".ToCharArray());
+            if (index > 0)
+                phoneNumber = phoneNumber.Remove(0, index - 1);
+            phoneNumber = phoneNumber.Replace("-", "").Replace(" ", "").Replace("(", "").Replace(")", "");
+            if (!String.IsNullOrWhiteSpace(phoneNumber))
+                DependencyService.Get<IPhoneService>().DialNumber(phoneNumber, NameCompany);
         }
     }
 }

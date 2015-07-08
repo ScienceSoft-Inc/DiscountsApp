@@ -29,24 +29,26 @@ namespace ScnDiscounts.Views
         {
             BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
 
-            var appBar = new CustomAppBar(this, CustomAppBar.CustomBarBtnEnum.cbBack)
+            var appBar = new CustomAppBar(this, CustomAppBar.BarBtnEnum.bbBack)
             {
                 BarColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor]
             };
             appBar.BtnBack.BackgroundColor = Color.Transparent;
             appBar.BtnBack.Source = contentUI.IconBack;
-            appBar.BtnBack.WidthRequest = appBar.HeightRequest;
-            appBar.BtnBack.HeightRequest = appBar.HeightRequest;
+            appBar.BtnBack.WidthRequest = appBar.HeightBar;
+            appBar.BtnBack.HeightRequest = appBar.HeightBar;
 
             ContentLayout.Children.Add(appBar);
 
             DiscountListView = new ListViewAnimation();
-            DiscountListView.RowHeight = Device.OnPlatform(100, 108, 136);
+            DiscountListView.HasUnevenRows = true;
+            DiscountListView.SetBinding(ListView.HeightRequestProperty, new Binding("DiscountItemsCount", BindingMode.Default, new ListViewHeightConverter(), (Device.OnPlatform(109, 108, 136))));
             DiscountListView.SeparatorVisibility = SeparatorVisibility.None;
             DiscountListView.SetBinding(ListView.ItemsSourceProperty, "DiscountItems");
-            DiscountListView.ItemTemplate = new DataTemplate(() => new DiscountTemplate(DiscountListView, DiscountListView.RowHeight)); ;
+            DiscountListView.ItemTemplate = new DataTemplate(() => new DiscountTemplate(DiscountListView,  Device.OnPlatform(108, 108, 136)));
             DiscountListView.ItemTapped += viewModel.OnDiscountItemTapped;
             DiscountListView.IsEnabled = false;
+            DiscountListView.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
             DiscountListView.AnimationFinished += async (s, e) => 
             {
                 await Task.Delay(100);
@@ -59,13 +61,26 @@ namespace ScnDiscounts.Views
                 Padding = Device.OnPlatform(new Thickness(0, 4), new Thickness(0, 4), new Thickness(0, 4, -12, 0)),
             };
             discountLayout.Children.Add(DiscountListView);
-            ContentLayout.Children.Add(discountLayout);
+            //ContentLayout.Children.Add(discountLayout);
+
+            var mainLayout = new AbsoluteLayout();
+            var scrollDiscount = new ScrollView
+            {
+                HeightRequest = 700,
+                Content = discountLayout,
+            };
+
+            AbsoluteLayout.SetLayoutFlags(scrollDiscount, AbsoluteLayoutFlags.All);
+            AbsoluteLayout.SetLayoutBounds(scrollDiscount, new Rectangle(0f, 0f, 1f, 1f));
+            mainLayout.Children.Add(scrollDiscount);
+            ContentLayout.Children.Add(mainLayout);
         }
 
-        class DiscountTemplate : ViewCell
+        class DiscountTemplate : ViewCellExtended
         {
             public DiscountTemplate(ListViewAnimation parentListView, int rowHeight)
             {
+                SelectColor = (Color)App.Current.Resources[MainStyles.ListSelectColor];
 
                 Grid gridDiscountItem = new Grid
                 {

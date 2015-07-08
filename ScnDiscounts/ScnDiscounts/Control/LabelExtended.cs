@@ -7,13 +7,16 @@ namespace ScnDiscounts.Control
     {
         public LabelExtended()
         {
-            var tapGesture = new TapGestureRecognizer();
-            tapGesture.Tapped += (sender, e) =>
+            if (Device.OS != TargetPlatform.iOS)
             {
-                OnClick();
-            };
+                var tapGesture = new TapGestureRecognizer();
+                tapGesture.Tapped += (sender, e) =>
+                {
+                    OnClick();
+                };
 
-            GestureRecognizers.Add(tapGesture);
+                GestureRecognizers.Add(tapGesture);
+            }
         }
 
         #region TagProperty

@@ -16,7 +16,6 @@ namespace ScnDiscounts.ViewModels
         protected override void InitProperty()
         {
             ViewPage.Appearing += AnimateListView_Appearing;
-
             int count = (AppData.Discount.DiscountCollection.Count > previewItemsCount) ? previewItemsCount : AppData.Discount.DiscountCollection.Count;
             _discountItems = new ObservableCollection<DiscountData>(AppData.Discount.DiscountCollection.Take(count));
         }
@@ -40,6 +39,7 @@ namespace ScnDiscounts.ViewModels
                 {
                     int count = AppData.Discount.DiscountCollection.Count - skipCount;
                     AppData.Discount.DiscountCollection.Skip(skipCount).Take(count).ToList().ForEach(DiscountItems.Add);
+                    OnPropertyChanged("DiscountItemsCount");
                 }
 
                 isFullInit = true;
@@ -63,9 +63,15 @@ namespace ScnDiscounts.ViewModels
         }
         #endregion
 
+        public int DiscountItemsCount
+        {
+            get { return DiscountItems.Count; }
+        }
+
         public async void OnDiscountItemTapped(object sender, ItemTappedEventArgs e)
         {
             DiscountData discountData = e.Item as DiscountData;
+            ((ListView)sender).SelectedItem = null;
 
             ViewPage.Appearing += AnimateListView_Appearing;
             if (Device.OS != TargetPlatform.Android)
@@ -80,8 +86,6 @@ namespace ScnDiscounts.ViewModels
             {
                 IsLoadActivity = false;
             }
-
-            ((ListView)sender).SelectedItem = null;
 
             await ViewPage.Navigation.PushAsync(new DiscountDetailPage(discountData), true);
         }

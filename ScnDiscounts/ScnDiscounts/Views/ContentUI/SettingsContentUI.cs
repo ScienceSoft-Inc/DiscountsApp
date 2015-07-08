@@ -18,7 +18,7 @@ namespace ScnDiscounts.Views.ContentUI
 
         public string Icon
         {
-            get { return Device.OnPlatform("Icon/Settings.png", "ic_settings.png", "Assets/Icon/Settings.png"); }
+            get { return Device.OnPlatform("Icon/settings.png", "ic_settings.png", "Assets/Icon/settings.png"); }
         }
 
         private PropertyLang _txtLanguageSel;

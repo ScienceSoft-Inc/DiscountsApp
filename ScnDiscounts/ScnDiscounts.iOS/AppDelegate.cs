@@ -4,6 +4,7 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using Google.Maps;
 
 namespace ScnDiscounts.iOS
 {
@@ -20,8 +21,12 @@ namespace ScnDiscounts.iOS
         //
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
+        const string MapsApiKey = "AIzaSyDQz3OULXJj7Tm3XijuEVE8WtJLPPYL7Nc";
+
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            MapServices.ProvideAPIKey(MapsApiKey);
+
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new ScnDiscounts.App());
 

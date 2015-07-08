@@ -8,22 +8,50 @@ namespace ScnDiscounts.Control
         public ImageButton()
         {
             BackgroundColor = Color.Red;
-            image = new Image();
             
+            image = new Image();
             SetLayoutFlags(image, AbsoluteLayoutFlags.PositionProportional);
             SetLayoutBounds(image,
                 new Rectangle(0.5, 0.5, image.Width, image.Height)
             );
             Children.Add(image);
 
-            var tapGesture = new TapGestureRecognizer();
-            tapGesture.Tapped += (sender, e) =>
-            {
-                OnClick();
-            };
+            var boxGesture = new BoxViewGesture(this);
+            SetLayoutFlags(boxGesture, AbsoluteLayoutFlags.PositionProportional);
+            SetLayoutBounds(boxGesture,
+                new Rectangle(0.5, 0.5, this.Width, this.Height)
+            );
 
-            GestureRecognizers.Add(tapGesture);
-            image.GestureRecognizers.Add(tapGesture);
+            boxGesture.Tap += (s, e) => { OnClick(); };
+            boxGesture.TapBegan += boxGesture_PressBegan;
+            boxGesture.TapEnded += boxGesture_PressEnded;
+            boxGesture.TapMoved += boxGesture_PressEnded;
+
+            boxGesture.LongTapEnded += boxGesture_PressEnded;
+            boxGesture.LongTapMoved += boxGesture_PressEnded;
+
+            Children.Add(boxGesture);
+
+            if (Device.OS != TargetPlatform.iOS)
+            {
+                var tapGesture = new TapGestureRecognizer();
+                tapGesture.Tapped += (sender, e) =>
+                {
+                    OnClick();
+                };
+                GestureRecognizers.Add(tapGesture);
+                image.GestureRecognizers.Add(tapGesture);
+            }
+        }
+
+        async void boxGesture_PressBegan(object sender, EventArgs e)
+        {
+            await this.ScaleTo(0.9, 100, Easing.CubicOut);
+        }
+
+        async void boxGesture_PressEnded(object sender, EventArgs e)
+        {
+            await this.ScaleTo(1, 100, Easing.CubicOut);
         }
 
         private Image image;

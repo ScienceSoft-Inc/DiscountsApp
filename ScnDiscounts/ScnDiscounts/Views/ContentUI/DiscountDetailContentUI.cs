@@ -19,12 +19,12 @@ namespace ScnDiscounts.Views.ContentUI
 
         public string IconPhone
         {
-            get { return Device.OnPlatform("Icon/empty.png", "ic_menu_phone.png", "Assets/Icon/phone.png"); }
+            get { return Device.OnPlatform("Icon/phone.png", "ic_menu_phone.png", "Assets/Icon/phone.png"); }
         }
 
         public string ImgPercentLabel
         {
-            get { return Device.OnPlatform("Icon/empty.png", "discount_label.png", "Assets/Image/discount_label.png"); }
+            get { return Device.OnPlatform("Image/discount_label.png", "discount_label.png", "Assets/Image/discount_label.png"); }
         }
     }
 }

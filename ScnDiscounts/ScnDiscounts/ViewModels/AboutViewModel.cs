@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ScnDiscounts.Control;
 using ScnDiscounts.Control.Pages;
 using ScnDiscounts.DependencyInterface;
@@ -30,7 +31,11 @@ namespace ScnDiscounts.ViewModels
         {
             LabelExtended label = sender as LabelExtended;
             string phoneNumber = label.Text.ToLower();
-            phoneNumber = phoneNumber.Replace(":", "").Replace("phone", "").Replace("-", "").Trim();
+
+            int index = phoneNumber.IndexOfAny("0123456789".ToCharArray());
+            if (index > 0)
+                phoneNumber = phoneNumber.Remove(0, index - 1);
+            phoneNumber = phoneNumber.Replace("-", "").Replace(" ", "").Replace("(", "").Replace(")", "");
             if (!String.IsNullOrWhiteSpace(phoneNumber))
                 DependencyService.Get<IPhoneService>().DialNumber(phoneNumber, "ScienceSoft");
         }

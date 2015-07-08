@@ -18,7 +18,7 @@ namespace ScnDiscounts.Droid.Renderers
 
             var cell = base.GetCellCore(item, convertView, parent, context);
             if (cell != null)
-                cell.Selected = extendedCell.HighlightSelection;
+                cell.Selected = extendedCell.IsHighlightSelection;
             
             return cell;
         }

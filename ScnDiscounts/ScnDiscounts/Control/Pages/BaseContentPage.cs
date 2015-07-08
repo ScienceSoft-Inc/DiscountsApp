@@ -96,7 +96,7 @@ namespace ScnDiscounts.Control.Pages
 
             var activityIndicator = new ActivityIndicator
             {
-                Color = Device.OnPlatform(Color.Black, Color.Default, Color.Default),
+                Color = Device.OnPlatform(Color.White, Color.Default, Color.Default),
                 VerticalOptions = LayoutOptions.EndAndExpand
             };
             activityIndicator.SetBinding(ActivityIndicator.IsRunningProperty, "IsLoadActivity");
@@ -105,7 +105,7 @@ namespace ScnDiscounts.Control.Pages
 
             var activityText = new Label
             {
-                TextColor = Device.OnPlatform(Color.Black, Color.Default, Color.Default),
+                TextColor = Device.OnPlatform(Color.White, Color.Default, Color.Default),
                 Text = contentUI.TxtLoading,
                 VerticalOptions = LayoutOptions.StartAndExpand,
                 HorizontalOptions = LayoutOptions.CenterAndExpand
