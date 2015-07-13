@@ -31,8 +31,6 @@ namespace ScnDiscounts.Views
             };
             appBar.BtnBack.BackgroundColor = Color.Transparent;
             appBar.BtnBack.Source = contentUI.IconBack;
-            appBar.BtnBack.WidthRequest = appBar.HeightBar;
-            appBar.BtnBack.HeightRequest = appBar.HeightBar;
 
             ContentLayout.Children.Add(appBar);
 
@@ -138,7 +136,7 @@ namespace ScnDiscounts.Views
                 IsUnderline = true
             };
 
-            if (Device.OS == TargetPlatform.iOS)
+            if (Device.OS != TargetPlatform.WinPhone)
             {
                 var viewGesture = new ViewGesture
                 {
@@ -199,7 +197,7 @@ namespace ScnDiscounts.Views
                 TextColor = (Color)App.Current.Resources[MainStyles.LightTextColor]
             };
             
-            if (Device.OS == TargetPlatform.iOS)
+            if (Device.OS != TargetPlatform.WinPhone)
             {
                 var viewGesture = new ViewGesture
                 {
@@ -231,7 +229,7 @@ namespace ScnDiscounts.Views
                 IsUnderline = true
             };
 
-            if (Device.OS == TargetPlatform.iOS)
+            if (Device.OS != TargetPlatform.WinPhone)
             {
                 var viewGesture = new ViewGesture
                 {

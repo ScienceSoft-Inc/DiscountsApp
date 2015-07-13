@@ -16,6 +16,7 @@ Global
 		ScnDiscounts\ScnDiscounts\ScnDiscounts.projitems*{a85cde3b-2ae8-434d-a520-070971005a8e}*SharedItemsImports = 4
 		ScnDiscounts\ScnDiscounts\ScnDiscounts.projitems*{4a47468a-6962-4f56-82a5-071100d9e99b}*SharedItemsImports = 4
 		ScnDiscounts\ScnDiscounts\ScnDiscounts.projitems*{8aecef42-5a7b-42c1-921b-ec910be5876f}*SharedItemsImports = 13
+		ScnDiscounts\ScnDiscounts\ScnDiscounts.projitems*{16cc9346-4e31-498d-9f62-28e05f05eefb}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU

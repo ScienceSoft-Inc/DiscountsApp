@@ -43,8 +43,6 @@ namespace ScnDiscounts.Views
             appBar.BtnBack.BackgroundColor = Color.Black;
             appBar.BtnBack.Opacity = 0.4;
             appBar.BtnBack.Source = contentUI.IconBack;
-            appBar.BtnBack.WidthRequest = appBar.HeightBar;
-            appBar.BtnBack.HeightRequest = appBar.HeightBar;
 
             discountLayout = new StackLayout
             {
@@ -222,7 +220,7 @@ namespace ScnDiscounts.Views
             txtUrlAddress.SetBinding(Label.TextProperty, "UrlAddress");
             
             //TODO
-            if (Device.OS == TargetPlatform.iOS)
+            if (Device.OS != TargetPlatform.WinPhone)
             {
                 var viewGesture = new ViewGesture
                 {
@@ -294,7 +292,7 @@ namespace ScnDiscounts.Views
             BranchListView.ItemTapped += viewModel.OnBranchViewItemTapped;
             BranchListView.SetBinding(ListView.ItemsSourceProperty, "BranchItems");
             BranchListView.ItemTemplate = new DataTemplate(() => new BranchInfoViewTemplate(BranchListView, contentUI, viewModel));
-            BranchListView.SetBinding(ListView.HeightRequestProperty, new Binding("BranchItemsCount", BindingMode.Default, new ListViewHeightConverter(), (Device.OnPlatform(160, 190, 250))));
+            BranchListView.SetBinding(ListView.HeightRequestProperty, new Binding("BranchItemsCount", BindingMode.Default, new ListViewHeightConverter(), (Device.OnPlatform(160, 170, 250))));
             BranchListView.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
 
             var stackBranchView = new StackLayout
@@ -390,7 +388,7 @@ namespace ScnDiscounts.Views
                 };
                 
                 //TODO
-                if (Device.OS == TargetPlatform.iOS)
+                if (Device.OS != TargetPlatform.WinPhone)
                 {
                     var viewGesture = new ViewGesture
                     {
@@ -427,7 +425,7 @@ namespace ScnDiscounts.Views
                 var phone1 = CreateCallButton(parentContentUI, "Phone1");
                 phone1.SetBinding(BorderBox.IsVisibleProperty, "IsPhone1FillIn");
                 phone1.SetBinding(BorderBox.TagProperty, "Phone1");
-                if (Device.OS == TargetPlatform.iOS)
+                if (Device.OS != TargetPlatform.WinPhone)
                 {
                     var viewGesture = new ViewGesture
                     {
@@ -448,7 +446,7 @@ namespace ScnDiscounts.Views
                 var phone2 = CreateCallButton(parentContentUI, "Phone2");
                 phone2.SetBinding(BorderBox.IsVisibleProperty, "IsPhone2FillIn");
                 phone2.SetBinding(BorderBox.TagProperty, "Phone2");
-                if (Device.OS == TargetPlatform.iOS)
+                if (Device.OS != TargetPlatform.WinPhone)
                 {
                     var viewGesture = new ViewGesture
                     {

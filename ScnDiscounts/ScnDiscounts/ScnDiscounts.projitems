@@ -70,8 +70,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\SplashPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\SelectionPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\SettingsPage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Views\StyleControl\EntryStyle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Views\StyleControl\LabelStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Styles\BaseStyles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Styles\LabelStyles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Styles\MainStyles.cs" />

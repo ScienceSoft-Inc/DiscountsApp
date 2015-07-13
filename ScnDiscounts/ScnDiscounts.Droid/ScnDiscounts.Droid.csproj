@@ -199,6 +199,7 @@
     <Compile Include="DependencyInterface\Network\Reachability.cs" />
     <Compile Include="DependencyInterface\PhoneServiceDroid.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Renderers\BoxViewGestureRenderer.cs" />
     <Compile Include="Renderers\MapTileDroid.cs" />
     <Compile Include="Renderers\LabelExtendedRenderer.cs" />
     <Compile Include="Renderers\ViewCellExtendedRenderer.cs" />

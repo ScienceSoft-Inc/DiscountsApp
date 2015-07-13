@@ -35,14 +35,10 @@ namespace ScnDiscounts.Views
             appBar.BtnRight.BackgroundColor = new Color(255, 255, 255, 0.7);
             appBar.BtnRight.Source = contentUI.IconMenuSideBar;
             appBar.BtnRight.Click += viewModel.AppBar_BtnRightClick;
-            appBar.BtnRight.WidthRequest = appBar.HeightBar;
-            appBar.BtnRight.HeightRequest = appBar.HeightBar;
 
             appBar.BtnLeft.BackgroundColor = new Color(255, 255, 255, 0.7);
             appBar.BtnLeft.Source = contentUI.IconLocation;
             appBar.BtnLeft.Click += viewModel.AppBar_BtnLeftClick;
-            appBar.BtnLeft.WidthRequest = appBar.HeightBar;
-            appBar.BtnLeft.HeightRequest = appBar.HeightBar;
 
             RightPanel.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor];
             RightPanel.Opacity = 0.9;
@@ -82,65 +78,36 @@ namespace ScnDiscounts.Views
             };
 
             #region SideBar menu
-            var rightPanelLayout = new RelativeLayout();
+            RightPanel.ClearContext();
+            RightPanel.AddToContext(new BoxView
+                {
+                    BackgroundColor = Color.Transparent,
+                    HeightRequest = 50,
+                });
 
             var imgLogo = new Image
             {
                 Source = ImageSource.FromFile(contentUI.ImgLogo),
                 HeightRequest = Device.OnPlatform(-1, -1, 120),
-
             };
-            rightPanelLayout.Children.Add(imgLogo,
-                Constraint.Constant(0),
-                Constraint.Constant(50),
-                Constraint.RelativeToParent(parent => { return parent.Width; }));
+            RightPanel.AddToContext(imgLogo);
+
+            RightPanel.AddToContext(new BoxView
+                {
+                    BackgroundColor = Color.Transparent,
+                    HeightRequest = 50,
+                });
 
             var menuView = new ListViewExtended();
-            
             menuView.SetBinding(ListView.ItemsSourceProperty, "MenuItemList");
             menuView.RowHeight = Device.OnPlatform(40, 40, 60);
             menuView.SeparatorVisibility = SeparatorVisibility.None;
             menuView.ItemTemplate = new DataTemplate(() => new MenuViewTemplate());
             menuView.ItemSelected += viewModel.OnMenuViewItemTapped;
             menuView.IsScrollable = false;
+            RightPanel.AddToContext(menuView, false);
 
-            rightPanelLayout.Children.Add(menuView,
-                Constraint.Constant(0),
-                Constraint.RelativeToView(imgLogo, (parent, sibling) =>
-                {
-                    return sibling.Y + sibling.Height + 50;
-                }));
-
-            #region Gesture block
-            if (Device.OS == TargetPlatform.iOS)
-            {
-                var boxGestureTop = new BoxViewGesture(null);
-                boxGestureTop.Tap += (s, e) => { RightPanel.OnClick(); };
-                boxGestureTop.Swipe += (s, e) => { RightPanel.OnClick(); };
-                rightPanelLayout.Children.Add(boxGestureTop,
-                    Constraint.Constant(0),
-                    Constraint.Constant(0),
-                    Constraint.RelativeToParent(parent => { return parent.Width; }),
-                    Constraint.RelativeToView(menuView, (parent, sibling) =>
-                    {
-                        return sibling.Y;
-                    }));
-
-                var boxGestureBottom = new BoxViewGesture(null);
-                boxGestureBottom.Tap += (s, e) => { RightPanel.OnClick(); };
-                boxGestureBottom.Swipe += (s, e) => { RightPanel.OnClick(); };
-                rightPanelLayout.Children.Add(boxGestureBottom,
-                    Constraint.Constant(0),
-                    Constraint.RelativeToView(menuView, (parent, sibling) =>
-                    {
-                        return sibling.Y + sibling.Height;
-                    }),
-                    Constraint.RelativeToParent(parent => { return parent.Width; }),
-                    Constraint.RelativeToParent(parent => { return parent.Height; }));
-            }
-            #endregion
-
-            RightPanel.Context = rightPanelLayout;
+            RightPanel.CloseContext();
             #endregion
         }
 

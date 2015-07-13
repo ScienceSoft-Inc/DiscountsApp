@@ -21,7 +21,12 @@ namespace ScnDiscounts.Models.WebService.MongoDB
 
         async private Task<string> Get(string request)
         {
+            #if DEBUG
+            var client = new HttpClient { BaseAddress = new Uri(Config.ServerAddress)};
+            #else
             var client = new HttpClient { BaseAddress = new Uri(Config.ServerAddress), Timeout = new TimeSpan(0, 0, 10)};
+            #endif
+
             var response = await client.GetAsync(request);
 
             return response.Content.ReadAsStringAsync().Result;

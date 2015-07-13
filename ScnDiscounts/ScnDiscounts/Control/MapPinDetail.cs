@@ -1,4 +1,5 @@
 ﻿using ScnDiscounts.Views.Styles;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace ScnDiscounts.Control
@@ -17,7 +18,7 @@ namespace ScnDiscounts.Control
             SetLayoutBounds(boxBack, new Rectangle(0f, 0f, 1f, 1f));
             Children.Add(boxBack);
 
-            if (Device.OS == TargetPlatform.iOS)
+            if (Device.OS != TargetPlatform.WinPhone)
             {
                 boxBack.Tap += (s, e) => { Hide(); };
                 boxBack.Swipe += (s, e) => { Hide(); };
@@ -286,17 +287,21 @@ namespace ScnDiscounts.Control
             }
         }
 
-
-        async public void Show()
+        static object locker = new object();
+        async public Task Show()
         {
             IsVisible = true;
+
+            ViewExtensions.CancelAnimations(borderDetail);
             await borderDetail.ScaleTo(1.1, 200, Easing.CubicIn);
             await borderDetail.ScaleTo(1, 50, Easing.CubicIn);
         }
 
-        async public void Hide()
+        async public Task Hide()
         {
+            ViewExtensions.CancelAnimations(borderDetail);
             await borderDetail.ScaleTo(0, 100, Easing.CubicOut);
+
             IsVisible = false;
         }
 

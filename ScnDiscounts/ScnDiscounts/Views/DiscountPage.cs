@@ -35,14 +35,12 @@ namespace ScnDiscounts.Views
             };
             appBar.BtnBack.BackgroundColor = Color.Transparent;
             appBar.BtnBack.Source = contentUI.IconBack;
-            appBar.BtnBack.WidthRequest = appBar.HeightBar;
-            appBar.BtnBack.HeightRequest = appBar.HeightBar;
 
             ContentLayout.Children.Add(appBar);
 
             DiscountListView = new ListViewAnimation();
             DiscountListView.HasUnevenRows = true;
-            DiscountListView.SetBinding(ListView.HeightRequestProperty, new Binding("DiscountItemsCount", BindingMode.Default, new ListViewHeightConverter(), (Device.OnPlatform(109, 108, 136))));
+            DiscountListView.SetBinding(ListView.HeightRequestProperty, new Binding("DiscountItemsCount", BindingMode.Default, new ListViewHeightConverter(), (Device.OnPlatform(109, 109, 136))));
             DiscountListView.SeparatorVisibility = SeparatorVisibility.None;
             DiscountListView.SetBinding(ListView.ItemsSourceProperty, "DiscountItems");
             DiscountListView.ItemTemplate = new DataTemplate(() => new DiscountTemplate(DiscountListView,  Device.OnPlatform(108, 108, 136)));

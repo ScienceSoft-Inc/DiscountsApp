@@ -7,7 +7,7 @@ namespace ScnDiscounts.Control
     {
         public LabelExtended()
         {
-            if (Device.OS != TargetPlatform.iOS)
+            if (Device.OS == TargetPlatform.WinPhone)
             {
                 var tapGesture = new TapGestureRecognizer();
                 tapGesture.Tapped += (sender, e) =>

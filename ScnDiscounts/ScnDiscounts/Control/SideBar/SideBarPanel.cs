@@ -11,7 +11,12 @@ namespace ScnDiscounts.Control.SideBar
             VerticalOptions = LayoutOptions.FillAndExpand;
             HorizontalOptions = LayoutOptions.EndAndExpand;
 
-            if (Device.OS != TargetPlatform.iOS)
+            panelLayout = new RelativeLayout();
+            SetLayoutFlags(panelLayout, AbsoluteLayoutFlags.All);
+            SetLayoutBounds(panelLayout, new Rectangle(0f, 0f, 1f, 1f));
+            Children.Add(panelLayout);
+
+            if (Device.OS == TargetPlatform.WinPhone)
             {
                 var tapSideBar = new TapGestureRecognizer();
                 tapSideBar.Tapped += (sender, e) => { OnClick(); };
@@ -25,18 +30,71 @@ namespace ScnDiscounts.Control.SideBar
             if (Click != null) Click(this, EventArgs.Empty);
         }
 
-        private View context;
-        public View Context
-        {
-            get { return context; }
-            set
-            {
-                context = value;
-                Children.Clear();
+        private RelativeLayout panelLayout;
+        private View previousView = null;
 
-                SetLayoutFlags(context, AbsoluteLayoutFlags.All);
-                SetLayoutBounds(context, new Rectangle(0f, 0f, 1f, 1f));
-                Children.Add(context);
+        public void ClearContext()
+        {
+            previousView = null;
+            panelLayout.Children.Clear();
+        }
+
+        public void AddToContext(View view, bool inputTransparent = true)
+        {
+            if (previousView != null)
+            {
+                panelLayout.Children.Add(view,
+                    Constraint.Constant(0),
+                    Constraint.RelativeToView(previousView, (parent, sibling) =>
+                    {
+                        return sibling.Y + sibling.Height;
+                    }),
+                    Constraint.RelativeToParent(parent => { return parent.Width; }));
+            }
+            else
+            {
+                panelLayout.Children.Add(view,
+                    Constraint.Constant(0),
+                    Constraint.Constant(0),
+                    Constraint.RelativeToParent(parent => { return parent.Width; }));
+            }
+
+            previousView = view;
+
+            if (inputTransparent)
+            {
+                var boxGesture = new BoxViewGesture(null);
+                boxGesture.Tap += (s, e) => { OnClick(); };
+                boxGesture.Swipe += (s, e) => { OnClick(); };
+                panelLayout.Children.Add(boxGesture,
+                    Constraint.Constant(0),
+                    Constraint.RelativeToView(view, (parent, sibling) =>
+                    {
+                        return sibling.Y;
+                    }),
+                    Constraint.RelativeToParent(parent => { return parent.Width; }),
+                    Constraint.RelativeToView(view, (parent, sibling) =>
+                    {
+                        return sibling.Y + sibling.Height;
+                    }));
+            }
+        }
+
+        public void CloseContext()
+        {
+            if (previousView != null)
+            {
+                var boxGesture = new BoxViewGesture(null);
+                boxGesture.Tap += (s, e) => { OnClick(); };
+                boxGesture.Swipe += (s, e) => { OnClick(); };
+                panelLayout.Children.Add(boxGesture,
+                Constraint.Constant(0),
+                Constraint.RelativeToView(previousView, (parent, sibling) =>
+                {
+                    return sibling.Y + sibling.Height;
+                }),
+                Constraint.RelativeToParent(parent => { return parent.Width; }),
+                Constraint.RelativeToParent(parent => { return parent.Height; }));
             }
         }
     }

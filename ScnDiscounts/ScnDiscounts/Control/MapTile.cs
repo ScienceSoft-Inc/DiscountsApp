@@ -39,6 +39,7 @@ namespace ScnDiscounts.Control
         {
             if (Device.OS != TargetPlatform.iOS)
                 base.MoveToRegion(mapSpan);
+
             Console.WriteLine(mapSpan.Radius.Kilometers.ToString());
             OnRegionMoved(new MapRegionMoveEventArgs(mapSpan.Center.Latitude, mapSpan.Center.Longitude, (mapSpan.Radius.Kilometers == 2) ? 13 : 11));
         }
@@ -102,7 +103,7 @@ namespace ScnDiscounts.Control
             }
         }
 
-        public void ShowPinDetailInfo(string id)
+        async public void ShowPinDetailInfo(string id)
         {
             MapPinData cutPinData = null;
             foreach (var item in PinList)
@@ -136,9 +137,8 @@ namespace ScnDiscounts.Control
             mapPinDetail.CategoryName = cutPinData.CaregoryName;
             mapPinDetail.Title = cutPinData.Name + ".";
             mapPinDetail.DistanceValue = cutPinData.Distance;
-            mapPinDetail.Show();
+            await mapPinDetail.Show();
             
-
             var tapPinDetail = new TapGestureRecognizer();
             tapPinDetail.Tapped += (sender, e) =>
             {
@@ -148,10 +148,10 @@ namespace ScnDiscounts.Control
             mapPinDetail.TapPinDetail = tapPinDetail;
         }
 
-        public void CloseDetailInfo()
+        async public void CloseDetailInfo()
         {
             _isShowDetailInfo = false;
-            mapPinDetail.Hide();
+            await mapPinDetail.Hide();
         }
 
         public void LocationUpdate()

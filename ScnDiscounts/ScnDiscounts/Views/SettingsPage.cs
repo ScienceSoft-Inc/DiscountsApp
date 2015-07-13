@@ -32,8 +32,6 @@ namespace ScnDiscounts.Views
             };
             appBar.BtnBack.BackgroundColor = Color.Transparent;
             appBar.BtnBack.Source = contentUI.IconBack;
-            appBar.BtnBack.WidthRequest = appBar.HeightBar;
-            appBar.BtnBack.HeightRequest = appBar.HeightBar;
 
             ContentLayout.Children.Add(appBar);
 
@@ -52,7 +50,7 @@ namespace ScnDiscounts.Views
             };
             txtLangTitle.SetBinding(Label.TextProperty, "CurrLanguageTitle");
 
-            if (Device.OS == TargetPlatform.iOS)
+            if (Device.OS != TargetPlatform.WinPhone)
             {
                 var viewGesture = new ViewGesture
                 {
@@ -70,7 +68,7 @@ namespace ScnDiscounts.Views
                 Style = (Style)App.Current.Resources[LabelStyles.SettingHintStyle]
             };
             txtLangValue.SetBinding(Label.TextProperty, "CurrLanguageName");
-            if (Device.OS == TargetPlatform.iOS)
+            if (Device.OS != TargetPlatform.WinPhone)
             {
                 var viewGesture = new ViewGesture
                 {
@@ -117,5 +115,50 @@ namespace ScnDiscounts.Views
 
             ContentLayout.Children.Add(stackSettings);
         }
+
+       /* private class SettingParam : AbsoluteLayout
+        {
+            private SettingParam ()
+            {
+                image = new Image();
+                SetLayoutFlags(image, AbsoluteLayoutFlags.PositionProportional);
+                SetLayoutBounds(image,
+                    new Rectangle(0.5, 0.5, image.Width, image.Height)
+                );
+                Children.Add(image);
+
+                var boxGesture = new BoxViewGesture(this);
+                SetLayoutFlags(boxGesture, AbsoluteLayoutFlags.PositionProportional);
+                SetLayoutBounds(boxGesture,
+                    new Rectangle(0.5, 0.5, this.Width, this.Height)
+                );
+
+                boxGesture.Tap += (s, e) => { OnClick(); };
+                boxGesture.TapBegan += boxGesture_PressBegan;
+                boxGesture.TapEnded += boxGesture_PressEnded;
+                boxGesture.TapMoved += boxGesture_PressEnded;
+
+                boxGesture.LongTapEnded += boxGesture_PressEnded;
+                boxGesture.LongTapMoved += boxGesture_PressEnded;
+
+                boxGesture.SwipeEnded += boxGesture_PressEnded;
+
+                Children.Add(boxGesture);
+
+                if (Device.OS == TargetPlatform.WinPhone)
+                {
+                    var tapGesture = new TapGestureRecognizer();
+                    tapGesture.Tapped += (sender, e) =>
+                    {
+                        OnClick();
+                    };
+                    GestureRecognizers.Add(tapGesture);
+                    image.GestureRecognizers.Add(tapGesture);
+                }
+
+            }
+
+        }*/
+
     }
 }

@@ -5,6 +5,13 @@ namespace ScnDiscounts.Control
 {
     public class CustomAppBar : AbsoluteLayout 
     {
+        /* Bar template 
+         * 
+         * [BtnBack] [BtnLeftLeft] [BtnLeft] [TITLE] [BtnRight] [BtnRightRight]
+         * 
+        */
+
+
         [Flags]
         public enum BarBtnEnum
         {
@@ -77,12 +84,13 @@ namespace ScnDiscounts.Control
             var stackLeftBtn = new StackLayout
             {
                 Padding = new Thickness (0),
+                Spacing = 0,
                 Orientation = StackOrientation.Horizontal,
                 HorizontalOptions = LayoutOptions.Start
             };
             SetLayoutFlags(stackLeftBtn, AbsoluteLayoutFlags.PositionProportional);
             SetLayoutBounds(stackLeftBtn,
-                new Rectangle(0, 0.5, HeightBar, AbsoluteLayout.AutoSize));
+                new Rectangle(0, 0.5, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
             appBar.Children.Add(stackLeftBtn);
             #endregion
 
@@ -90,35 +98,60 @@ namespace ScnDiscounts.Control
             var stackRightBtn = new StackLayout
             {
                 Padding = new Thickness(0),
+                Spacing = 0,
                 Orientation = StackOrientation.Horizontal,
                 HorizontalOptions = LayoutOptions.End
             };
+
             AbsoluteLayout.SetLayoutFlags(stackRightBtn, AbsoluteLayoutFlags.PositionProportional);
             AbsoluteLayout.SetLayoutBounds(stackRightBtn,
-                new Rectangle(1, 0.5, HeightBar, AbsoluteLayout.AutoSize));
+                new Rectangle(1, 0.5, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
             appBar.Children.Add(stackRightBtn);
             #endregion
 
-            #region Back button create
+            #region Back button
             BtnBack = new BackImageButton(page);
+            BtnBack.WidthRequest = HeightBar;
+            BtnBack.HeightRequest = HeightBar;
 
             if ((barBtn & BarBtnEnum.bbBack) != 0)
                 stackLeftBtn.Children.Add(BtnBack);
-
             #endregion
 
-            #region Right button create
-            BtnRight = new ImageButton();
+            #region LeftLeft button
+            BtnLeftLeft = new ImageButton();
+            BtnLeftLeft.WidthRequest = HeightBar;
+            BtnLeftLeft.HeightRequest = HeightBar;
 
-            if ((barBtn & BarBtnEnum.bbRight) != 0)
+            if ((barBtn & BarBtnEnum.bbLeftLeft) != 0)
+                stackLeftBtn.Children.Add(BtnLeftLeft);
+            #endregion
+
+            #region Left button
+            BtnLeft = new ImageButton();
+            BtnLeft.WidthRequest = HeightBar;
+            BtnLeft.HeightRequest = HeightBar;
+
+            if (((barBtn & BarBtnEnum.bbLeft) != 0) || ((barBtn & BarBtnEnum.bbLeftLeft) != 0))
+                stackLeftBtn.Children.Add(BtnLeft);
+            #endregion
+
+            #region Right button
+            BtnRight = new ImageButton();
+            BtnRight.WidthRequest = HeightBar;
+            BtnRight.HeightRequest = HeightBar;
+
+            if (((barBtn & BarBtnEnum.bbRight) != 0) || ((barBtn & BarBtnEnum.bbRightRight) != 0))
                 stackRightBtn.Children.Add(BtnRight);
             #endregion
 
-            #region Left button create
-            BtnLeft = new ImageButton();
+            #region RightRight button
+            BtnRightRight = new ImageButton();
+            BtnRightRight.WidthRequest = HeightBar;
+            BtnRightRight.HeightRequest = HeightBar;
 
-            if ((barBtn & BarBtnEnum.bbLeft) != 0)
-                stackLeftBtn.Children.Add(BtnLeft);
+            if ((barBtn & BarBtnEnum.bbRightRight) != 0)
+                stackRightBtn.Children.Add(BtnRightRight);
             #endregion
 
             AbsoluteLayout.SetLayoutFlags(appBar, AbsoluteLayoutFlags.All);
@@ -175,7 +208,9 @@ namespace ScnDiscounts.Control
 
         public ImageButton BtnBack { get; private set; }
         public ImageButton BtnRight { get;  private set; }
-        public ImageButton BtnLeft { get;  private set; }
+        public ImageButton BtnRightRight { get; private set; }
+        public ImageButton BtnLeft { get; private set; }
+        public ImageButton BtnLeftLeft { get; private set; }
     
         private class BackImageButton : ImageButton
         {
@@ -187,8 +222,9 @@ namespace ScnDiscounts.Control
             async public override void OnClick()
             {
                 base.OnClick();
-
-                await curPage.Navigation.PopAsync(true);
+                
+                if (curPage.Navigation.NavigationStack.Count > 0)
+                    await curPage.Navigation.PopAsync(true);
             } 
         }
     }

@@ -30,9 +30,11 @@ namespace ScnDiscounts.Control
             boxGesture.LongTapEnded += boxGesture_PressEnded;
             boxGesture.LongTapMoved += boxGesture_PressEnded;
 
+            boxGesture.SwipeEnded += boxGesture_PressEnded;
+
             Children.Add(boxGesture);
 
-            if (Device.OS != TargetPlatform.iOS)
+            if (Device.OS == TargetPlatform.WinPhone)
             {
                 var tapGesture = new TapGestureRecognizer();
                 tapGesture.Tapped += (sender, e) =>
