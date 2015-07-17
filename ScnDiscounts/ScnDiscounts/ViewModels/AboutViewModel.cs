@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using ScnDiscounts.Control;
-using ScnDiscounts.Control.Pages;
 using ScnDiscounts.DependencyInterface;
 using ScnDiscounts.Views.ContentUI;
 using Xamarin.Forms;
+using ScnPage.Plugin.Forms;
 
 namespace ScnDiscounts.ViewModels
 {

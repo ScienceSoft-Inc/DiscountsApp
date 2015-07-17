@@ -1,4 +1,5 @@
 ﻿using ScnDiscounts.Helpers;
+using ScnDiscounts.Models;
 using Xamarin.Forms;
 
 namespace ScnDiscounts.Views.ContentUI
@@ -7,14 +8,14 @@ namespace ScnDiscounts.Views.ContentUI
     {
         public DiscountDetailContentUI()
         {
-            _title = new PropertyLang("Information", "Информация", "інфармацыя");
-            _txtShowOnMap = new PropertyLang("Show on map", "Показать на карте", "Паказаць на мапе");
+            title = new LanguageStrings("Information", "Информация", "інфармацыя");
+            _txtShowOnMap = new LanguageStrings("Show on map", "Показать на карте", "Паказаць на мапе");
         }
 
-        private PropertyLang _txtShowOnMap;
+        private LanguageStrings _txtShowOnMap;
         public string TxtShowOnMap
         {
-            get { return _txtShowOnMap.ActualValue(); }
+            get { return _txtShowOnMap.Current; }
         }
 
         public string IconPhone

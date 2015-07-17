@@ -1,5 +1,6 @@
-﻿using ScnDiscounts.Control.Pages;
-using ScnDiscounts.Helpers;
+﻿using ScnDiscounts.Helpers;
+using ScnDiscounts.Models;
+using ScnPage.Plugin.Forms;
 using Xamarin.Forms;
 
 namespace ScnDiscounts.Views.ContentUI
@@ -8,23 +9,26 @@ namespace ScnDiscounts.Views.ContentUI
     {
         public RootContentUI()
         {
-            txtCancel = new PropertyLang("Cancel", "Отменить", "Адмяніць");
-            txtOk = new PropertyLang("OK", "ОК", "Добра");
+            txtLoading = new LanguageStrings("loading...", "загрузка...", "пампаванне...");
+            txtAwait = new LanguageStrings("wait...", "подождите...", "чакайце...");
 
-            txtDistanceScaleCaption = new PropertyLang("km", "км", "км");
-            txtDiscount = new PropertyLang("Discount", "Скидка", "Зніжка");
+            txtCancel = new LanguageStrings("Cancel", "Отменить", "Адмяніць");
+            txtOk = new LanguageStrings("OK", "ОК", "Добра");
+
+            txtDistanceScaleCaption = new LanguageStrings("km", "км", "км");
+            txtDiscount = new LanguageStrings("Discount", "Скидка", "Зніжка");
         }
 
-        private PropertyLang txtCancel;
+        private LanguageStrings txtCancel;
         public string TxtCancel
         {
-            get { return txtCancel.ActualValue(); }
+            get { return txtCancel.Current; }
         }
 
-        private PropertyLang txtOk;
+        private LanguageStrings txtOk;
         public string TxtOk
         {
-            get { return txtOk.ActualValue(); }
+            get { return txtOk.Current; }
         }
         
         public string IconBack
@@ -42,16 +46,16 @@ namespace ScnDiscounts.Views.ContentUI
             get { return Device.OnPlatform("Icon/detail.png", "ic_detail.png", "Assets/Icon/detail.png"); }
         }
 
-        private PropertyLang txtDistanceScaleCaption;
+        private LanguageStrings txtDistanceScaleCaption;
         public string TxtDistanceScaleValue
         {
-            get { return txtDistanceScaleCaption.ActualValue(); }
+            get { return txtDistanceScaleCaption.Current; }
         }
 
-        private PropertyLang txtDiscount;
+        private LanguageStrings txtDiscount;
         public string TxtDiscount
         {
-            get { return txtDiscount.ActualValue(); }
+            get { return txtDiscount.Current; }
         }
     }
 }

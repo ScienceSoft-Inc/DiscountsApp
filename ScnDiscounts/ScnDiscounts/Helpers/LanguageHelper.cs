@@ -41,9 +41,9 @@ namespace ScnDiscounts.Helpers
         }
     }
     
-    public struct PropertyLang
+    /*public struct LanguageStrings
     {
-        public PropertyLang(string enUs = "", string ruRu = "", string beBe = "")
+        public LanguageStrings(string enUs = "", string ruRu = "", string beBe = "")
         {
             enUsValue = enUs;
             ruRuValue = ruRu;
@@ -54,7 +54,7 @@ namespace ScnDiscounts.Helpers
         private string ruRuValue;
         private string beBeValue;
 
-        public string ActualValue()
+        public string Current
         {
             string stringDescription = enUsValue;
 
@@ -75,6 +75,6 @@ namespace ScnDiscounts.Helpers
 
             return stringDescription;
         }
-    }
+    }*/
 
 }

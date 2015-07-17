@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using ScnDiscounts.Control;
-using ScnDiscounts.Control.Pages;
 using ScnDiscounts.Helpers;
 using ScnDiscounts.Models;
 using ScnDiscounts.Models.Data;
@@ -10,6 +9,7 @@ using ScnDiscounts.Views.ContentUI;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using System.Threading.Tasks;
+using ScnPage.Plugin.Forms;
 
 namespace ScnDiscounts.ViewModels
 {

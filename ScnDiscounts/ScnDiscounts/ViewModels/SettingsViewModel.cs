@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using ScnDiscounts.Control.Pages;
 using ScnDiscounts.Helpers;
 using ScnDiscounts.Models;
 using ScnDiscounts.Views;
 using ScnDiscounts.Views.ContentUI;
 using Xamarin.Forms;
 using ScnDiscounts.Control;
+using ScnPage.Plugin.Forms;
+using ScnDiscounts.Helpers;
 
 namespace ScnDiscounts.ViewModels
 {

@@ -1,9 +1,10 @@
 ﻿using ScnDiscounts.Control;
-using ScnDiscounts.Control.Pages;
 using ScnDiscounts.ValueConverter;
 using ScnDiscounts.ViewModels;
 using ScnDiscounts.Views.ContentUI;
 using ScnDiscounts.Views.Styles;
+using ScnPage.Plugin.Forms;
+using ScnTitleBar.Forms;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -29,7 +30,7 @@ namespace ScnDiscounts.Views
         {
             BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
 
-            var appBar = new CustomAppBar(this, CustomAppBar.BarBtnEnum.bbBack)
+            var appBar = new TitleBar(this, TitleBar.BarBtnEnum.bbBack)
             {
                 BarColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor]
             };

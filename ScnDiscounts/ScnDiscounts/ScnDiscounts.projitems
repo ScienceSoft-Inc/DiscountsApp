@@ -12,18 +12,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\BorderBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\BoxViewGesture.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Control\CustomAppBar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\ImageButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\ListViewExtended.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\ListViewAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\MapPinDetail.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\MapTile.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Control\Pages\BaseContentPage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Control\Pages\BaseContentUI.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Control\Pages\BaseViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Control\SideBar\SideBarMenu.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Control\SideBar\SideBarPage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Control\SideBar\SideBarPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\LabelExtended.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\ViewCellExtended.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\ViewGesture.cs" />
@@ -42,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Data\BranchData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Data\DiscountData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Data\MapPinData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\LanguageStrings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\NotifyPropertyChanged.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\WebService\Config.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\WebService\IClient.cs" />

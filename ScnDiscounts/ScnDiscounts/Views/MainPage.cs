@@ -1,9 +1,10 @@
 ﻿using ScnDiscounts.Control;
-using ScnDiscounts.Control.SideBar;
 using ScnDiscounts.Models;
 using ScnDiscounts.ViewModels;
 using ScnDiscounts.Views.ContentUI;
 using ScnDiscounts.Views.Styles;
+using ScnSideMenu.Forms;
+using ScnTitleBar.Forms;
 using Xamarin.Forms;
 
 namespace ScnDiscounts.Views
@@ -27,7 +28,7 @@ namespace ScnDiscounts.Views
         {
             BackgroundColor = (Color)App.Current.Resources[MainStyles.ListBackgroundColor];
 
-            var appBar = new CustomAppBar(this, CustomAppBar.BarBtnEnum.bbRightLeft, CustomAppBar.BarAlignEnum.baBottom)
+            var appBar = new TitleBar(this, TitleBar.BarBtnEnum.bbLeftRight, TitleBar.BarAlignEnum.baBottom)
             {
                 BarColor = Color.Transparent,
                 HorizontalOptions = LayoutOptions.FillAndExpand  
@@ -107,7 +108,6 @@ namespace ScnDiscounts.Views
             menuView.IsScrollable = false;
             RightPanel.AddToContext(menuView, false);
 
-            RightPanel.CloseContext();
             #endregion
         }
 

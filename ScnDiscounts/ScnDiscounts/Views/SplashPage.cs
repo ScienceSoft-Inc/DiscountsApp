@@ -1,7 +1,7 @@
-﻿using ScnDiscounts.Control.Pages;
-using ScnDiscounts.ViewModels;
+﻿using ScnDiscounts.ViewModels;
 using ScnDiscounts.Views.ContentUI;
 using ScnDiscounts.Views.Styles;
+using ScnPage.Plugin.Forms;
 using Xamarin.Forms;
 
 namespace ScnDiscounts.Views

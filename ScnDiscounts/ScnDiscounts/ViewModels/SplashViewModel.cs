@@ -1,9 +1,9 @@
 ﻿using System;
-using ScnDiscounts.Control.Pages;
 using ScnDiscounts.Models;
 using ScnDiscounts.Views;
 using ScnDiscounts.Views.ContentUI;
 using Xamarin.Forms;
+using ScnPage.Plugin.Forms;
 
 namespace ScnDiscounts.ViewModels
 {
@@ -20,11 +20,11 @@ namespace ScnDiscounts.ViewModels
 
             ViewPage.Appearing += ViewPage_AppearingLogo;
 
-            CurrentApp.Suspending += CurrentApp_Suspending;
+            (Application.Current as App).Suspending += CurrentApp_Suspending;
 
             MessagingCenter.Subscribe<SplashViewModel>(this, "StartMainForm", sender =>
             {
-                CurrentApp.MainPage = new NavigationPage(new MainPage());
+                (Application.Current as App).MainPage = new NavigationPage(new MainPage());
             });
         }
 

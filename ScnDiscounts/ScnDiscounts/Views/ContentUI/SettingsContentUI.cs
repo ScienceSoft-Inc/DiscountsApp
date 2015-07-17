@@ -1,5 +1,6 @@
-﻿using ScnDiscounts.Helpers;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
+using ScnDiscounts.Helpers;
+using ScnDiscounts.Models;
 
 namespace ScnDiscounts.Views.ContentUI
 {
@@ -7,13 +8,13 @@ namespace ScnDiscounts.Views.ContentUI
     {
         public SettingsContentUI()
         {
-            _title = new PropertyLang("Settings", "Настройки", "Налады");
+            title = new LanguageStrings("Settings", "Настройки", "Налады");
 
-            _txtLanguage = new PropertyLang("Language", "Язык", "Мова");
-            _txtLanguageSel = new PropertyLang("Choose language", "Выберите язык", "Выберыце мову");
+            _txtLanguage = new LanguageStrings("Language", "Язык", "Мова");
+            _txtLanguageSel = new LanguageStrings("Choose language", "Выберите язык", "Выберыце мову");
 
-            _txtMap = new PropertyLang("Map", "Карта");
-            _txtMapSel = new PropertyLang("Choose map", "Выберите карту");
+            _txtMap = new LanguageStrings("Map", "Карта");
+            _txtMapSel = new LanguageStrings("Choose map", "Выберите карту");
         }
 
         public string Icon
@@ -21,28 +22,28 @@ namespace ScnDiscounts.Views.ContentUI
             get { return Device.OnPlatform("Icon/settings.png", "ic_settings.png", "Assets/Icon/settings.png"); }
         }
 
-        private PropertyLang _txtLanguageSel;
+        private LanguageStrings _txtLanguageSel;
         public string TxtLanguageSel 
         {
-            get { return _txtLanguageSel.ActualValue(); }
+            get { return _txtLanguageSel.Current; }
         }
 
-        private PropertyLang _txtLanguage;
+        private LanguageStrings _txtLanguage;
         public string TxtLanguage
         {
-            get { return _txtLanguage.ActualValue(); }
+            get { return _txtLanguage.Current; }
         }
 
-        private PropertyLang _txtMap;
+        private LanguageStrings _txtMap;
         public string TxtMap
         {
-            get { return _txtMap.ActualValue(); }
+            get { return _txtMap.Current; }
         }
 
-        private PropertyLang _txtMapSel;
+        private LanguageStrings _txtMapSel;
         public string TxtMapSel
         {
-            get { return _txtMapSel.ActualValue(); }
+            get { return _txtMapSel.Current; }
         }
     }
 }

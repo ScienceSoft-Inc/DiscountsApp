@@ -5,6 +5,7 @@ using System.Linq;
 using Foundation;
 using UIKit;
 using Google.Maps;
+using ScnGesture.Plugin.Forms.iOS.Renderers;
 
 namespace ScnDiscounts.iOS
 {
@@ -28,6 +29,8 @@ namespace ScnDiscounts.iOS
             MapServices.ProvideAPIKey(MapsApiKey);
 
             global::Xamarin.Forms.Forms.Init();
+            BoxViewGestureRenderer.Init();
+
             LoadApplication(new ScnDiscounts.App());
 
             return base.FinishedLaunching(app, options);

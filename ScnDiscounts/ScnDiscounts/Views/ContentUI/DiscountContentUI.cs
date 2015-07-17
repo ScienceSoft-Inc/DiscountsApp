@@ -1,5 +1,6 @@
-﻿using ScnDiscounts.Helpers;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
+using ScnDiscounts.Helpers;
+using ScnDiscounts.Models;
 
 namespace ScnDiscounts.Views.ContentUI
 {
@@ -7,7 +8,7 @@ namespace ScnDiscounts.Views.ContentUI
     {
         public DiscountContentUI()
         {
-            _title = new PropertyLang("Discounts", "Скидки", "Зніжкі");
+            title = new LanguageStrings("Discounts", "Скидки", "Зніжкі");
         }
 
         public string Icon

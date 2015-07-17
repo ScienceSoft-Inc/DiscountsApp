@@ -1,10 +1,11 @@
 ﻿using System;
 using ScnDiscounts.Control;
-using ScnDiscounts.Control.Pages;
 using ScnDiscounts.ViewModels;
 using ScnDiscounts.Views.ContentUI;
 using ScnDiscounts.Views.Styles;
 using Xamarin.Forms;
+using ScnPage.Plugin.Forms;
+using ScnTitleBar.Forms;
 
 namespace ScnDiscounts.Views
 {
@@ -25,7 +26,7 @@ namespace ScnDiscounts.Views
         {
             BackgroundColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor];
 
-            var appBar = new CustomAppBar(this, CustomAppBar.BarBtnEnum.bbBack)
+            var appBar = new TitleBar(this, TitleBar.BarBtnEnum.bbBack)
             {
                 BarColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor]
             };
@@ -115,7 +116,6 @@ namespace ScnDiscounts.Views
                 }
             };
 
-
             var stackDescription = new StackLayout
             {
                 Children = 
@@ -127,29 +127,33 @@ namespace ScnDiscounts.Views
                 }
             };
 
-            var txtDescriptionLink = new LabelExtended
+            //because apple might reject application
+            if (Device.OS != TargetPlatform.iOS)
             {
-                Text = contentUI.TxtDescriptionLink,
-                Style = (Style)App.Current.Resources[LabelStyles.LinkStyle],
-                TextColor = (Color)App.Current.Resources[MainStyles.LightTextColor],
-                LineBreakMode = LineBreakMode.WordWrap,
-                IsUnderline = true
-            };
-
-            if (Device.OS != TargetPlatform.WinPhone)
-            {
-                var viewGesture = new ViewGesture
+                var txtDescriptionLink = new LabelExtended
                 {
-                    Content = txtDescriptionLink,
-                    DeformationValue = -5,
+                    Text = contentUI.TxtDescriptionLink,
+                    Style = (Style)App.Current.Resources[LabelStyles.LinkStyle],
+                    TextColor = (Color)App.Current.Resources[MainStyles.LightTextColor],
+                    LineBreakMode = LineBreakMode.WordWrap,
+                    IsUnderline = true
                 };
-                viewGesture.Gesture.Tap += viewModel.txtLink_Click;
-                stackDescription.Children.Add(viewGesture);
-            }
-            else
-            {
-                txtDescriptionLink.Click += viewModel.txtLink_Click;
-                stackDescription.Children.Add(txtDescriptionLink);
+
+                if (Device.OS != TargetPlatform.WinPhone)
+                {
+                    var viewGesture = new ViewGesture
+                    {
+                        Content = txtDescriptionLink,
+                        DeformationValue = -5,
+                    };
+                    viewGesture.Gesture.Tap += viewModel.txtLink_Click;
+                    stackDescription.Children.Add(viewGesture);
+                }
+                else
+                {
+                    txtDescriptionLink.Click += viewModel.txtLink_Click;
+                    stackDescription.Children.Add(txtDescriptionLink);
+                }
             }
             #endregion
 

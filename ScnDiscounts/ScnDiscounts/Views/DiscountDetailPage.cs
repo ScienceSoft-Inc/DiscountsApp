@@ -1,10 +1,11 @@
 ﻿using ScnDiscounts.Control;
-using ScnDiscounts.Control.Pages;
 using ScnDiscounts.Models.Data;
 using ScnDiscounts.ValueConverter;
 using ScnDiscounts.ViewModels;
 using ScnDiscounts.Views.ContentUI;
 using ScnDiscounts.Views.Styles;
+using ScnPage.Plugin.Forms;
+using ScnTitleBar.Forms;
 using Xamarin.Forms;
 
 namespace ScnDiscounts.Views
@@ -33,7 +34,7 @@ namespace ScnDiscounts.Views
 
             var mainLayout = new AbsoluteLayout();
 
-            var appBar = new CustomAppBar(this, CustomAppBar.BarBtnEnum.bbBack)
+            var appBar = new TitleBar(this, TitleBar.BarBtnEnum.bbBack)
             {
                 BarColor = Color.Transparent
             };

@@ -4,10 +4,10 @@ using System.Linq;
 using Xamarin.Forms;
 using System.Threading.Tasks;
 using ScnDiscounts.Views.Styles;
-using ScnDiscounts.Control.Pages;
 using ScnDiscounts.Models;
 using ScnDiscounts.Models.Data;
 using ScnDiscounts.Views;
+using ScnPage.Plugin.Forms;
 
 namespace ScnDiscounts.ViewModels
 {
