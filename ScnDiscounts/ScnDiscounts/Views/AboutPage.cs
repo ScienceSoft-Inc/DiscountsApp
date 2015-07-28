@@ -6,6 +6,7 @@ using ScnDiscounts.Views.Styles;
 using Xamarin.Forms;
 using ScnPage.Plugin.Forms;
 using ScnTitleBar.Forms;
+using ScnViewGestures.Plugin.Forms;
 
 namespace ScnDiscounts.Views
 {
@@ -139,21 +140,14 @@ namespace ScnDiscounts.Views
                     IsUnderline = true
                 };
 
-                if (Device.OS != TargetPlatform.WinPhone)
+                var viewGesturesLink = new ViewGestures
                 {
-                    var viewGesture = new ViewGesture
-                    {
-                        Content = txtDescriptionLink,
-                        DeformationValue = -5,
-                    };
-                    viewGesture.Gesture.Tap += viewModel.txtLink_Click;
-                    stackDescription.Children.Add(viewGesture);
-                }
-                else
-                {
-                    txtDescriptionLink.Click += viewModel.txtLink_Click;
-                    stackDescription.Children.Add(txtDescriptionLink);
-                }
+                    Content = txtDescriptionLink,
+                    DeformationValue = -5,
+                };
+                viewGesturesLink.BackgroundColor = this.BackgroundColor;
+                viewGesturesLink.Tap += viewModel.txtLink_Click;
+                stackDescription.Children.Add(viewGesturesLink);
             }
             #endregion
 
@@ -201,21 +195,14 @@ namespace ScnDiscounts.Views
                 TextColor = (Color)App.Current.Resources[MainStyles.LightTextColor]
             };
             
-            if (Device.OS != TargetPlatform.WinPhone)
+            var viewGesturesPhone = new ViewGestures
             {
-                var viewGesture = new ViewGesture
-                {
-                    Content = txtPhone,
-                    DeformationValue = -5,
-                };
-                viewGesture.Gesture.Tap += viewModel.txtPhone_Click;
-                stackDeveloper.Children.Add(viewGesture);
-            }
-            else
-            {
-                txtPhone.Click += viewModel.txtPhone_Click;
-                stackDeveloper.Children.Add(txtPhone);
-            }
+                Content = txtPhone,
+                DeformationValue = -5,
+            };
+            viewGesturesPhone.BackgroundColor = this.BackgroundColor;
+            viewGesturesPhone.Tap += viewModel.txtPhone_Click;
+            stackDeveloper.Children.Add(viewGesturesPhone);
 
             var txtEmail = new Label
             {
@@ -233,21 +220,14 @@ namespace ScnDiscounts.Views
                 IsUnderline = true
             };
 
-            if (Device.OS != TargetPlatform.WinPhone)
+            var viewGesturesHTTP = new ViewGestures
             {
-                var viewGesture = new ViewGesture
-                {
-                    Content = txtHttp,
-                    DeformationValue = -5,
-                };
-                viewGesture.Gesture.Tap += viewModel.txtLink_Click;
-                stackDeveloper.Children.Add(viewGesture);
-            }
-            else
-            {
-                txtHttp.Click += viewModel.txtLink_Click;
-                stackDeveloper.Children.Add(txtHttp);
-            }
+                Content = txtHttp,
+                DeformationValue = -5,
+            };
+            viewGesturesHTTP.BackgroundColor = this.BackgroundColor;
+            viewGesturesHTTP.Tap += viewModel.txtLink_Click;
+            stackDeveloper.Children.Add(viewGesturesHTTP);
 
             #endregion
 

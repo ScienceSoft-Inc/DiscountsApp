@@ -6,6 +6,7 @@ using ScnDiscounts.Views.ContentUI;
 using ScnDiscounts.Views.Styles;
 using ScnPage.Plugin.Forms;
 using ScnTitleBar.Forms;
+using ScnViewGestures.Plugin.Forms;
 using Xamarin.Forms;
 
 namespace ScnDiscounts.Views
@@ -38,11 +39,9 @@ namespace ScnDiscounts.Views
             {
                 BarColor = Color.Transparent
             };
-            appBar.BoxPadding.Color = Color.Black;
-            appBar.BoxPadding.Opacity = 0.4;
+            appBar.BoxPadding.Color = new Color(0, 0, 0, 0.4);
 
-            appBar.BtnBack.BackgroundColor = Color.Black;
-            appBar.BtnBack.Opacity = 0.4;
+            appBar.BtnBack.BackgroundColor = new Color(0, 0, 0, 0.4);
             appBar.BtnBack.Source = contentUI.IconBack;
 
             discountLayout = new StackLayout
@@ -220,23 +219,14 @@ namespace ScnDiscounts.Views
             };
             txtUrlAddress.SetBinding(Label.TextProperty, "UrlAddress");
             
-            //TODO
-            if (Device.OS != TargetPlatform.WinPhone)
+            var viewGesturesURL = new ViewGestures
             {
-                var viewGesture = new ViewGesture
-                {
-                    Content = txtUrlAddress,
-                    DeformationValue = -5,
-                };
-                viewGesture.Gesture.Tap += viewModel.txtUrlAddress_Click;
-                titleDetailLayout.Children.Add(viewGesture);
-            }
-            else
-            {
-                txtUrlAddress.Click += viewModel.txtUrlAddress_Click;
-                titleDetailLayout.Children.Add(txtUrlAddress);
-            }
-            
+                Content = txtUrlAddress,
+                DeformationValue = -5,
+            };
+            viewGesturesURL.BackgroundColor = this.BackgroundColor;
+            viewGesturesURL.Tap += viewModel.txtUrlAddress_Click;
+            titleDetailLayout.Children.Add(viewGesturesURL);
             #endregion
 
             gridHeader.Children.Add(titleDetailLayout, 1, 0);
@@ -265,8 +255,8 @@ namespace ScnDiscounts.Views
 
             var scrollDiscount = new ScrollView
             {
-                HeightRequest = 700,
                 Content = discountLayout,
+                HeightRequest = Device.OnPlatform(600, 600, -1), 
             };
 
             AbsoluteLayout.SetLayoutFlags(scrollDiscount, AbsoluteLayoutFlags.All);
@@ -293,7 +283,7 @@ namespace ScnDiscounts.Views
             BranchListView.ItemTapped += viewModel.OnBranchViewItemTapped;
             BranchListView.SetBinding(ListView.ItemsSourceProperty, "BranchItems");
             BranchListView.ItemTemplate = new DataTemplate(() => new BranchInfoViewTemplate(BranchListView, contentUI, viewModel));
-            BranchListView.SetBinding(ListView.HeightRequestProperty, new Binding("BranchItemsCount", BindingMode.Default, new ListViewHeightConverter(), (Device.OnPlatform(160, 170, 250))));
+            BranchListView.SetBinding(ListView.HeightRequestProperty, new Binding("BranchItemsCount", BindingMode.Default, new ListViewHeightConverter(), (Device.OnPlatform(160, 190, 250))));
             BranchListView.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
 
             var stackBranchView = new StackLayout
@@ -388,22 +378,14 @@ namespace ScnDiscounts.Views
                     }
                 };
                 
-                //TODO
-                if (Device.OS != TargetPlatform.WinPhone)
+                var viewGesturesMap = new ViewGestures
                 {
-                    var viewGesture = new ViewGesture
-                    {
-                        Content = txtShowOnMap,
-                        DeformationValue = -5,
-                    };
-                    viewGesture.Gesture.Tap += parentViewModel.txtShowOnMap_Click;
-                    locationLayout.Children.Add(viewGesture);
-                }
-                else
-                {
-                    txtShowOnMap.Click += parentViewModel.txtShowOnMap_Click;
-                    locationLayout.Children.Add(txtShowOnMap);
+                    Content = txtShowOnMap,
+                    DeformationValue = -5,
                 };
+                viewGesturesMap.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
+                viewGesturesMap.Tap += parentViewModel.txtShowOnMap_Click;
+                locationLayout.Children.Add(viewGesturesMap);
 
                 var scroll = new ScrollView
                 {
@@ -423,47 +405,35 @@ namespace ScnDiscounts.Views
                     Padding = Device.OnPlatform(new Thickness(0, 4), new Thickness(0, 4), new Thickness(0, 4, -8, 4)),
                 };
 
+                #region phone1
                 var phone1 = CreateCallButton(parentContentUI, "Phone1");
-                phone1.SetBinding(BorderBox.IsVisibleProperty, "IsPhone1FillIn");
                 phone1.SetBinding(BorderBox.TagProperty, "Phone1");
-                if (Device.OS != TargetPlatform.WinPhone)
-                {
-                    var viewGesture = new ViewGesture
-                    {
-                        Content = phone1,
-                        DeformationValue = 0,
-                    };
-                    viewGesture.Gesture.Tap += parentViewModel.BtnCall_Click;
-                    stackPhoneView.Children.Add(viewGesture);
-                }
-                else
-                {
-                    var tapGesture1 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
-                    tapGesture1.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone1");
-                    phone1.TapGesture = tapGesture1;
-                    stackPhoneView.Children.Add(phone1);
-                }
 
+                var viewGesturesPhone1 = new ViewGestures
+                {
+                    Content = phone1,
+                    DeformationValue = -5,
+                };
+                viewGesturesPhone1.SetBinding(ViewGestures.IsVisibleProperty, "IsPhone1FillIn");
+                viewGesturesPhone1.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
+                viewGesturesPhone1.Tap += parentViewModel.BtnCall_Click;
+                stackPhoneView.Children.Add(viewGesturesPhone1);
+                #endregion
+
+                #region phone2
                 var phone2 = CreateCallButton(parentContentUI, "Phone2");
-                phone2.SetBinding(BorderBox.IsVisibleProperty, "IsPhone2FillIn");
                 phone2.SetBinding(BorderBox.TagProperty, "Phone2");
-                if (Device.OS != TargetPlatform.WinPhone)
+
+                var viewGesturesPhone2 = new ViewGestures
                 {
-                    var viewGesture = new ViewGesture
-                    {
-                        Content = phone2,
-                        DeformationValue = 0,
-                    };
-                    viewGesture.Gesture.Tap += parentViewModel.BtnCall_Click;
-                    stackPhoneView.Children.Add(viewGesture);
-                }
-                else
-                {
-                    var tapGesture2 = new TapGestureRecognizer { Command = parentViewModel.CallCommand };
-                    tapGesture2.SetBinding(TapGestureRecognizer.CommandParameterProperty, "Phone2");
-                    phone2.TapGesture = tapGesture2;
-                    stackPhoneView.Children.Add(phone2);
-                }
+                    Content = phone2,
+                    DeformationValue = -5,
+                };
+                viewGesturesPhone2.SetBinding(ViewGestures.IsVisibleProperty, "IsPhone2FillIn");
+                viewGesturesPhone2.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
+                viewGesturesPhone2.Tap += parentViewModel.BtnCall_Click;
+                stackPhoneView.Children.Add(viewGesturesPhone2);
+                #endregion
 
                 stackBranch.Children.Add(stackPhoneView);
                 #endregion

@@ -2,6 +2,7 @@
 using ScnDiscounts.Helpers;
 using Xamarin.Forms;
 using ScnDiscounts.Control;
+using System.Collections.Generic;
 
 namespace ScnDiscounts.Models
 {
@@ -27,6 +28,14 @@ namespace ScnDiscounts.Models
                 set { _mapSource = value; }
             }
 
+            //category filter
+            private string CategoryFilterPrefix = "CategotyFilter_";
+            private List<FilterCategoryItem> _filterCategoryList = new List<FilterCategoryItem>();
+            public List<FilterCategoryItem> FilterCategoryList
+            {
+                get { return _filterCategoryList; }
+            }
+
             public void Init()
             {
                 LoadValue();
@@ -36,6 +45,8 @@ namespace ScnDiscounts.Models
             {
                 Application.Current.Properties[SystemLangParamName] = SystemLang.ToString();
                 Application.Current.Properties[MapSourceParamName] = MapSource.ToString();
+
+                SaveCategoryFilter();
             }
 
             public void LoadValue()
@@ -54,6 +65,40 @@ namespace ScnDiscounts.Models
                     MapTile.TileSourceEnum tmpMap;
                     if (Enum.TryParse(map, out tmpMap))
                         MapSource = tmpMap;
+                }
+
+                LoadCategoryFilter();
+            }
+
+            private void SaveCategoryFilter()
+            {
+                foreach (var item in _filterCategoryList)
+                    Application.Current.Properties[item.ParamName] = item.IsToggle.ToString();
+            }
+
+            private void LoadCategoryFilter()
+            {
+                _filterCategoryList.Clear();
+
+                foreach (var item in CategoryHelper.CategoryList)
+                {
+                    var filterItem = new FilterCategoryItem 
+                    {
+                        Id = item.Key,
+                        ParamName = CategoryFilterPrefix + item.Value.DefaultName,
+
+                        IsToggle = true,
+                    };
+
+                    if (Application.Current.Properties.ContainsKey(filterItem.ParamName))
+                    {
+                        string value = Application.Current.Properties[filterItem.ParamName] as string;
+                        bool resValue = true;
+                        if (bool.TryParse(value, out resValue))
+                            filterItem.IsToggle = resValue;
+                    }
+
+                    _filterCategoryList.Add(filterItem);
                 }
             }
         }

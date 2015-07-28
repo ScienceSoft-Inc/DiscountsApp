@@ -23,7 +23,7 @@
     <ValidateXaml>true</ValidateXaml>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
-    <NuGetPackageImportStamp>6304008f</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>d3e66505</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -130,6 +130,7 @@
     <Content Include="Assets\Icon\about.png" />
     <Content Include="Assets\Icon\back.png" />
     <Content Include="Assets\Icon\detail.png" />
+    <Content Include="Assets\Icon\filter.png" />
     <Content Include="Assets\Icon\location.png" />
     <Content Include="Assets\Icon\marker_distance.png" />
     <Content Include="Assets\Icon\menu.png" />
@@ -141,6 +142,7 @@
     <Content Include="Assets\Image\img_logo.png" />
     <Content Include="Assets\Image\logo.png" />
     <Content Include="Assets\MapPins\ic_pin_blue.png" />
+    <Content Include="Assets\MapPins\ic_pin_disabled.png" />
     <Content Include="Assets\MapPins\ic_pin_green.png" />
     <Content Include="Assets\MapPins\ic_pin_grey.png" />
     <Content Include="Assets\MapPins\ic_pin_navigation.png" />
@@ -188,24 +190,24 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="ScnGesture.Plugin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ScnTitleBar.Forms.1.0.1\lib\wp8\ScnGesture.Plugin.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ScnGesture.Plugin.WinPhone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ScnTitleBar.Forms.1.0.1\lib\wp8\ScnGesture.Plugin.WinPhone.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="ScnPage.Plugin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ScnSideMenu.Forms.1.0.10\lib\wp8\ScnPage.Plugin.dll</HintPath>
+      <HintPath>..\..\packages\ScnSideMenu.Forms.1.0.20\lib\wp8\ScnPage.Plugin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ScnSideMenu, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ScnSideMenu.Forms.1.0.10\lib\wp8\ScnSideMenu.dll</HintPath>
+      <HintPath>..\..\packages\ScnSideMenu.Forms.1.0.20\lib\wp8\ScnSideMenu.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ScnTitleBar, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ScnTitleBar.Forms.1.0.1\lib\wp8\ScnTitleBar.dll</HintPath>
+      <HintPath>..\..\packages\ScnTitleBar.Forms.1.0.6\lib\wp8\ScnTitleBar.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ScnViewGestures, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ScnViewGestures.Forms.1.0.10\lib\wp8\ScnViewGestures.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ScnViewGestures.WinPhone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ScnViewGestures.Forms.1.0.10\lib\wp8\ScnViewGestures.WinPhone.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http">
@@ -218,27 +220,27 @@
       <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\sl4-windowsphone71\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Forms.Core, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xamarin.Forms.1.4.3.6376\lib\WP80\Xamarin.Forms.Core.dll</HintPath>
+      <HintPath>..\..\packages\Xamarin.Forms.1.4.4.6387\lib\WP80\Xamarin.Forms.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Xamarin.Forms.Maps, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xamarin.Forms.Maps.1.4.3.6376\lib\WP80\Xamarin.Forms.Maps.dll</HintPath>
+      <HintPath>..\..\packages\Xamarin.Forms.Maps.1.4.4.6387\lib\WP80\Xamarin.Forms.Maps.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Xamarin.Forms.Maps.WP8, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xamarin.Forms.Maps.1.4.3.6376\lib\WP80\Xamarin.Forms.Maps.WP8.dll</HintPath>
+      <HintPath>..\..\packages\Xamarin.Forms.Maps.1.4.4.6387\lib\WP80\Xamarin.Forms.Maps.WP8.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Xamarin.Forms.Platform, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xamarin.Forms.1.4.3.6376\lib\WP80\Xamarin.Forms.Platform.dll</HintPath>
+      <HintPath>..\..\packages\Xamarin.Forms.1.4.4.6387\lib\WP80\Xamarin.Forms.Platform.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Xamarin.Forms.Platform.WP8, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xamarin.Forms.1.4.3.6376\lib\WP80\Xamarin.Forms.Platform.WP8.dll</HintPath>
+      <HintPath>..\..\packages\Xamarin.Forms.1.4.4.6387\lib\WP80\Xamarin.Forms.Platform.WP8.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Xamarin.Forms.Xaml, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xamarin.Forms.1.4.3.6376\lib\WP80\Xamarin.Forms.Xaml.dll</HintPath>
+      <HintPath>..\..\packages\Xamarin.Forms.1.4.4.6387\lib\WP80\Xamarin.Forms.Xaml.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -261,8 +263,8 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Xamarin.Forms.1.4.3.6376\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Forms.1.4.3.6376\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Xamarin.Forms.1.4.4.6387\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Forms.1.4.4.6387\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets'))" />
   </Target>
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
-  <Import Project="..\..\packages\Xamarin.Forms.1.4.3.6376\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.1.4.3.6376\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
+  <Import Project="..\..\packages\Xamarin.Forms.1.4.4.6387\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.1.4.4.6387\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
 </Project>

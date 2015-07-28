@@ -1,6 +1,7 @@
-﻿using ScnDiscounts.Views.Styles;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Xamarin.Forms;
+using ScnDiscounts.Views.Styles;
+using ScnViewGestures.Plugin.Forms;
 
 namespace ScnDiscounts.Control
 {
@@ -9,29 +10,20 @@ namespace ScnDiscounts.Control
         public MapPinDetail()
         {
             #region Back box
-            boxBack = new BoxViewGesture(this)
+            viewGestures = new ViewGestures()
             {
                 BackgroundColor = new Color(0, 0, 0, 0.01)
             };
 
-            SetLayoutFlags(boxBack, AbsoluteLayoutFlags.All);
-            SetLayoutBounds(boxBack, new Rectangle(0f, 0f, 1f, 1f));
-            Children.Add(boxBack);
+            SetLayoutFlags(viewGestures, AbsoluteLayoutFlags.All);
+            SetLayoutBounds(viewGestures, new Rectangle(0f, 0f, 1f, 1f));
+            Children.Add(viewGestures);
 
-            if (Device.OS != TargetPlatform.WinPhone)
-            {
-                boxBack.Tap += (s, e) => { Hide(); };
-                boxBack.Swipe += (s, e) => { Hide(); };
-            }
-            else
-            {
-                var tapClosePinDetail = new TapGestureRecognizer();
-                tapClosePinDetail.Tapped += (sender, e) =>
-                {
-                    Hide();
-                };
-                boxBack.GestureRecognizers.Add(tapClosePinDetail);
-            }
+            viewGestures.Tap += (s, e) => { Hide(); };
+            viewGestures.SwipeLeft += (s, e) => { Hide(); };
+            viewGestures.SwipeRight += (s, e) => { Hide(); };
+            viewGestures.SwipeUp += (s, e) => { Hide(); };
+            viewGestures.SwipeDown += (s, e) => { Hide(); };
 
             #endregion
 
@@ -171,7 +163,7 @@ namespace ScnDiscounts.Control
         }
         
         private BorderBox borderDetail;
-        private BoxViewGesture boxBack;
+        private ViewGestures viewGestures;
         private Label txtTitle;
         private Label txtCategory;
         private Label txtDiscountCaption;

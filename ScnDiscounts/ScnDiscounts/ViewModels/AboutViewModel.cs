@@ -22,11 +22,6 @@ namespace ScnDiscounts.ViewModels
                 Device.OpenUri(new Uri(label.Text));
         }
 
-        /*public void OnPhoneViewItemTapped(object sender, ItemTappedEventArgs e)
-        {
-        }*/
-
-
         public void txtPhone_Click(object sender, EventArgs e)
         {
             LabelExtended label = sender as LabelExtended;

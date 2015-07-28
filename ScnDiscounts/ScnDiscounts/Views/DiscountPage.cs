@@ -53,25 +53,32 @@ namespace ScnDiscounts.Views
                 await Task.Delay(100);
                 DiscountListView.IsEnabled = true; 
             };
-            DiscountListView.AnimationFinished += viewModel.BranchView_AnimationFinished;
 
             discountLayout = new StackLayout
             {
+                VerticalOptions = LayoutOptions.FillAndExpand,
                 Padding = Device.OnPlatform(new Thickness(0, 4), new Thickness(0, 4), new Thickness(0, 4, -12, 0)),
             };
             discountLayout.Children.Add(DiscountListView);
-            //ContentLayout.Children.Add(discountLayout);
 
             var mainLayout = new AbsoluteLayout();
-            var scrollDiscount = new ScrollView
+            if (Device.OS == TargetPlatform.WinPhone)
             {
-                HeightRequest = 700,
-                Content = discountLayout,
-            };
+                AbsoluteLayout.SetLayoutFlags(discountLayout, AbsoluteLayoutFlags.All);
+                AbsoluteLayout.SetLayoutBounds(discountLayout, new Rectangle(0f, 0f, 1f, 1f));
+                mainLayout.Children.Add(discountLayout);
+            }
+            else
+            {
+                var scrollDiscount = new ScrollView
+                {
+                    Content = discountLayout,
+                };
 
-            AbsoluteLayout.SetLayoutFlags(scrollDiscount, AbsoluteLayoutFlags.All);
-            AbsoluteLayout.SetLayoutBounds(scrollDiscount, new Rectangle(0f, 0f, 1f, 1f));
-            mainLayout.Children.Add(scrollDiscount);
+                AbsoluteLayout.SetLayoutFlags(scrollDiscount, AbsoluteLayoutFlags.All);
+                AbsoluteLayout.SetLayoutBounds(scrollDiscount, new Rectangle(0f, 0f, 1f, 1f));
+                mainLayout.Children.Add(scrollDiscount);
+            }
             ContentLayout.Children.Add(mainLayout);
         }
 

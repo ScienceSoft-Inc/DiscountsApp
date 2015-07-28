@@ -5,6 +5,7 @@ using ScnDiscounts.Views.ContentUI;
 using ScnDiscounts.Views.Styles;
 using ScnSideMenu.Forms;
 using ScnTitleBar.Forms;
+using ScnViewGestures.Plugin.Forms;
 using Xamarin.Forms;
 
 namespace ScnDiscounts.Views
@@ -24,7 +25,7 @@ namespace ScnDiscounts.Views
         public MapTile MapLocation;
 
         public MainPage()
-            : base(typeof(MainViewModel), typeof(MainContentUI))
+            : base(typeof(MainViewModel), typeof(MainContentUI), PanelSetEnum.psLeftRight)
         {
             BackgroundColor = (Color)App.Current.Resources[MainStyles.ListBackgroundColor];
 
@@ -38,12 +39,16 @@ namespace ScnDiscounts.Views
             appBar.BtnRight.Click += viewModel.AppBar_BtnRightClick;
 
             appBar.BtnLeft.BackgroundColor = new Color(255, 255, 255, 0.7);
-            appBar.BtnLeft.Source = contentUI.IconLocation;
+            appBar.BtnLeft.Source = contentUI.IconFilter;
             appBar.BtnLeft.Click += viewModel.AppBar_BtnLeftClick;
 
             RightPanel.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor];
             RightPanel.Opacity = 0.9;
             SpeedAnimatePanel = 200;
+
+            LeftPanel.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor];
+            LeftPanel.Opacity = 0.9;
+            LeftPanelWidth = Device.OnPlatform(300, 240, 300);
 
             MapLocation = new MapTile
             {
@@ -53,9 +58,13 @@ namespace ScnDiscounts.Views
             };
 
             MapLocation.ClickPinDetail += viewModel.MapLocation_ClickPinDetail;
-            
-            foreach (var item in AppData.Discount.MapPinCollection)
-                MapLocation.PinList.Add(item);
+
+            var btnLocation = new ImageButton();
+            btnLocation.HeightRequest = appBar.HeightBar;
+            btnLocation.WidthRequest = appBar.HeightBar;
+            btnLocation.BackgroundColor = new Color(255, 255, 255, 0.7);
+            btnLocation.Source = contentUI.IconLocation;
+            btnLocation.Click += viewModel.BtnLocation_Click;
 
             var mainLayout = new RelativeLayout();
             mainLayout.Children.Add(MapLocation.MapLayout,
@@ -69,7 +78,13 @@ namespace ScnDiscounts.Views
                 Constraint.RelativeToParent(parent => { return parent.Height - appBar.HeightBar; }),
                 Constraint.RelativeToParent(parent => { return parent.Width; }),
                 Constraint.Constant(appBar.HeightBar));
-            
+
+            mainLayout.Children.Add(btnLocation,
+                Constraint.Constant(0),
+                Constraint.RelativeToView(appBar, (parent, sibling) =>
+                {
+                    return sibling.Y - appBar.HeightBar - 10;
+                }));       
             ContentLayout.Children.Add(mainLayout);
 
             PanelChanged += (s, e) => 
@@ -78,7 +93,7 @@ namespace ScnDiscounts.Views
                     MapLocation.CloseDetailInfo();
             };
 
-            #region SideBar menu
+            #region Right SideBar menu
             RightPanel.ClearContext();
             RightPanel.AddToContext(new BoxView
                 {
@@ -107,7 +122,25 @@ namespace ScnDiscounts.Views
             menuView.ItemSelected += viewModel.OnMenuViewItemTapped;
             menuView.IsScrollable = false;
             RightPanel.AddToContext(menuView, false);
+            #endregion
 
+            #region Left SideBar menu
+            LeftPanel.ClearContext();
+            
+            LeftPanel.AddToContext(new BoxView
+            {
+                BackgroundColor = Color.Transparent,
+                HeightRequest = 50,
+            });
+            
+            var filterView = new ListViewExtended();
+            filterView.IsScrollable = false;
+            filterView.SetBinding(ListView.ItemsSourceProperty, "FilterCategoryList");
+            filterView.RowHeight = Device.OnPlatform(80, 60, 100);
+            filterView.SeparatorVisibility = SeparatorVisibility.None;
+            filterView.ItemTemplate = new DataTemplate(() => new FilterViewTemplate(viewModel));
+            filterView.ItemSelected += viewModel.OnMenuViewItemTapped;
+            LeftPanel.AddToContext(filterView, false);
             #endregion
         }
 
@@ -149,12 +182,93 @@ namespace ScnDiscounts.Views
             }
         }
 
+        public class FilterViewTemplate : ViewCellExtended
+        {
+            public FilterViewTemplate(MainViewModel parentViewModel)
+            {
+                IsHighlightSelection = false;
+
+                SelectColor = (Color)App.Current.Resources[MainStyles.ListSelectColor];
+
+                var stackFilterItem = new StackLayout 
+                {
+                    Padding = new Thickness(20, 0),
+                };
+
+                #region Title
+                var stackTitle = new StackLayout
+                {
+                    Orientation = StackOrientation.Horizontal,
+                };
+                var imgFilterItem = new Image();
+                imgFilterItem.SetBinding(Image.SourceProperty, "Icon");
+                stackTitle.Children.Add(imgFilterItem);
+
+                var txtFilterItem = new Label
+                {
+                    VerticalOptions = LayoutOptions.CenterAndExpand,
+                    //Style = (Style)App.Current.Resources[LabelStyles.MenuStyle]
+                };
+                txtFilterItem.SetBinding(Label.StyleProperty, "NameStyle");
+                txtFilterItem.SetBinding(Label.TextProperty, "Name");
+                stackTitle.Children.Add(txtFilterItem);
+
+                var filterTitleGestures = new ViewGestures();
+                filterTitleGestures.Content = stackTitle;
+                filterTitleGestures.Tap += parentViewModel.FilterGestures_Tap;
+                filterTitleGestures.SwipeLeft += parentViewModel.FilterGestures_Tap;
+                filterTitleGestures.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor];
+
+                stackFilterItem.Children.Add(filterTitleGestures);
+                #endregion
+
+                #region Toggle
+                var stackToggle = new StackLayout 
+                { 
+                    Orientation = StackOrientation.Horizontal,
+                };
+
+                var filterToggleGestures = new ViewGestures();
+                filterToggleGestures.HorizontalOptions = LayoutOptions.FillAndExpand;
+                filterToggleGestures.Tap += parentViewModel.FilterGestures_Tap;
+                filterToggleGestures.SwipeLeft += parentViewModel.FilterGestures_Tap;
+                filterToggleGestures.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor];
+
+                if (Device.OS != TargetPlatform.Android)
+                {
+                    var txtSwitchValue = new Label
+                    {
+                        HorizontalOptions = LayoutOptions.End,
+                        Style = (Style)App.Current.Resources[LabelStyles.MenuHintStyle]
+                    };
+                    txtSwitchValue.SetBinding(Label.TextProperty, "ToggleValue");
+                    filterToggleGestures.Content = txtSwitchValue;
+                }
+                stackToggle.Children.Add(filterToggleGestures);
+
+                var switchFilter = new Switch
+                {
+                    VerticalOptions = LayoutOptions.Start,
+                };
+
+                if (Device.OS == TargetPlatform.WinPhone)
+                    switchFilter.TranslationY = -30;
+                switchFilter.SetBinding(Switch.IsToggledProperty, "IsToggle", BindingMode.TwoWay);
+                switchFilter.Toggled += parentViewModel.SwitchFilter_Toggled;
+                stackToggle.Children.Add(switchFilter);
+
+                stackFilterItem.Children.Add(stackToggle);
+                #endregion
+
+                View = stackFilterItem;
+            }
+        }
+
         protected override bool OnBackButtonPressed()
         {
             if (MapLocation.IsShowDetailInfo)
             {
                 MapLocation.IsShowDetailInfo = false;
-
                 return true ;
             }
 

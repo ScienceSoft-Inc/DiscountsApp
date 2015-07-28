@@ -17,6 +17,8 @@ namespace ScnDiscounts.Views.ContentUI
 
             txtDistanceScaleCaption = new LanguageStrings("km", "км", "км");
             txtDiscount = new LanguageStrings("Discount", "Скидка", "Зніжка");
+            txtTurnOn = new LanguageStrings("On", "Вкл.");
+            txtTurnOff = new LanguageStrings("Off", "Выкл.");
         }
 
         private LanguageStrings txtCancel;
@@ -56,6 +58,18 @@ namespace ScnDiscounts.Views.ContentUI
         public string TxtDiscount
         {
             get { return txtDiscount.Current; }
+        }
+
+        private LanguageStrings txtTurnOn;
+        public string TxtTurnOn
+        {
+            get { return txtTurnOn.Current; }
+        }
+
+        private LanguageStrings txtTurnOff;
+        public string TxtTurnOff
+        {
+            get { return txtTurnOff.Current; }
         }
     }
 }

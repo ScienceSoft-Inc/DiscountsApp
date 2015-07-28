@@ -14,6 +14,7 @@ namespace ScnDiscounts.Helpers
         public const string ic_pin_rose = "ic_pin_rose.png";
         public const string ic_pin_yellow = "ic_pin_yellow.png";
 
+        public static string ic_pin_disabled = Device.OnPlatform("MapPins/ic_pin_disabled.png", "ic_pin_disabled.png", "Assets/MapPins/ic_pin_disabled.png");
 
         static public Dictionary<int, CategoryParam> CategoryList = new Dictionary<int, CategoryParam>
         {
@@ -43,6 +44,7 @@ namespace ScnDiscounts.Helpers
 
         private LanguageStrings _name;
         public string Name { get { return _name.Current; } }
+        public string DefaultName { get { return _name.Default; } }
 
         private string _icon;
         public string Icon { get { return _icon; } }

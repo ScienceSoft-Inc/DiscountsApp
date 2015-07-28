@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using ScnDiscounts.Control;
 using ScnDiscounts.Helpers;
 using ScnDiscounts.Models;
@@ -24,22 +25,29 @@ namespace ScnDiscounts.ViewModels
         {
             ViewPage.Appearing += ViewPage_Appearing;
             ViewPage.Appearing += ViewPage_InitAfterAppearing;
+            
             _menuItemList = new ObservableCollection<MenuSideBarItem>();
-            InitMenuItem();
+            InitMenuList();
+
+            _filterCategoryList = new ObservableCollection<FilterCategoryItem>();
+            InitFilterList();
         }
 
         private void ViewPage_InitAfterAppearing(object sender, EventArgs e)
         {
             ViewPage.Appearing -= ViewPage_InitAfterAppearing;
-
-            double minskLat = 53.904841;
-            double minskLong = 27.55327;
-            (ViewPage as MainPage).MapLocation.MoveToRegion(MapSpan.FromCenterAndRadius(
-                                                       new Position(minskLat, minskLong),
-                                                       Distance.FromKilometers(5)));
-            
+            InitMapPinCollection();
             (ViewPage as MainPage).MapLocation.OnPinUpdate();
-            DelayInit();
+
+            if (ViewPage.Navigation.NavigationStack.Count == 1)
+            {
+                double minskLat = 53.904841;
+                double minskLong = 27.55327;
+                (ViewPage as MainPage).MapLocation.MoveToRegion(MapSpan.FromCenterAndRadius(
+                                                           new Position(minskLat, minskLong),
+                                                           Distance.FromKilometers(5)));
+                DelayInit();
+            }
         }
 
         async private void DelayInit()
@@ -55,7 +63,10 @@ namespace ScnDiscounts.ViewModels
         private void ViewPage_Appearing(object sender, EventArgs e)
         {
             if (langInit != AppParameters.Config.SystemLang)
-                InitMenuItem();
+            {
+                InitMenuList();
+                InitFilterList();
+            }
 
             if (!String.IsNullOrWhiteSpace(AppData.Discount.ActiveMapPinId))
                 ActivateMapPin();
@@ -65,7 +76,7 @@ namespace ScnDiscounts.ViewModels
 
         private LanguageHelper.LangTypeEnum langInit;
 
-        private void InitMenuItem()
+        private void InitMenuList()
         {
             _menuItemList.Clear();
 
@@ -83,6 +94,11 @@ namespace ScnDiscounts.ViewModels
             langInit = AppParameters.Config.SystemLang;
         }
 
+        private void InitFilterList()
+        {
+            FilterCategoryList = new ObservableCollection<FilterCategoryItem>(AppParameters.Config.FilterCategoryList);
+        }
+
         //------------------
         // Property
         //------------------
@@ -92,10 +108,15 @@ namespace ScnDiscounts.ViewModels
             get { return _menuItemList; }
         }
 
-        private ObservableCollection<MenuSideBarItem> _pinList;
-        public ObservableCollection<MenuSideBarItem> PinList
+        private ObservableCollection<FilterCategoryItem> _filterCategoryList;
+        public ObservableCollection<FilterCategoryItem> FilterCategoryList
         {
-            get { return _menuItemList; }
+            get { return _filterCategoryList; }
+            set 
+            {
+                _filterCategoryList = value;
+                OnPropertyChanged();
+            }
         }
 
         public string ActivateMapPinId { get; set; }
@@ -205,7 +226,30 @@ namespace ScnDiscounts.ViewModels
             (ViewPage as MainPage).MapLocation.ShowPinDetailInfo(pinData.Id);
         }
 
+        public void InitMapPinCollection()
+        {
+            (ViewPage as MainPage).MapLocation.PinList.Clear();
+
+            foreach (var item in AppData.Discount.MapPinCollection)
+            {
+                var filterCategoryItem = AppParameters.Config.FilterCategoryList.FirstOrDefault<FilterCategoryItem>(x => x.Id == item.CategoryType);
+                if (filterCategoryItem != null)
+                {
+                    if (filterCategoryItem.IsToggle)
+                        (ViewPage as MainPage).MapLocation.PinList.Add(item);
+                }
+                else
+                    (ViewPage as MainPage).MapLocation.PinList.Add(item);
+            }
+        }
+
         internal void AppBar_BtnLeftClick(object sender, EventArgs e)
+        {
+            (ViewPage as MainPage).MapLocation.CloseDetailInfo();
+            (ViewPage as MainPage).IsShowLeftPanel = !(ViewPage as MainPage).IsShowLeftPanel;
+        }
+
+        internal void BtnLocation_Click(object sender, EventArgs e)
         {
             (ViewPage as MainPage).MapLocation.CloseDetailInfo();
             if (AppMobileService.Locaion.IsAvailable())
@@ -218,6 +262,17 @@ namespace ScnDiscounts.ViewModels
             }
             else
                 ViewPage.DisplayAlert(contentUI.MsgTitleNoGPS, contentUI.MsgTxtNoGPS, contentUI.TxtOk);
+        }
+
+        internal void SwitchFilter_Toggled(object sender, ToggledEventArgs e)
+        {
+            InitMapPinCollection();
+            (ViewPage as MainPage).MapLocation.OnPinUpdate();
+        }
+
+        internal void FilterGestures_Tap(object sender, EventArgs e)
+        {
+            (ViewPage as MainPage).IsShowLeftPanel = false;
         }
     }
 

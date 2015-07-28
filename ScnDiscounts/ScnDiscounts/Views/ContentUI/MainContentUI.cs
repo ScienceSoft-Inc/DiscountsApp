@@ -33,6 +33,11 @@ namespace ScnDiscounts.Views.ContentUI
             get { return Device.OnPlatform("Icon/pin.png", "ic_pin.png", "Assets/Icon/pin.png"); }
         }
 
+        public string IconFilter
+        {
+            get { return Device.OnPlatform("Icon/filter.png", "ic_filter.png", "Assets/Icon/filter.png"); }
+        }
+
         private LanguageStrings _msgTitleNoGPS;
         public string MsgTitleNoGPS
         {

@@ -7,16 +7,6 @@ namespace ScnDiscounts.Control
     {
         public LabelExtended()
         {
-            if (Device.OS == TargetPlatform.WinPhone)
-            {
-                var tapGesture = new TapGestureRecognizer();
-                tapGesture.Tapped += (sender, e) =>
-                {
-                    OnClick();
-                };
-
-                GestureRecognizers.Add(tapGesture);
-            }
         }
 
         #region TagProperty
@@ -64,12 +54,6 @@ namespace ScnDiscounts.Control
                     LineBreakMode = LineBreakMode.WordWrap;
                     break;
             }
-        }
-
-        public event EventHandler Click;
-        public virtual void OnClick()
-        {
-            if (Click != null) Click(this, EventArgs.Empty);
         }
     }
 }

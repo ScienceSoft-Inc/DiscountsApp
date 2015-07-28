@@ -14,6 +14,8 @@ namespace ScnDiscounts.Views.Styles
         public static string LabelPercentSymbolStyle = "labelPercentSymbolStyle";
         public static string LinkStyle = "linkStyle";
         public static string MenuStyle = "menuStyle";
+        public static string MenuHintStyle = "menuHintStyle";
+        public static string MenuDisabledStyle = "menuDisabledStyle";
         public static string CategoryStyle = "categoryStyle";
         public static string DetailTitleStyle = "detailTitleStyle";
         public static string DetailDistanceStyle = "detailDistanceStyle";
@@ -162,6 +164,33 @@ namespace ScnDiscounts.Views.Styles
             };
             #endregion
 
+            #region Style MenuHint
+            Style menuHintStyle = new Style(typeof(Label))
+            {
+                Setters =
+                {
+                    new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(13, 13, 18) },
+                    new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("EEE") },
+                    new Setter { Property = Label.OpacityProperty, Value = 0.5 },
+                    new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
+                }
+            };
+            #endregion
+
+            #region Style Menu disabled
+            Style menuDisabledStyle = new Style(typeof(Label))
+            {
+                Setters =
+                {
+                    new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(15, 15, 20) },
+                    new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("7F7F7F") },
+                    new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
+                }
+            };
+            #endregion
+
             #region Style Categoty
             Style categoryStyle = new Style(typeof(Label))
             {
@@ -279,6 +308,8 @@ namespace ScnDiscounts.Views.Styles
             Resources.Add(LabelPercentSymbolStyle, labelPercentSymbolStyle);
             Resources.Add(LinkStyle, linkStyle);
             Resources.Add(MenuStyle, menuStyle);
+            Resources.Add(MenuHintStyle, menuHintStyle);
+            Resources.Add(MenuDisabledStyle, menuDisabledStyle);
             Resources.Add(CategoryStyle, categoryStyle);
             Resources.Add(DetailTitleStyle, detailTitleStyle);
             Resources.Add(DetailDistanceStyle, detailDistanceStyle);

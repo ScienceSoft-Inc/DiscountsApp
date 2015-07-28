@@ -24,25 +24,35 @@ namespace ScnDiscounts.ViewModels
         private bool isFullInit = false;
         async void AnimateListView_Appearing(object sender, EventArgs e)
         {
-            IsLoadBusy = true;
             ViewPage.Appearing -= AnimateListView_Appearing;
 
-            await Task.Delay(300); //waiting appearing page
-            await (ViewPage as DiscountPage).DiscountListView.ShowAnimation();
-
-            if (!isFullInit)
+            try
             {
-                await Task.Delay(100); //waiting full render after animation
-                var skipCount = (AppData.Discount.DiscountCollection.Count > previewItemsCount) ? previewItemsCount : 0;
+                if (Device.OS == TargetPlatform.Android)
+                    IsLoadActivity = true;
+                
+                await Task.Delay(300); //waiting appearing page
+                await (ViewPage as DiscountPage).DiscountListView.ShowAnimation();
 
-                if (skipCount > 0)
+                if (!isFullInit)
                 {
-                    int count = AppData.Discount.DiscountCollection.Count - skipCount;
-                    AppData.Discount.DiscountCollection.Skip(skipCount).Take(count).ToList().ForEach(DiscountItems.Add);
-                    OnPropertyChanged("DiscountItemsCount");
-                }
+                    await Task.Delay(100); //waiting full render after animation
+                    var skipCount = (AppData.Discount.DiscountCollection.Count > previewItemsCount) ? previewItemsCount : 0;
 
-                isFullInit = true;
+                    if (skipCount > 0)
+                    {
+                        int count = AppData.Discount.DiscountCollection.Count - skipCount;
+                        AppData.Discount.DiscountCollection.Skip(skipCount).Take(count).ToList().ForEach(DiscountItems.Add);
+                        OnPropertyChanged("DiscountItemsCount");
+                    }
+
+                    isFullInit = true;
+                }
+            }
+            finally
+            {
+                if (Device.OS == TargetPlatform.Android)
+                    IsLoadActivity = false;
             }
         }
 
@@ -74,25 +84,54 @@ namespace ScnDiscounts.ViewModels
             ((ListView)sender).SelectedItem = null;
 
             ViewPage.Appearing += AnimateListView_Appearing;
-            if (Device.OS != TargetPlatform.Android)
-                (ViewPage as DiscountPage).DiscountListView.HideAnimation();
 
+            if ((discountData != null) && (!IsOpenning))
+                OpenPage(discountData);
+        }
+
+        #region OpenningLocker
+        static object OpenningLocker = new object();
+        private bool _isOpenning = false;
+        private bool IsOpenning
+        {
+            get
+            {
+                lock (OpenningLocker)
+                    return _isOpenning;
+            }
+            set
+            {
+                lock (OpenningLocker)
+                    _isOpenning = value;
+            }
+        }
+        #endregion
+
+        async private void OpenPage(DiscountData discountData)
+        {
             try
             {
-                IsLoadActivity = true;
-                await AppData.Discount.LoadBranchList(discountData);
+                IsOpenning = true;
+
+                if (Device.OS != TargetPlatform.Android)
+                    (ViewPage as DiscountPage).DiscountListView.HideAnimation();
+
+                try
+                {
+                    IsLoadActivity = true;
+                    await AppData.Discount.LoadBranchList(discountData);
+                }
+                finally
+                {
+                    IsLoadActivity = false;
+                }
+
+                await ViewPage.Navigation.PushAsync(new DiscountDetailPage(discountData), true);
             }
             finally
             {
-                IsLoadActivity = false;
+                IsOpenning = false;
             }
-
-            await ViewPage.Navigation.PushAsync(new DiscountDetailPage(discountData), true);
-        }
-
-        internal void BranchView_AnimationFinished(object sender, EventArgs e)
-        {
-            IsLoadBusy = false;
         }
     }
 }

@@ -10,11 +10,15 @@ namespace ScnDiscounts.Models
     {
         public LanguageStrings(string enUs = "", string ruRu = "", string beBe = "")
         {
+            DefaultValue = enUs;
+
             EnUsValue = enUs;
             RuRuValue = ruRu;
             BeBeValue = beBe;
         }
-        
+
+        private string DefaultValue { get; set; }
+
         public string EnUsValue { get; set; }
         public string RuRuValue { get; set; }
         public string BeBeValue { get; set; }
@@ -24,12 +28,21 @@ namespace ScnDiscounts.Models
             get { return GetCurrentLangString(); }
         }
 
+        public string Default
+        {
+            get { return DefaultValue; }
+        }
+
         public override string GetCurrentLangString()
         {
-            string stringDescription = EnUsValue;
+            string stringDescription = DefaultValue;
 
             switch (AppParameters.Config.SystemLang)
             {
+                case (LanguageHelper.LangTypeEnum.ltEn):
+                    stringDescription = EnUsValue;
+                    break;
+
                 case (LanguageHelper.LangTypeEnum.ltRu):
                     stringDescription = RuRuValue;
                     break;
@@ -38,7 +51,6 @@ namespace ScnDiscounts.Models
                     stringDescription = BeBeValue;
                     break;
 
-                case (LanguageHelper.LangTypeEnum.ltEn):
                 default:
                     break;
             };

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.sciencesoft.discounts" android:versionName="1.2" android:versionCode="5">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.sciencesoft.discounts" android:versionName="1.3" android:versionCode="6">
 	<uses-sdk android:minSdkVersion="16" />
 	<application android:icon="@drawable/ic_logo" android:label="ScienceSoft Discounts" android:theme="@style/AppTheme">
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBSIQ6vq8Nf-KTp_MECYI3eQVwtu7KRz5E" />

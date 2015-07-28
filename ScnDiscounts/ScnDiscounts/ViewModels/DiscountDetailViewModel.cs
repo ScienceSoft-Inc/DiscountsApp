@@ -250,12 +250,14 @@ namespace ScnDiscounts.ViewModels
         //------------------
         // Methods
         //------------------
-        async internal void txtShowOnMap_Click(object sender, EventArgs e)
+        internal void txtShowOnMap_Click(object sender, EventArgs e)
         {
             AppData.Discount.ActiveMapPinId = (sender as LabelExtended).Tag;
-            Console.WriteLine(AppData.Discount.ActiveMapPinId);
 
-            await ViewPage.Navigation.PopToRootAsync(true);
+            if (Device.OS == TargetPlatform.iOS)
+                ViewPage.Navigation.PushAsync(new MainPage());
+            else
+                ViewPage.Navigation.PopToRootAsync(true);
         }
 
         internal void txtUrlAddress_Click(object sender, EventArgs e)
