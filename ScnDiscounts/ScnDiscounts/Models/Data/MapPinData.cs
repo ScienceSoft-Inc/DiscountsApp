@@ -10,25 +10,31 @@ namespace ScnDiscounts.Models.Data
     {
         public MapPinData()
         {
-            //SetName()
+            _categorieList = new List<CategorieData>();
         }
 
-        public MapPinData(DeserializeBranchItem deserializeBranch)
+        public MapPinData(DeserializeBranchItem deserializeBranch) : this()
         {
             NumberFormatInfo format = new NumberFormatInfo();
             format.NumberGroupSeparator = ",";
             format.NumberDecimalSeparator = ".";
 
-            _categoryType = 0;
-
-            if ((deserializeBranch.Categories != null) && (deserializeBranch.Categories.Count > 0))
+            foreach (var item in deserializeBranch.Categories)
             {
-                int.TryParse(deserializeBranch.Categories[0].Type, out _categoryType);
-
-                foreach (var item in deserializeBranch.Categories[0].Name)
-                    SetCategory(item.Lan, item.LocText);
+                var categorie = new CategorieData();
+                int typeCode = 0;
+                int.TryParse(item.Type, out typeCode);
+                categorie.TypeCode = typeCode;
+                foreach (var itemName in item.Name)
+                    categorie.SetName(itemName.Lan, itemName.LocText);
+                _categorieList.Add(categorie);
             }
-            
+
+            if (_categorieList.Count > 0)
+                _primaryCategory = _categorieList[0];
+            else
+                _primaryCategory = new CategorieData { TypeCode = -1 };
+
             try
             {
                 _discount = deserializeBranch.Discounts[0].Name[0].LocText;
@@ -61,13 +67,6 @@ namespace ScnDiscounts.Models.Data
             set { _id = value; }
         }
 
-        private int _categoryType;
-        public int CategoryType
-        {
-            get { return _categoryType; }
-            set { _categoryType = value; }
-        }
-
         private string _discount;
         public string Discount
         {
@@ -91,7 +90,7 @@ namespace ScnDiscounts.Models.Data
 
         #region Name
         private Dictionary<LanguageHelper.LangTypeEnum, string> _name = new Dictionary<LanguageHelper.LangTypeEnum, string>(); 
-        private void SetName(string langCode, string value)
+        public void SetName(string langCode, string value)
         {
             var lang = LanguageHelper.LangCodeToEnum(langCode);
             _name.Add(lang, value);
@@ -109,24 +108,16 @@ namespace ScnDiscounts.Models.Data
         #endregion
 
         #region Category
-        private Dictionary<LanguageHelper.LangTypeEnum, string> _category = new Dictionary<LanguageHelper.LangTypeEnum, string>();
-        private void SetCategory(string langCode, string value)
-        {
-            var lang = LanguageHelper.LangCodeToEnum(langCode);
-            _category.Add(lang, value);
-        }
+        private List<CategorieData> _categorieList;
+        public List<CategorieData> CategorieList { get { return _categorieList; } }
 
-        public string CaregoryName
+        private CategorieData _primaryCategory;
+        public CategorieData PrimaryCategory
         {
-            get
-            {
-                if (_category.ContainsKey(AppParameters.Config.SystemLang))
-                    return _category[AppParameters.Config.SystemLang];
-                return "noname";
-            }
+            get { return _primaryCategory; }
+            set { _primaryCategory = value; }
         }
         #endregion
-
 
         #region Distance
         private string _distance = "0.0";

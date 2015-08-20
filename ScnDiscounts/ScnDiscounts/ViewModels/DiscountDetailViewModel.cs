@@ -11,6 +11,7 @@ using Xamarin.Forms;
 using System.Threading.Tasks;
 using ScnDiscounts.Views;
 using ScnPage.Plugin.Forms;
+using ScnViewGestures.Plugin.Forms;
 
 namespace ScnDiscounts.ViewModels
 {
@@ -23,7 +24,7 @@ namespace ScnDiscounts.ViewModels
 
         protected override void InitProperty()
         {
-            _branchItems = new ObservableCollection<BranchData>();
+            _branchItems = new ObservableCollection<DiscountDetailBranchData>();
 
             ViewPage.Appearing += ViewPage_Appearing;
             ViewPage.Appearing += InitListView_Appearing;
@@ -44,11 +45,11 @@ namespace ScnDiscounts.ViewModels
 
                 await Task.Delay(1000); //waiting init listview control
 
-                var skipCount = (currentDiscount.BranchList.Count > previewItemsCount) ? previewItemsCount : 0;
+                var skipCount = (discountDetailData.BranchList.Count > previewItemsCount) ? previewItemsCount : 0;
                 if (skipCount > 0)
                 {
-                    int count = currentDiscount.BranchList.Count - skipCount;
-                    currentDiscount.BranchList.Skip(skipCount).Take(count).ToList().ForEach(BranchItems.Add);
+                    int count = discountDetailData.BranchList.Count - skipCount;
+                    discountDetailData.BranchList.Skip(skipCount).Take(count).ToList().ForEach(BranchItems.Add);
                     OnPropertyChanged("BranchItemsCount");
 
                     CalculateDistance();
@@ -68,18 +69,16 @@ namespace ScnDiscounts.ViewModels
             CalculateDistance();
         }
 
-        public DiscountData currentDiscount;
-        public void SetDiscount(DiscountData discountData)
+        public void SetDiscount(string discountID)
         {
-            currentDiscount = discountData;
-
+            discountDetailData = AppData.Discount.DB.LoadDiscountDetail(discountID);
             if (Device.OS == TargetPlatform.Android)
             {
-                var count = (currentDiscount.BranchList.Count > previewItemsCount) ? previewItemsCount : currentDiscount.BranchList.Count;
-                currentDiscount.BranchList.Take(count).ToList().ForEach(BranchItems.Add);
+                var count = (discountDetailData.BranchList.Count > previewItemsCount) ? previewItemsCount : discountDetailData.BranchList.Count;
+                discountDetailData.BranchList.Take(count).ToList().ForEach(BranchItems.Add);
             }
             else if ((Device.OS == TargetPlatform.WinPhone) || (Device.OS == TargetPlatform.iOS))
-                BranchItems = currentDiscount.BranchList;
+                BranchItems = new ObservableCollection<DiscountDetailBranchData>(discountDetailData.BranchList);
 
             CalculateDistance();
         }
@@ -90,25 +89,27 @@ namespace ScnDiscounts.ViewModels
                 item.CalculateDistance();
         }
 
+        private DiscountDetailData discountDetailData;
+
         //------------------
         // Property
         //------------------
-        #region ImgPhoto -
-        public string ImgPhoto
+        #region ImageFileName -
+        public string ImageFileName
         {
             get 
             {
-                return currentDiscount.Image; 
+                return discountDetailData.ImageFileName; 
             }
         }
         #endregion
 
-        #region ImgLogo -
-        public string ImgLogo
+        #region LogoFileName -
+        public string LogoFileName
         {
             get
             {
-                return currentDiscount.Icon;
+                return discountDetailData.LogoFileName;
             }
         }
         #endregion
@@ -116,21 +117,21 @@ namespace ScnDiscounts.ViewModels
         #region DiscountPercent -
         public string DiscountPercent
         {
-            get { return currentDiscount.DiscountPercent; }
+            get { return  discountDetailData.Persent; }
         }
         #endregion
 
         #region Categories
         public int CategoriesCount
         {
-            get { return currentDiscount.CategorieList.Count; }
+            get { return  discountDetailData.CategorieList.Count; }
         }
 
         public string CategoryIndexName(int index)
         {
             string name = "empty";
             if (index < CategoriesCount)
-                name = currentDiscount.CategorieList[index].Name;
+                name = CategoryHelper.CategoryList[discountDetailData.CategorieList[index].TypeCode].Name;
             return name.ToUpper();
         }
 
@@ -140,9 +141,9 @@ namespace ScnDiscounts.ViewModels
 
             if (index < CategoriesCount)
             {
-                if (CategoryHelper.CategoryList.ContainsKey(currentDiscount.CategorieList[index].TypeCode))
+                if (CategoryHelper.CategoryList.ContainsKey(discountDetailData.CategorieList[index].TypeCode))
                 {
-                    var categoryParam = CategoryHelper.CategoryList[currentDiscount.CategorieList[index].TypeCode];
+                    var categoryParam = CategoryHelper.CategoryList[discountDetailData.CategorieList[index].TypeCode];
                     color = categoryParam.ColorTheme;
                 }
             }
@@ -151,64 +152,30 @@ namespace ScnDiscounts.ViewModels
         }
         #endregion
 
-        #region CategoryName
-        public string CategoryName
-        {
-            get { return currentDiscount.FirstCategoryName; }
-        }
-        #endregion
-
-        #region CategoryColor
-        public Color CategoryColor
-        {
-            get { return currentDiscount.FirstCategoryColor; }
-        }
-        #endregion
-
         #region NameCompany
         public string NameCompany
         {
-            get { return currentDiscount.Name; }
+            get { return discountDetailData.Title; }
         }
         #endregion
 
         #region Description -
         public string Description
         {
-            get { return currentDiscount.Description; }
+            get { return discountDetailData.Description; }
         }
         #endregion
 
         #region UrlAddress -
         public string UrlAddress
         {
-            get { return currentDiscount.UrlAddress; }
-        }
-        #endregion
-
-        #region PartnerAddress -
-        public string PartnerAddress
-        {
-            get { return currentDiscount.Address; }
-        }
-        #endregion
-
-        #region Distance -
-        private string _distance = "0.0";
-        public string Distance
-        {
-            get { return _distance; }
-            set
-            {
-                _distance = value;
-                OnPropertyChanged();
-            }
+            get { return discountDetailData.UrlAddress; }
         }
         #endregion
 
         #region BranchItems - property
-        private ObservableCollection<BranchData> _branchItems;
-        public ObservableCollection<BranchData> BranchItems
+        private ObservableCollection<DiscountDetailBranchData> _branchItems;
+        public ObservableCollection<DiscountDetailBranchData> BranchItems
         {
             get { return _branchItems; }
             set
@@ -221,7 +188,14 @@ namespace ScnDiscounts.ViewModels
 
         public int BranchItemsCount
         {
-            get { return BranchItems.Count; }
+            get 
+            {
+                //gag for WP, beause label doesn't expand automatically in this case
+                if ((Device.OS == TargetPlatform.WinPhone) && (BranchItems.Count == 1))
+                    return BranchItems.Count + 1; // +1 supplementary space for label
+                
+                return BranchItems.Count; 
+            }
         }
 
         //------------------
@@ -250,14 +224,24 @@ namespace ScnDiscounts.ViewModels
         //------------------
         // Methods
         //------------------
-        internal void txtShowOnMap_Click(object sender, EventArgs e)
+        internal void ShowOnMap_Click(object sender, EventArgs e)
         {
-            AppData.Discount.ActiveMapPinId = (sender as LabelExtended).Tag;
+            var parentElement = (sender as VisualElement).Parent;
+            if (!(parentElement is ViewGestures))
+                return;
 
-            if (Device.OS == TargetPlatform.iOS)
-                ViewPage.Navigation.PushAsync(new MainPage());
-            else
-                ViewPage.Navigation.PopToRootAsync(true);
+            AppData.Discount.ActiveMapPinId = (parentElement as ViewGestures).Tag;
+
+            var page = ViewPage.Navigation.NavigationStack[1];
+            if (page != null)
+            {
+                if (page is BaseContentPage)
+                    (page as BaseContentPage).OnDisposing();
+
+                ViewPage.Navigation.RemovePage(page);
+            }
+            ViewPage.Navigation.PopAsync(true); 
+            //ViewPage.Navigation.PopToRootAsync(true); - BUG on WP
         }
 
         internal void txtUrlAddress_Click(object sender, EventArgs e)

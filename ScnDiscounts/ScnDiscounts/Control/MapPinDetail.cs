@@ -53,8 +53,22 @@ namespace ScnDiscounts.Control
 
             txtCategory = new Label
             {
-                Text = CategoryName,
-                Style = (Style)App.Current.Resources[LabelStyles.DescriptionStyle],
+                Style = (Style)App.Current.Resources[LabelStyles.CategoryStyle],
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                Text = CategoryName.ToUpper(),
+            };
+
+            stackCategory = new StackLayout
+            {
+                Padding = Device.OnPlatform(new Thickness(4), new Thickness(4), new Thickness(6)),
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                BackgroundColor = CategoryColor,
+                Children =
+                    {
+                        txtCategory
+                    }
             };
 
             Grid gridHeader = new Grid
@@ -73,7 +87,7 @@ namespace ScnDiscounts.Control
             };
 
             gridHeader.Children.Add(txtTitle, 0, 0);
-            gridHeader.Children.Add(txtCategory, 1, 0);
+            gridHeader.Children.Add(stackCategory, 1, 0);
             #endregion
 
             #region Info
@@ -143,17 +157,17 @@ namespace ScnDiscounts.Control
 
             borderDetail = new BorderBox(BorderBox.BorderTypeEnum.btLabel);
 
-            borderDetail.HeightRequest = Device.OnPlatform(50, 58, 76);
-            borderDetail.WidthRequest = Device.OnPlatform(210, 210, 260);
+            borderDetail.HeightRequest = Device.OnPlatform(50, 58, 84);
+            borderDetail.WidthRequest = Device.OnPlatform(210, 210, 280);
             borderDetail.BorderWidth = 1;
             borderDetail.BorderColor = (Color)App.Current.Resources[MainStyles.ListBorderColor];
             borderDetail.Content = gridDetail;
 
             SetLayoutFlags(borderDetail, AbsoluteLayoutFlags.PositionProportional);
             SetLayoutBounds(borderDetail, Device.OnPlatform(
-                new Rectangle(0.5, 0.385, AutoSize, AutoSize),
                 new Rectangle(0.5, 0.365, AutoSize, AutoSize),
-                new Rectangle(0.5, 0.365, AutoSize, AutoSize))
+                new Rectangle(0.5, 0.360, AutoSize, AutoSize),
+                new Rectangle(0.5, 0.355, AutoSize, AutoSize))
             );
 
             borderDetail.Scale = 0;
@@ -166,6 +180,7 @@ namespace ScnDiscounts.Control
         private ViewGestures viewGestures;
         private Label txtTitle;
         private Label txtCategory;
+        private StackLayout stackCategory;
         private Label txtDiscountCaption;
         private Label txtPercentValue;
         private Image imgDistanceIcon;
@@ -209,7 +224,18 @@ namespace ScnDiscounts.Control
             set 
             { 
                 _categoryName = value;
-                txtCategory.Text = _categoryName;
+                txtCategory.Text = _categoryName.ToUpper();
+            }
+        }
+
+        private Color _categoryColor = Color.Transparent;
+        public Color CategoryColor
+        {
+            get { return _categoryColor; }
+            set
+            {
+                _categoryColor = value;
+                stackCategory.BackgroundColor = _categoryColor;
             }
         }
 

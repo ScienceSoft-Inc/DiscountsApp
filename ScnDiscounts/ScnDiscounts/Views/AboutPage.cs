@@ -29,7 +29,7 @@ namespace ScnDiscounts.Views
 
             var appBar = new TitleBar(this, TitleBar.BarBtnEnum.bbBack)
             {
-                BarColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor]
+                BarColor = (Color)App.Current.Resources[MainStyles.StatusBarColor]
             };
             appBar.BtnBack.BackgroundColor = Color.Transparent;
             appBar.BtnBack.Source = contentUI.IconBack;
@@ -48,13 +48,13 @@ namespace ScnDiscounts.Views
             var txtDescription = new Label
             {
                 Text = contentUI.TxtDescription,
-                Style = (Style)App.Current.Resources[LabelStyles.AboutDescriptionStyle],
+                Style = (Style)App.Current.Resources[LabelStyles.DescriptionLightStyle],
             };
 
             var txtDescriptionBullet1 = new Label
             {
                 Text = contentUI.TxtDescriptionBullet1,
-                Style = (Style)App.Current.Resources[LabelStyles.AboutDescriptionStyle],
+                Style = (Style)App.Current.Resources[LabelStyles.DescriptionLightStyle],
             };
 
             var stackDescriptionBullet1 = new StackLayout
@@ -67,12 +67,12 @@ namespace ScnDiscounts.Views
                     {
                         VerticalOptions = LayoutOptions.Start,
                         Text = contentUI.TxtDescriptionBulletSymbol,
-                        Style = (Style)App.Current.Resources[LabelStyles.AboutDescriptionStyle],
+                        Style = (Style)App.Current.Resources[LabelStyles.DescriptionLightStyle],
                     },
                     new Label 
                     {
                         Text = contentUI.TxtDescriptionBullet1,
-                        Style = (Style)App.Current.Resources[LabelStyles.AboutDescriptionStyle],
+                        Style = (Style)App.Current.Resources[LabelStyles.DescriptionLightStyle],
                     },
                 }
             };
@@ -87,12 +87,12 @@ namespace ScnDiscounts.Views
                     {
                         VerticalOptions = LayoutOptions.Start,
                         Text = contentUI.TxtDescriptionBulletSymbol,
-                        Style = (Style)App.Current.Resources[LabelStyles.AboutDescriptionStyle],
+                        Style = (Style)App.Current.Resources[LabelStyles.DescriptionLightStyle],
                     },
                     new Label 
                     {
                         Text = contentUI.TxtDescriptionBullet2,
-                        Style = (Style)App.Current.Resources[LabelStyles.AboutDescriptionStyle],
+                        Style = (Style)App.Current.Resources[LabelStyles.DescriptionLightStyle],
                     },
                 }
             };
@@ -107,12 +107,12 @@ namespace ScnDiscounts.Views
                     {
                         VerticalOptions = LayoutOptions.Start,
                         Text = contentUI.TxtDescriptionBulletSymbol,
-                        Style = (Style)App.Current.Resources[LabelStyles.AboutDescriptionStyle],
+                        Style = (Style)App.Current.Resources[LabelStyles.DescriptionLightStyle],
                     },
                     new Label 
                     {
                         Text = contentUI.TxtDescriptionBullet3,
-                        Style = (Style)App.Current.Resources[LabelStyles.AboutDescriptionStyle],
+                        Style = (Style)App.Current.Resources[LabelStyles.DescriptionLightStyle],
                     },
                 }
             };
@@ -163,7 +163,7 @@ namespace ScnDiscounts.Views
             var txtNumberVersion = new Label 
             {
                 Text = contentUI.TxtVersionValue,
-                Style = (Style)App.Current.Resources[LabelStyles.AboutVersionStyle],
+                Style = (Style)App.Current.Resources[LabelStyles.DescriptionLightStyle],
             };
 
             var stackVersion = new StackLayout

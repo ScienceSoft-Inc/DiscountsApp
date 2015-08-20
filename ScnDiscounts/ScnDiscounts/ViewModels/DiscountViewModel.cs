@@ -28,8 +28,8 @@ namespace ScnDiscounts.ViewModels
 
             try
             {
-                if (Device.OS == TargetPlatform.Android)
-                    IsLoadActivity = true;
+                //if (Device.OS == TargetPlatform.Android)
+                //    IsLoadActivity = true;
                 
                 await Task.Delay(300); //waiting appearing page
                 await (ViewPage as DiscountPage).DiscountListView.ShowAnimation();
@@ -51,8 +51,8 @@ namespace ScnDiscounts.ViewModels
             }
             finally
             {
-                if (Device.OS == TargetPlatform.Android)
-                    IsLoadActivity = false;
+                //if (Device.OS == TargetPlatform.Android)
+                //    IsLoadActivity = false;
             }
         }
 
@@ -119,14 +119,14 @@ namespace ScnDiscounts.ViewModels
                 try
                 {
                     IsLoadActivity = true;
-                    await AppData.Discount.LoadBranchList(discountData);
+                    await AppData.Discount.LoadFullDescription(discountData);
                 }
                 finally
                 {
                     IsLoadActivity = false;
                 }
 
-                await ViewPage.Navigation.PushAsync(new DiscountDetailPage(discountData), true);
+                await ViewPage.Navigation.PushAsync(new DiscountDetailPage(discountData.DocumentId), true);
             }
             finally
             {

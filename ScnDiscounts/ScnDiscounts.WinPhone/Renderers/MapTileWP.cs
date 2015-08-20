@@ -229,10 +229,10 @@ namespace ScnDiscounts.WinPhone.Renderers
         {
             public PinMarker(MapPinData pinData)
             {
-                if (pinData.CategoryType > 0)
+                if (pinData.PrimaryCategory != null)
                 {
                     System.Windows.Controls.Image imgPin = new System.Windows.Controls.Image();
-                    var categoryParam = CategoryHelper.CategoryList[pinData.CategoryType];
+                    var categoryParam = CategoryHelper.CategoryList[pinData.PrimaryCategory.TypeCode];
                     BitmapImage bmp = new BitmapImage(new Uri(categoryParam.Icon, UriKind.Relative));
                     imgPin.Source = bmp;
                     //imgPin.Width = 60;

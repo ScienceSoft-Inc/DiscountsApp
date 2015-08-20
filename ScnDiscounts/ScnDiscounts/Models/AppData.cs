@@ -4,6 +4,10 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using ScnDiscounts.Models.Data;
 using ScnDiscounts.Models.WebService.MongoDB;
+using ScnDiscounts.Models.Database;
+using ScnDiscounts.Views.ContentUI;
+using Xamarin.Forms;
+using ScnDiscounts.Helpers;
 
 namespace ScnDiscounts.Models
 {
@@ -15,10 +19,15 @@ namespace ScnDiscounts.Models
             {
                 _discountCollection = new List<DiscountData>();
                 _mapPinCollection = new ObservableCollection<MapPinData>();
+
+                _db = new LocalDB();
             }
 
             private bool isConnected;
             private Client ServiceProvider { get; set; }
+
+            private LocalDB _db;
+            public LocalDB DB { get { return _db; } }
 
             private List<DiscountData> _discountCollection;
             public List<DiscountData> DiscountCollection { get { return _discountCollection; } }
@@ -98,14 +107,17 @@ namespace ScnDiscounts.Models
                 return isSuccess;
             }
 
-            async public Task<bool> LoadBranchList(DiscountData discountData)
+            async public Task<bool> LoadFullDescription(DiscountData discountData)
             {
                 bool isSuccess = false;
                 
                 try
                 {
-                    if ((isConnected) && (discountData != null) && (discountData.BranchList.Count == 0))
-                        isSuccess = await ServiceProvider.GetPartnerDetail(discountData);
+                    if (discountData.IsFullDescription)
+                        isSuccess = true;
+                    else
+                        if ((isConnected) && (discountData != null))
+                            isSuccess = await ServiceProvider.GetPartnerDetail(discountData);
                 }
                 catch (Exception)
                 {
@@ -116,6 +128,86 @@ namespace ScnDiscounts.Models
 
                 return isSuccess;
             }
+
+            private bool LoadLocalDB() 
+            {
+                bool isSuccess = false;
+
+                return isSuccess;
+            }
+
+            private void ClearLocalDB()
+            {
+
+            }
+
+            async public Task<bool> LoadData(Action<string> actionProcess)
+            {
+                bool isSuccess = false;
+
+                try
+                {
+                    var content = new SplashContentUI();
+                    actionProcess(content.TxtProcessLoadingData);
+
+                    var dataMidificationHash = AppParameters.Config.DataMidificationHash;
+                    if (!await GetModificationHash())
+                        return false;
+
+                    bool isNeedUpdating = dataMidificationHash != AppParameters.Config.DataMidificationHash;
+
+                    if (isNeedUpdating)
+                    {
+                        _db.DiscountClean();
+                        IsolatedStorageHelper.ClearStorage();
+
+                        actionProcess(content.TxtProcessLoadMapData);
+                        isSuccess = await LoadDiscounts();
+
+                        actionProcess(content.TxtProcessLoadDiscountsData);
+                        if (isSuccess)
+                            isSuccess = await LoadSpatial();
+                    }
+
+                    _db.LoadMapData();
+                    _db.LoadDiscount();
+                    isSuccess = true;
+                }
+                catch (Exception ex)
+                {
+                    //TODO: Handling exception
+
+                    isSuccess = false;
+                }
+
+                return isSuccess;
+            }
+
+            async private Task<bool> GetModificationHash()
+            {
+                bool isSuccess = false;
+
+                try
+                {
+                    isSuccess = await ServiceConnected();
+
+                    if (isConnected)
+                    {
+                        var param = await ServiceProvider.GetModificationHash();
+                        AppParameters.Config.DataMidificationHash = param.Value;
+                        AppParameters.Config.SaveValue();
+                    }
+                }
+                catch (Exception)
+                {
+                    //TODO: Handling exception
+
+                    isSuccess = false;
+                }
+
+                return isSuccess;
+            }
+        
         }
 
         static public DiscountContainer Discount = new DiscountContainer();

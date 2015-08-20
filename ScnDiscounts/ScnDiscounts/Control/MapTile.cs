@@ -127,28 +127,31 @@ namespace ScnDiscounts.Control
             }
 
             string categoryName = "";
-            if (CategoryHelper.CategoryList.ContainsKey(cutPinData.CategoryType))
+            Color categoryColor = Color.Black;
+            if (CategoryHelper.CategoryList.ContainsKey(cutPinData.PrimaryCategory.TypeCode))
             {
-                var categoryParam = CategoryHelper.CategoryList[cutPinData.CategoryType];
+                var categoryParam = CategoryHelper.CategoryList[cutPinData.PrimaryCategory.TypeCode];
                 categoryName = categoryParam.Name;
+                categoryColor = categoryParam.ColorTheme;
             }
 
             mapPinDetail.DiscountValue = cutPinData.Discount + "%";
-            mapPinDetail.CategoryName = cutPinData.CaregoryName;
+            mapPinDetail.CategoryName =  CategoryHelper.GetName(cutPinData.PrimaryCategory.TypeCode);
+            mapPinDetail.CategoryColor = CategoryHelper.GetColorTheme(cutPinData.PrimaryCategory.TypeCode);
             mapPinDetail.Title = cutPinData.Name + ".";
             mapPinDetail.DistanceValue = cutPinData.Distance;
             await mapPinDetail.Show();
             
             var tapPinDetail = new TapGestureRecognizer();
-            tapPinDetail.Tapped += (sender, e) =>
+            tapPinDetail.Tapped += async (sender, e) =>
             {
-                CloseDetailInfo();
+                await CloseDetailInfo();
                 OnClickPinDetail(new MapPinDataEventArgs(cutPinData));
             };
             mapPinDetail.TapPinDetail = tapPinDetail;
         }
 
-        async public void CloseDetailInfo()
+        async public Task CloseDetailInfo()
         {
             _isShowDetailInfo = false;
             await mapPinDetail.Hide();

@@ -1,5 +1,6 @@
 ﻿using ScnDiscounts.Control;
 using ScnDiscounts.ValueConverter;
+using ScnDiscounts.ValueConverters;
 using ScnDiscounts.ViewModels;
 using ScnDiscounts.Views.ContentUI;
 using ScnDiscounts.Views.Styles;
@@ -32,7 +33,7 @@ namespace ScnDiscounts.Views
 
             var appBar = new TitleBar(this, TitleBar.BarBtnEnum.bbBack)
             {
-                BarColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor]
+                BarColor = (Color)App.Current.Resources[MainStyles.StatusBarColor]
             };
             appBar.BtnBack.BackgroundColor = Color.Transparent;
             appBar.BtnBack.Source = contentUI.IconBack;
@@ -104,14 +105,18 @@ namespace ScnDiscounts.Views
                     }
                 };
 
+                var fileNameConverter = new FileNameToImageConverter();
+
                 // Company logo
-                var imgCompanyLogo = new Image
+                var imgCompanyLogo = new ImageExtended
                 {
                     WidthRequest = Device.OnPlatform(64, 64, 64),
                     HeightRequest = Device.OnPlatform(64, 64, 64),
-                    Aspect = Aspect.AspectFit
+                    Aspect = Aspect.AspectFit,
+                    
                 };
-                imgCompanyLogo.SetBinding(Image.SourceProperty, new Binding("Icon", BindingMode.Default, new FileStreamToImageSource(), FileStreamToImageSource.SizeImage.siSmall));
+                imgCompanyLogo.SetBinding(Image.SourceProperty, new Binding("LogoFileName", BindingMode.Default, fileNameConverter));
+
 
                 var stackCompanyLogo = new StackLayout
                 {

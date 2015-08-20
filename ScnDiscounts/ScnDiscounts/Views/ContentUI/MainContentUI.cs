@@ -9,8 +9,11 @@ namespace ScnDiscounts.Views.ContentUI
         public MainContentUI()
         {
             title = new LanguageStrings("Map", "Карта", "Мапа");
-            _msgTitleNoGPS = new LanguageStrings("GPS is turned off", "GPS выключен");
-            _msgTxtNoGPS = new LanguageStrings("Locating disabled. Turn on the GPS in your phone settings.", "Определение местоположения отключено. Включите функцию GPS в настройках телефона.");
+            _msgTitleNoGPS = new LanguageStrings("GPS is turned off", "GPS выключен", "GPS выключаны");
+            _msgTxtNoGPS = new LanguageStrings(
+                "Locating disabled. Turn on the GPS in your phone settings.", 
+                "Определение местоположения отключено. Включите функцию GPS в настройках телефона.",
+                "Вызначэнне месцазнаходжання адключана. Уключыце функцыю GPS у наладах тэлефона.");
         }
 
         public string IconMenuSideBar

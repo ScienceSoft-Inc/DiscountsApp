@@ -68,7 +68,7 @@ namespace ScnDiscounts.iOS.Renderers
                 map.Clear();
                 foreach (var item in mapTile.PinList)
                 {
-                    var categoryParam = CategoryHelper.CategoryList[item.CategoryType];
+                    var categoryParam = CategoryHelper.CategoryList[item.PrimaryCategory.TypeCode];
 
                     Marker marker = new Marker();
                     marker.Position = new CoreLocation.CLLocationCoordinate2D(item.Latitude, item.Longitude);
@@ -102,7 +102,7 @@ namespace ScnDiscounts.iOS.Renderers
             var mapPinData = mapTile.PinList.First(x => x.Id == pinId);
             if (mapPinData != null)
             {
-                var categoryParam = CategoryHelper.CategoryList[mapPinData.CategoryType];
+                var categoryParam = CategoryHelper.CategoryList[mapPinData.PrimaryCategory.TypeCode];
                 marker.Icon = UIImage.FromFile(categoryParam.Icon).Scale(new CGSize(marker.Icon.Size.Width * 1.2, marker.Icon.Size.Height * 1.2)); ;
                 await Task.Delay(200);
                 marker.Icon = UIImage.FromFile(categoryParam.Icon);

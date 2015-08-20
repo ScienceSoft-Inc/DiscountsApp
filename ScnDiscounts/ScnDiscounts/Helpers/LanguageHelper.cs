@@ -10,8 +10,8 @@ namespace ScnDiscounts.Helpers
         static public Dictionary<LangTypeEnum, string> LanguageList = new Dictionary<LangTypeEnum, string>
         {
             {LangTypeEnum.ltEn, "English" },
-            {LangTypeEnum.ltRu, "Русский" }
-            //{LangTypeEnum.ltBe, "Беларуская" }
+            {LangTypeEnum.ltRu, "Русский" },
+            {LangTypeEnum.ltBe, "Беларуская" }
         };
 
         static public LangTypeEnum LangNameToEnum(string lang)
@@ -39,42 +39,23 @@ namespace ScnDiscounts.Helpers
                 return LangTypeEnum.ltBe;
             return LangTypeEnum.ltEn;
         }
-    }
-    
-    /*public struct LanguageStrings
-    {
-        public LanguageStrings(string enUs = "", string ruRu = "", string beBe = "")
+
+        static public string LangEnumToCode(LangTypeEnum langType)
         {
-            enUsValue = enUs;
-            ruRuValue = ruRu;
-            beBeValue = beBe;
-        }
-
-        private string enUsValue;
-        private string ruRuValue;
-        private string beBeValue;
-
-        public string Current
-        {
-            string stringDescription = enUsValue;
-
-            switch (AppParameters.Config.SystemLang)
+            switch (langType)
             {
-                case (LanguageHelper.LangTypeEnum.ltRu):
-                    stringDescription = ruRuValue;
-                    break;
+                case LangTypeEnum.ltEn:
+                    return "EN";
 
-                case (LanguageHelper.LangTypeEnum.ltBe):
-                    stringDescription = beBeValue;
-                    break;
+                case LangTypeEnum.ltRu:
+                    return "RU";
 
-                case (LanguageHelper.LangTypeEnum.ltEn):
+                case LangTypeEnum.ltBe:
+                    return "BY";
+
                 default:
-                    break;
-            };
-
-            return stringDescription;
+                    return "EN";
+            }
         }
-    }*/
-
+    }
 }

@@ -1488,6 +1488,8 @@ namespace ScnDiscounts.Droid
 			global::GooglePlayServices.Resource.Styleable.WalletFragmentStyle_maskedWalletDetailsTextAppearance = global::ScnDiscounts.Droid.Resource.Styleable.WalletFragmentStyle_maskedWalletDetailsTextAppearance;
 			global::ScnViewGestures.Droid.Resource.String.ApplicationName = global::ScnDiscounts.Droid.Resource.String.ApplicationName;
 			global::ScnViewGestures.Droid.Resource.String.Hello = global::ScnDiscounts.Droid.Resource.String.Hello;
+			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.ApplicationName = global::ScnDiscounts.Droid.Resource.String.ApplicationName;
+			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.Hello = global::ScnDiscounts.Droid.Resource.String.Hello;
 			global::Xamarin.Forms.Platform.Resource.String.ApplicationName = global::ScnDiscounts.Droid.Resource.String.ApplicationName;
 			global::Xamarin.Forms.Platform.Resource.String.Hello = global::ScnDiscounts.Droid.Resource.String.Hello;
 		}
@@ -3193,31 +3195,31 @@ namespace ScnDiscounts.Droid
 			public const int ic_pin = 2130837624;
 			
 			// aapt resource value: 0x7f020079
-			public const int ic_pin_blue = 2130837625;
+			public const int ic_pin_cinema = 2130837625;
 			
 			// aapt resource value: 0x7f02007a
-			public const int ic_pin_disabled = 2130837626;
+			public const int ic_pin_clothing = 2130837626;
 			
 			// aapt resource value: 0x7f02007b
-			public const int ic_pin_green = 2130837627;
+			public const int ic_pin_coffee = 2130837627;
 			
 			// aapt resource value: 0x7f02007c
-			public const int ic_pin_grey = 2130837628;
+			public const int ic_pin_disabled = 2130837628;
 			
 			// aapt resource value: 0x7f02007d
-			public const int ic_pin_navigation = 2130837629;
+			public const int ic_pin_entertainment = 2130837629;
 			
 			// aapt resource value: 0x7f02007e
-			public const int ic_pin_orange = 2130837630;
+			public const int ic_pin_food = 2130837630;
 			
 			// aapt resource value: 0x7f02007f
-			public const int ic_pin_purple = 2130837631;
+			public const int ic_pin_navigation = 2130837631;
 			
 			// aapt resource value: 0x7f020080
-			public const int ic_pin_rose = 2130837632;
+			public const int ic_pin_photo = 2130837632;
 			
 			// aapt resource value: 0x7f020081
-			public const int ic_pin_yellow = 2130837633;
+			public const int ic_pin_sport = 2130837633;
 			
 			// aapt resource value: 0x7f020082
 			public const int ic_play_dark = 2130837634;

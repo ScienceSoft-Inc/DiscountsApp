@@ -85,26 +85,25 @@ namespace ScnDiscounts.Droid.Renderers
                     markerWithIcon.SetSnippet(item.Id);
                     try
                     {
-                        if (CategoryHelper.CategoryList.ContainsKey(item.CategoryType))
+                        if (CategoryHelper.CategoryList.ContainsKey(item.PrimaryCategory.TypeCode))
                         {
-                            var categoryParam = CategoryHelper.CategoryList[item.CategoryType];
-                            // markerWithIcon.InvokeIcon(BitmapDescriptorFactory.FromPath(categoryParam.Icon));//  FromAsset("ic_pin.png")); //String.Format("{0}.png", formsPin.PinIcon)));
+                            var categoryParam = CategoryHelper.CategoryList[item.PrimaryCategory.TypeCode];
                             var constIcon = 0;
 
-                            if (categoryParam.Icon == CategoryHelper.ic_pin_blue)
-                                constIcon = Resource.Drawable.ic_pin_blue;
-                            else if (categoryParam.Icon == CategoryHelper.ic_pin_green)
-                                constIcon = Resource.Drawable.ic_pin_green;
-                            else if (categoryParam.Icon == CategoryHelper.ic_pin_grey)
-                                constIcon = Resource.Drawable.ic_pin_grey;
-                            else if (categoryParam.Icon == CategoryHelper.ic_pin_orange)
-                                constIcon = Resource.Drawable.ic_pin_orange;
-                            else if (categoryParam.Icon == CategoryHelper.ic_pin_purple)
-                                constIcon = Resource.Drawable.ic_pin_purple;
-                            else if (categoryParam.Icon == CategoryHelper.ic_pin_rose)
-                                constIcon = Resource.Drawable.ic_pin_rose;
-                            else if (categoryParam.Icon == CategoryHelper.ic_pin_yellow)
-                                constIcon = Resource.Drawable.ic_pin_yellow;
+                            if (categoryParam.Icon == CategoryHelper.ic_pin_coffee)
+                                constIcon = Resource.Drawable.ic_pin_coffee;
+                            else if (categoryParam.Icon == CategoryHelper.ic_pin_cinema)
+                                constIcon = Resource.Drawable.ic_pin_cinema;
+                            else if (categoryParam.Icon == CategoryHelper.ic_pin_photo)
+                                constIcon = Resource.Drawable.ic_pin_photo;
+                            else if (categoryParam.Icon == CategoryHelper.ic_pin_clothing)
+                                constIcon = Resource.Drawable.ic_pin_clothing;
+                            else if (categoryParam.Icon == CategoryHelper.ic_pin_entertainment)
+                                constIcon = Resource.Drawable.ic_pin_entertainment;
+                            else if (categoryParam.Icon == CategoryHelper.ic_pin_sport)
+                                constIcon = Resource.Drawable.ic_pin_sport;
+                            else if (categoryParam.Icon == CategoryHelper.ic_pin_food)
+                                constIcon = Resource.Drawable.ic_pin_food;
 
                             if (constIcon != 0)
                                 markerWithIcon.InvokeIcon(BitmapDescriptorFactory.FromResource(constIcon));

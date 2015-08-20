@@ -15,6 +15,7 @@ namespace ScnDiscounts.Views.ContentUI
                                                 "Праверце падлучэнне. Прыкладанне не можа працаваць без інтэрнэту.");
             _txtProcessCheckInternet = new LanguageStrings("Checking Internet available", "Проверка доступа в интернет", "Праверка доступу ў інтэрнэт");
             _txtProcessConnection = new LanguageStrings("Connection to server", "Подключение к серверу", "Падключэнне да сервера");
+            _txtProcessLoadingData = new LanguageStrings("Loading data", "Загрузка данных", "Загрузка даных");
             _txtProcessLoadMapData = new LanguageStrings("Loading map data", "Загрузка информации для карты", "Загрузка інфармацыі для мапы");
             _txtProcessLoadDiscountsData = new LanguageStrings("Loading discounts data", "Загрузка информации о скидках", "Загрузка інфармацыі пра зніжкі");
             
@@ -59,6 +60,12 @@ namespace ScnDiscounts.Views.ContentUI
         public string TxtProcessConnection
         {
             get { return _txtProcessConnection.Current; }
+        }
+
+        private LanguageStrings _txtProcessLoadingData;
+        public string TxtProcessLoadingData
+        {
+            get { return _txtProcessLoadingData.Current; }
         }
 
         private LanguageStrings _txtProcessLoadMapData;

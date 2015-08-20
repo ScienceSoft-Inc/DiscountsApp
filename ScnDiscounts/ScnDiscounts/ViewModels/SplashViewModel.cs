@@ -44,28 +44,10 @@ namespace ScnDiscounts.ViewModels
         async private void InitApp()
         {
             IsShowLoading = true;
-
+            
             if (CheckInternet())
             {
-                bool isLoadingSuccess = true;
-
-                //Load Spatial
-                ProcessMessage = contentUI.TxtProcessLoadMapData;
-                isLoadingSuccess = await AppData.Discount.LoadSpatial();
-
-                if (!isLoadingSuccess)
-                {
-                    ProcessMessage = contentUI.TitleErrLoading;
-                    await ViewPage.DisplayAlert(contentUI.TitleErrLoading, contentUI.MsgErrLoading, contentUI.TxtOk);
-                    ProcessMessage = contentUI.TxtErrServiceConnection;
-                    IsRetry = true;
-                    return;
-                }
-
-                //Load Discounts
-                ProcessMessage = contentUI.TxtProcessLoadDiscountsData;
-                isLoadingSuccess = await AppData.Discount.LoadDiscounts();
-                if (!isLoadingSuccess)
+                if (!await AppData.Discount.LoadData(OnProcessMessage))
                 {
                     ProcessMessage = contentUI.TitleErrLoading;
                     await ViewPage.DisplayAlert(contentUI.TitleErrLoading, contentUI.MsgErrLoading, contentUI.TxtOk);
@@ -82,9 +64,14 @@ namespace ScnDiscounts.ViewModels
             IsShowLoading = false;
         }
 
+        public void OnProcessMessage(string message)
+        {
+            ProcessMessage = message;
+        }
+
         private bool CheckInternet()
         {
-            ProcessMessage = contentUI.TxtProcessCheckInternet;
+            OnProcessMessage(contentUI.TxtProcessCheckInternet);
 
             var isHasInternet = AppMobileService.Network.IsAvailable();
 

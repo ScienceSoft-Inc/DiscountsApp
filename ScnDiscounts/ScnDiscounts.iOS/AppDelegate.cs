@@ -22,7 +22,7 @@ namespace ScnDiscounts.iOS
         //
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
-        const string MapsApiKey = "AIzaSyDQz3OULXJj7Tm3XijuEVE8WtJLPPYL7Nc";
+        const string MapsApiKey = "AIzaSyDsfIRAyypmT5Wp6a0Wd8vEfvmRAJuRolo";
 
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {

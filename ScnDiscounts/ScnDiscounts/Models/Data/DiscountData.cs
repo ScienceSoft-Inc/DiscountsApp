@@ -3,37 +3,36 @@ using ScnDiscounts.Helpers;
 using ScnDiscounts.Models.WebService.MongoDB;
 using Xamarin.Forms;
 using System.Collections.ObjectModel;
+using System;
 
 namespace ScnDiscounts.Models.Data
 {
     public class DiscountData : NotifyPropertyChanged
     {
-        public DiscountData(DeserializeBranchItem branchItem)
+        public DiscountData()
         {
-            _id = branchItem.Id;
+            _name = new Dictionary<LanguageHelper.LangTypeEnum, string>();
+            _description = new Dictionary<LanguageHelper.LangTypeEnum, string>();
+
+            _categorieList = new List<CategorieData>();
+        }
+        public DiscountData(DeserializeBranchItem branchItem) : this()
+        {
+            _documentId = branchItem.Id;
             _partnerId = branchItem.PartnerId;
 
-            _name = new Dictionary<LanguageHelper.LangTypeEnum, string>();
             foreach (var item in branchItem.Name)
                 SetName(item.Lan, item.LocText);
 
-            _description = new Dictionary<LanguageHelper.LangTypeEnum, string>();
             foreach (var item in branchItem.Description)
                 SetDescription(item.Lan, item.LocText);
-
-            _discountValueList = new List<DiscountValue>();
-            foreach (var item in branchItem.Discounts)
-            {
-                var discountValue = new DiscountValue();
-                foreach (var itemName in item.Name)
-                    discountValue.SetName(itemName.Lan, itemName.LocText);
-                _discountValueList.Add(discountValue);
-            }
-
-            _categorieList = new List<Categorie>();
+            
+            if (branchItem.Discounts.Count > 0 && branchItem.Discounts[0].Name.Count > 0)
+                _discountPercent = branchItem.Discounts[0].Name[0].LocText;
+           
             foreach (var item in branchItem.Categories)
             {
-                var categorie = new Categorie();
+                var categorie = new CategorieData();
                 int typeCode = 0;
                 int.TryParse (item.Type, out typeCode);
                 categorie.TypeCode = typeCode;
@@ -44,31 +43,21 @@ namespace ScnDiscounts.Models.Data
 
             _urlAddress = branchItem.Url;
 
-            _address = new Dictionary<LanguageHelper.LangTypeEnum, string>();
-            foreach (var item in branchItem.Address)
-                SetAddress(item.Lan, item.LocText);
-
-            _phoneList = new List<string>();
-            foreach (var item in branchItem.Phones)
-                _phoneList.Add(item.Number);
-
             _icon = branchItem.Icon;
-
-            _branchList = new ObservableCollection<BranchData>();
         }
 
-        #region Id
-        private string _id;
-        public string Id
+        #region DocumentId
+        private string _documentId;
+        public string DocumentId
         {
-            get { return _id; }
-            set { _id = value; }
+            get { return _documentId; }
+            set { _documentId = value; }
         }
         #endregion
 
         #region Name
         private Dictionary<LanguageHelper.LangTypeEnum, string> _name;
-        private void SetName(string langCode, string value)
+        public void SetName(string langCode, string value)
         {
             var lang = LanguageHelper.LangCodeToEnum(langCode);
             _name.Add(lang, value);
@@ -83,11 +72,43 @@ namespace ScnDiscounts.Models.Data
                 return "empty";
             }
         }
+
+        public Dictionary<LanguageHelper.LangTypeEnum, string> NameList
+        {
+            get { return _name; }
+        }
+        #endregion
+
+        #region IsFullDescription
+        private bool _isFullDescription = false;
+        public bool IsFullDescription
+        {
+            get { return _isFullDescription; }
+            set { _isFullDescription = value; }
+        }
+        #endregion
+
+        #region LogoFileName
+        private string _logoFileName = "";
+        public string LogoFileName
+        {
+            get { return _logoFileName; }
+            set { _logoFileName = value; }
+        }
+        #endregion
+
+        #region ImageFileName
+        private string _imageFileName = "";
+        public string ImageFileName
+        {
+            get { return _imageFileName; }
+            set { _imageFileName = value; }
+        }
         #endregion
 
         #region Description
         private Dictionary<LanguageHelper.LangTypeEnum, string> _description;
-        private void SetDescription(string langCode, string value)
+        public void SetDescription(string langCode, string value)
         {
             var lang = LanguageHelper.LangCodeToEnum(langCode);
             _description.Add(lang, value);
@@ -102,16 +123,17 @@ namespace ScnDiscounts.Models.Data
                 return "empty";
             }
         }
-        #endregion
 
-        #region DiscountValues
-        private List<DiscountValue> _discountValueList;
-        public List<DiscountValue> DiscountValueList { get { return _discountValueList; } }
+        public Dictionary<LanguageHelper.LangTypeEnum, string> DescriptionList
+        {
+            get { return _description; }
+        }
+
         #endregion
 
         #region Categories
-        private List<Categorie> _categorieList;
-        public List<Categorie> CategorieList { get { return _categorieList; } }
+        private List<CategorieData> _categorieList;
+        public List<CategorieData> CategorieList { get { return _categorieList; } }
         #endregion
 
         #region FirstCategoryName
@@ -172,30 +194,6 @@ namespace ScnDiscounts.Models.Data
         }
         #endregion
 
-        #region Address
-        private Dictionary<LanguageHelper.LangTypeEnum, string> _address;
-        private void SetAddress(string langCode, string value)
-        {
-            var lang = LanguageHelper.LangCodeToEnum(langCode);
-            _address.Add(lang, value);
-        }
-
-        public string Address
-        {
-            get
-            {
-                if (_address.ContainsKey(AppParameters.Config.SystemLang))
-                    return _address[AppParameters.Config.SystemLang];
-                return "empty";
-            }
-        }
-        #endregion
-
-        #region Phones
-        private List<string> _phoneList;
-        public List<string> PhoneList { get { return _phoneList; } }
-        #endregion
-
         #region Icon
         private string _icon = "";
         public string Icon
@@ -224,64 +222,14 @@ namespace ScnDiscounts.Models.Data
         #endregion
 
         #region DiscountPercent
+        private string _discountPercent;
         public string DiscountPercent
         {
-            get
-            {
-                var percentValue = "0";
-
-                if (_discountValueList.Count > 0)
-                {
-                    percentValue = _discountValueList[0].Name;
-                }
-
-                return percentValue;
-            }
+            get { return _discountPercent; }
+            set { _discountPercent = value; }
         }
         #endregion
 
-        #region Branchs
-        private ObservableCollection<BranchData> _branchList;
-        public ObservableCollection<BranchData> BranchList 
-        {
-            get { return _branchList; } 
-        }
-        #endregion
-
-        public class Categorie
-        {
-            public Categorie ()
-            {
-                _name = new Dictionary<LanguageHelper.LangTypeEnum, string>();
-            }
-
-            private int _typeCode;
-            public int TypeCode
-            {
-                get { return _typeCode; }
-                set { _typeCode = value; }
-            }
-
-            #region Name
-            private Dictionary<LanguageHelper.LangTypeEnum, string> _name;
-            public void SetName(string langCode, string value)
-            {
-                var lang = LanguageHelper.LangCodeToEnum(langCode);
-                _name.Add(lang, value);
-            }
-
-            public string Name
-            {
-                get
-                {
-                    if (_name.ContainsKey(AppParameters.Config.SystemLang))
-                        return _name[AppParameters.Config.SystemLang];
-                    return "empty";
-                }
-            }
-            #endregion
-        }
-       
         public class DiscountValue
         {
             public DiscountValue()

@@ -30,8 +30,6 @@ namespace ScnDiscounts.Models
             set { _paramName = value; }
         }
 
-        private LanguageStrings toggleState;
-
         public string Icon
         {
             get
@@ -84,15 +82,21 @@ namespace ScnDiscounts.Models
             }
         }
 
-        public string ToggleValue
+        public string TurnOnValue
         {
-            get 
+            get
             {
                 var content = new RootContentUI();
-                if (IsToggle)
-                    return content.TxtTurnOn;
-                else
-                    return content.TxtTurnOff;
+                return content.TxtTurnOn;
+            }
+        }
+
+        public string TurnOffValue
+        {
+            get
+            {
+                var content = new RootContentUI();
+                return content.TxtTurnOff;
             }
         }
     }

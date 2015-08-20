@@ -46,6 +46,13 @@ namespace ScnDiscounts.ViewModels
         // Property
         //------------------
 
+        #region Title
+        public string Title
+        {
+            get { return contentUI.Title; }
+        }
+        #endregion
+
         #region CurrLanguageTitle - Current language title
         public string CurrLanguageTitle
         {

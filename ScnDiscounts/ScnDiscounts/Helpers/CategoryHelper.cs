@@ -6,29 +6,36 @@ namespace ScnDiscounts.Helpers
 {
     public static class CategoryHelper
     {
-        public const string ic_pin_blue = "ic_pin_blue.png";
-        public const string ic_pin_green = "ic_pin_green.png";
-        public const string ic_pin_grey = "ic_pin_grey.png";
-        public const string ic_pin_orange = "ic_pin_orange.png";
-        public const string ic_pin_purple = "ic_pin_purple.png";
-        public const string ic_pin_rose = "ic_pin_rose.png";
-        public const string ic_pin_yellow = "ic_pin_yellow.png";
+        public const string ic_pin_cinema = "ic_pin_cinema.png";
+        public const string ic_pin_clothing = "ic_pin_clothing.png";
+        public const string ic_pin_entertainment = "ic_pin_entertainment.png";
+        public const string ic_pin_photo = "ic_pin_photo.png";
+        public const string ic_pin_food = "ic_pin_food.png";
+        public const string ic_pin_coffee = "ic_pin_coffee.png";
+        public const string ic_pin_sport = "ic_pin_sport.png";
 
         public static string ic_pin_disabled = Device.OnPlatform("MapPins/ic_pin_disabled.png", "ic_pin_disabled.png", "Assets/MapPins/ic_pin_disabled.png");
 
         static public Dictionary<int, CategoryParam> CategoryList = new Dictionary<int, CategoryParam>
         {
-            { 1, new CategoryParam (Color.FromHex("ddca00"), new LanguageStrings("Food", "Еда", "Ежа"), Device.OnPlatform("MapPins/" + ic_pin_yellow, ic_pin_yellow, "Assets/MapPins/" + ic_pin_yellow)) },
-            { 2, new CategoryParam (Color.FromHex("3875d7"), new LanguageStrings("Coffee", "Кофе", "Кава"), Device.OnPlatform("MapPins/" + ic_pin_blue, ic_pin_blue, "Assets/MapPins/" + ic_pin_blue)) },
-            { 3, new CategoryParam (Color.FromHex("FF6600"), new LanguageStrings("Clothing", "Одежда", "Адзенне"), Device.OnPlatform("MapPins/" + ic_pin_orange, ic_pin_orange, "Assets/MapPins/" + ic_pin_orange)) },
-            { 4, new CategoryParam (Color.FromHex("51a123"), new LanguageStrings("Cinema", "Кино", "Кiно"), Device.OnPlatform("MapPins/" + ic_pin_green, ic_pin_green, "Assets/MapPins/" + ic_pin_green)) },
-            { 5, new CategoryParam (Color.FromHex("666"), new LanguageStrings("Photography", "Фотография", "Фатаграфiя"), Device.OnPlatform("MapPins/" + ic_pin_grey, ic_pin_grey, "Assets/MapPins/" + ic_pin_grey)) },
-            { 6, new CategoryParam (Color.FromHex("8A21B9"), new LanguageStrings("Entertainment", "Развлечения", "Забавы"), Device.OnPlatform("MapPins/" + ic_pin_purple, ic_pin_purple, "Assets/MapPins/" + ic_pin_purple)) },
-            { 7, new CategoryParam (Color.FromHex("F42494"), new LanguageStrings("Sports", "Спорт", "Спорт"), Device.OnPlatform("MapPins/" + ic_pin_rose, ic_pin_rose, "Assets/MapPins/" + ic_pin_rose)) }
+            { 1, new CategoryParam (Color.FromHex("FFD535"), new LanguageStrings("Food", "Еда", "Ежа"), Device.OnPlatform("MapPins/" + ic_pin_food, ic_pin_food, "Assets/MapPins/" + ic_pin_food)) },
+            { 2, new CategoryParam (Color.FromHex("593B32"), new LanguageStrings("Coffee", "Кофе", "Кава"), Device.OnPlatform("MapPins/" + ic_pin_coffee, ic_pin_coffee, "Assets/MapPins/" + ic_pin_coffee)) },
+            { 3, new CategoryParam (Color.FromHex("F06A14"), new LanguageStrings("Clothing", "Одежда", "Адзенне"), Device.OnPlatform("MapPins/" + ic_pin_clothing, ic_pin_clothing, "Assets/MapPins/" + ic_pin_clothing)) },
+            { 4, new CategoryParam (Color.FromHex("8CC453"), new LanguageStrings("Cinema", "Кино", "Кiно"), Device.OnPlatform("MapPins/" + ic_pin_cinema, ic_pin_cinema, "Assets/MapPins/" + ic_pin_cinema)) },
+            { 5, new CategoryParam (Color.FromHex("37B6FF"), new LanguageStrings("Photography", "Фотография", "Фатаграфiя"), Device.OnPlatform("MapPins/" + ic_pin_photo, ic_pin_photo, "Assets/MapPins/" + ic_pin_photo)) },
+            { 6, new CategoryParam (Color.FromHex("C17CCF"), new LanguageStrings("Entertainment", "Развлечения", "Забавы"), Device.OnPlatform("MapPins/" + ic_pin_entertainment, ic_pin_entertainment, "Assets/MapPins/" + ic_pin_entertainment)) },
+            { 7, new CategoryParam (Color.FromHex("FFFF0B"), new LanguageStrings("Sports", "Спорт", "Спорт"), Device.OnPlatform("MapPins/" + ic_pin_sport, ic_pin_sport, "Assets/MapPins/" + ic_pin_sport)) }
         };
 
-       // static public CategoryParam GetCategoryBy
+        public static string GetName(int typeCode)
+        {
+            return CategoryList[typeCode].Name;
+        }
 
+        public static Color GetColorTheme(int typeCode)
+        {
+            return CategoryList[typeCode].ColorTheme;
+        }
     }
 
     public struct CategoryParam

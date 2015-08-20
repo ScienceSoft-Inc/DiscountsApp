@@ -3,6 +3,7 @@ using ScnDiscounts.Helpers;
 using Xamarin.Forms;
 using ScnDiscounts.Control;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace ScnDiscounts.Models
 {
@@ -36,6 +37,15 @@ namespace ScnDiscounts.Models
                 get { return _filterCategoryList; }
             }
 
+            //data modification hash
+            private string DataMidificationHashParamName = "MapSource";
+            private string _dataMidificationHash = String.Empty;
+            public string DataMidificationHash
+            {
+                get { return _dataMidificationHash; }
+                set { _dataMidificationHash = value; }
+            }
+
             public void Init()
             {
                 LoadValue();
@@ -45,6 +55,7 @@ namespace ScnDiscounts.Models
             {
                 Application.Current.Properties[SystemLangParamName] = SystemLang.ToString();
                 Application.Current.Properties[MapSourceParamName] = MapSource.ToString();
+                Application.Current.Properties[DataMidificationHashParamName] = DataMidificationHash;
 
                 SaveCategoryFilter();
             }
@@ -58,6 +69,11 @@ namespace ScnDiscounts.Models
                     if (Enum.TryParse(lang, out tmpLang))
                         SystemLang = tmpLang;
                 }
+                else
+                {
+                    var langNameISO = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+                    SystemLang = LanguageHelper.LangCodeToEnum(langNameISO);
+                }
 
                 if (Application.Current.Properties.ContainsKey(MapSourceParamName))
                 {
@@ -66,6 +82,9 @@ namespace ScnDiscounts.Models
                     if (Enum.TryParse(map, out tmpMap))
                         MapSource = tmpMap;
                 }
+
+                if (Application.Current.Properties.ContainsKey(DataMidificationHashParamName))
+                    DataMidificationHash = Application.Current.Properties[DataMidificationHashParamName] as string;
 
                 LoadCategoryFilter();
             }
@@ -101,6 +120,8 @@ namespace ScnDiscounts.Models
                     _filterCategoryList.Add(filterItem);
                 }
             }
+
+            
         }
 
         static public ConfigContainer Config = new ConfigContainer();

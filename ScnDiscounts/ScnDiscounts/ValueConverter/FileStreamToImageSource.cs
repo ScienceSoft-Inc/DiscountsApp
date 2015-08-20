@@ -11,7 +11,9 @@ namespace ScnDiscounts.ValueConverter
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var base64Stream = (string)value;
+            return Device.OnPlatform("Image/img_logo.png", "img_logo.png", "Assets/Image/img_logo.png");
+
+            /*var base64Stream = (string)value;
             if (String.IsNullOrEmpty(base64Stream))
             {
                 SizeImage sizeImage = (SizeImage)parameter;
@@ -20,11 +22,21 @@ namespace ScnDiscounts.ValueConverter
                     return Device.OnPlatform("", "img_empty_big.png", "");
                 if (sizeImage == SizeImage.siSmall)
                     return Device.OnPlatform("", "img_empty_small.png", "");
-            }
+            }*/
 
-            byte[] imageBytes = System.Convert.FromBase64String(base64Stream);
+            //byte[] imageBytes = System.Convert.FromBase64String(base64Stream);
 
-            return ImageSource.FromStream(() => { return new MemoryStream(imageBytes); });
+            //ImageSource imgSource = null;
+
+            /*using (var stream = new MemoryStream(imageBytes))
+            {
+                return ImageSource.FromStream(() => { return stream; });
+            }*/
+            //return imgSource;
+
+            //ImageSource. 
+
+            //return ImageSource.FromStream(() => { return new MemoryStream(imageBytes); });
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

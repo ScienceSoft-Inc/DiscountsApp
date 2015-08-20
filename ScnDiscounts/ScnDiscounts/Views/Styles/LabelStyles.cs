@@ -7,6 +7,7 @@ namespace ScnDiscounts.Views.Styles
         public static string PageTitleStyle = "pageTitleStyle";
         public static string TitleStyle = "titleStyle";
         public static string DescriptionStyle = "descriptionStyle";
+        public static string DescriptionLightStyle = "descriptionLightStyle";
         public static string ListTitleStyle = "listTitleStyle";
         public static string ListPercentStyle = "listPercentStyle";
         public static string ListPercentSymbolStyle = "listPercentSymbolStyle";
@@ -22,8 +23,6 @@ namespace ScnDiscounts.Views.Styles
         public static string DetailPhoneStyle = "detailPhoneStyle";
         public static string SettingStyle = "settingStyle";
         public static string SettingHintStyle = "settingHintStyle";
-        public static string AboutDescriptionStyle = "aboutDescriptionStyle";
-        public static string AboutVersionStyle = "aboutVersionStyle";
 
         public override void Load()
         {
@@ -63,6 +62,19 @@ namespace ScnDiscounts.Views.Styles
                     new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(13, 13, 17) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("444") },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.TailTruncation }
+                }
+            };
+            #endregion
+
+            #region Style Description
+            Style descriptionLightStyle = new Style(typeof(Label))
+            {
+                Setters =
+                {
+                    new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(13, 13, 17) },
+                    new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(255, 255, 255) },
+                    new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.WordWrap }
                 }
             };
             #endregion
@@ -157,7 +169,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(15, 15, 20) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(17, 17, 22) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("EEE") },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
                 }
@@ -184,7 +196,7 @@ namespace ScnDiscounts.Views.Styles
                 Setters =
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(15, 15, 20) },
+                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(17, 17, 22) },
                     new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("7F7F7F") },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
                 }
@@ -272,35 +284,10 @@ namespace ScnDiscounts.Views.Styles
             };
             #endregion
 
-            #region Style AboutDescription
-            Style aboutDescriptionStyle = new Style(typeof(Label))
-            {
-                Setters =
-                {
-                    new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(13, 13, 17) },
-                    new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(255, 255, 255) },
-                    new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.WordWrap }
-                }
-            };
-            #endregion
-
-            #region Style AboutVersion
-            Style aboutVersionStyle = new Style(typeof(Label))
-            {
-                Setters =
-                {
-                    new Setter { Property = Label.FontFamilyProperty, Value =  Device.OnPlatform("Arial", "Arial", "Arial") },
-                    new Setter { Property = Label.FontSizeProperty, Value = Device.OnPlatform(28, 28, 32) },
-                    new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(255, 255, 255) },
-                    new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
-                }
-            };
-            #endregion
-
             Resources.Add(PageTitleStyle, pageTitleStyle);
             Resources.Add(TitleStyle, titleStyle);
             Resources.Add(DescriptionStyle, descriptionStyle);
+            Resources.Add(DescriptionLightStyle, descriptionLightStyle);
             Resources.Add(ListTitleStyle, listTitleStyle);
             Resources.Add(ListPercentStyle, listPercentStyle);
             Resources.Add(ListPercentSymbolStyle, listPercentSymbolStyle);
@@ -316,8 +303,6 @@ namespace ScnDiscounts.Views.Styles
             Resources.Add(DetailPhoneStyle, detailPhoneStyle);
             Resources.Add(SettingStyle, settingStyle);
             Resources.Add(SettingHintStyle, settingHintStyle);
-            Resources.Add(AboutDescriptionStyle, aboutDescriptionStyle);
-            Resources.Add(AboutVersionStyle, aboutVersionStyle);
         }
     }
 }

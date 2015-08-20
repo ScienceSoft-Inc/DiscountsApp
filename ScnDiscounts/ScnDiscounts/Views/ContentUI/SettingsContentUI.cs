@@ -11,10 +11,10 @@ namespace ScnDiscounts.Views.ContentUI
             title = new LanguageStrings("Settings", "Настройки", "Налады");
 
             _txtLanguage = new LanguageStrings("Language", "Язык", "Мова");
-            _txtLanguageSel = new LanguageStrings("Choose language", "Выберите язык", "Выберыце мову");
+            _txtLanguageSel = new LanguageStrings("Choose language", "Выберите язык", "Выбірыце мову");
 
-            _txtMap = new LanguageStrings("Map", "Карта");
-            _txtMapSel = new LanguageStrings("Choose map", "Выберите карту");
+            _txtMap = new LanguageStrings("Map", "Карта", "Мапа");
+            _txtMapSel = new LanguageStrings("Choose map", "Выберите карту", "Выбірыце мапу");
         }
 
         public string Icon

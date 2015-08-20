@@ -10,6 +10,7 @@ namespace ScnDiscounts.Views.Styles
         public static string ListBackgroundColor = "ListBackgroundColor";
         public static string ListSelectColor = "ListSelectColor";
         public static string LightTextColor = "LightTextColor";
+        public static string StatusBarColor = "StatusBarColor";
 
         public override void Load()
         {
@@ -19,6 +20,7 @@ namespace ScnDiscounts.Views.Styles
             Color listBackgroundColor = Color.FromRgb(255, 255, 255);
             Color listSelectColor = Color.FromRgb(100, 194, 255);
             Color lightTextColor = Color.FromRgb(255, 255, 255);
+            Color statusBarColor = Color.FromRgb(40, 120, 192);
 
             Resources.Add(MainBackgroundColor, mainBackgroundColor);
             Resources.Add(MainLightBackgroundColor, mainLightBackgroundColor);
@@ -26,6 +28,7 @@ namespace ScnDiscounts.Views.Styles
             Resources.Add(ListBackgroundColor, listBackgroundColor);
             Resources.Add(ListSelectColor, listSelectColor);
             Resources.Add(LightTextColor, lightTextColor);
+            Resources.Add(StatusBarColor, statusBarColor);
         }
     }
 }

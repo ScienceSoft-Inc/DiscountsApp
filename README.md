@@ -7,8 +7,8 @@ Store links:
 - Android Play Matrket: https://play.google.com/store/apps/details?id=com.sciencesoft.discounts
 
 Versions:
-- iOS app is version 1.1.
-- Android app is version 1.3.
-- WP app is version 1.2.
+- iOS app is version 1.3.
+- Android app is version 1.4.
+- WP app is version 1.3.
 
 

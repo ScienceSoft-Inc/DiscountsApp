@@ -13,6 +13,7 @@ namespace ScnDiscounts.Models.WebService.MongoDB
         private const string RequestSpatial = @"spatial/discounts/";
         private const string RequestPartnerDetail = @"partners/{0}/details";
         private const string RequestPartnerTooltip = @"partners/{0}/branches/{1}/tooltip";
+        private const string RequestModificationHash = @"modificationhash/";
 
         async public Task<bool> CheckConnection()
         {
@@ -46,7 +47,10 @@ namespace ScnDiscounts.Models.WebService.MongoDB
                 foreach (var item in branchList)
                 {
                     var deserializeBranch = JsonConvert.DeserializeObject<DeserializeBranchItem>(item.ToString());
-                    AppData.Discount.DiscountCollection.Add(new DiscountData(deserializeBranch));
+                    DiscountData discountData = new DiscountData(deserializeBranch);
+                    //AppData.Discount.DiscountCollection.Add(discountData);
+
+                    await AppData.Discount.DB.SaveDiscount(discountData);
                 }
 
                 isSuccess = true;
@@ -71,7 +75,9 @@ namespace ScnDiscounts.Models.WebService.MongoDB
                 foreach (var item in spatialList)
                 {
                     var deserializeBranch = JsonConvert.DeserializeObject<DeserializeBranchItem>(item.ToString());
-                    AppData.Discount.MapPinCollection.Add(new MapPinData(deserializeBranch));
+                    //AppData.Discount.MapPinCollection.Add(new MapPinData(deserializeBranch));
+
+                    await AppData.Discount.DB.UpdateDiscount(deserializeBranch);
                 }
 
                 isSuccess = true;
@@ -90,18 +96,13 @@ namespace ScnDiscounts.Models.WebService.MongoDB
 
             try
             {
-                discountData.BranchList.Clear();
-
-                var token = await Get(String.Format(RequestPartnerDetail, discountData.Id));
+                var token = await Get(String.Format(RequestPartnerDetail, discountData.DocumentId));
                 var branchList = JsonConvert.DeserializeObject<List<Object>>(token);
 
                 foreach (var item in branchList)
                 {
                     var deserializeBranch = JsonConvert.DeserializeObject<DeserializeBranchItem>(item.ToString());
-                    discountData.BranchList.Add(new BranchData(deserializeBranch)); 
-                    
-                    if (deserializeBranch.Id == deserializeBranch.PartnerId)
-                        discountData.Image = deserializeBranch.Image;
+                    await AppData.Discount.DB.UpdateDiscount(deserializeBranch);
                 }
 
                 isSuccess = true;
@@ -130,6 +131,23 @@ namespace ScnDiscounts.Models.WebService.MongoDB
             }
 
             return isSuccess;
+        }
+
+        async public Task<ParameterData> GetModificationHash()
+        {
+            ParameterData parameter = null;
+            
+            try
+            {
+                var token = await Get(RequestModificationHash);
+                parameter = JsonConvert.DeserializeObject<ParameterData>(token);
+            }
+            catch (Exception ex)
+            {
+                parameter = null;
+            }
+
+            return parameter;
         }
     }
 }

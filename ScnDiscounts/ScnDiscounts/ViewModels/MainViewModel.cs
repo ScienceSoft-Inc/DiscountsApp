@@ -173,21 +173,21 @@ namespace ScnDiscounts.ViewModels
         async public void MapLocation_ClickPinDetail(object sender, MapPinDataEventArgs e)
         {
             MapPinData pinData = e.PinData;
-            DiscountData discountData = AppData.Discount.DiscountCollection.Find(item => { return item.Id == pinData.PartnerId; });
+            DiscountData discountData = AppData.Discount.DiscountCollection.Find(item => { return item.DocumentId == pinData.PartnerId; });
 
             if (discountData != null)
             {
                 try
                 {
                     IsLoadActivity = true;
-                    await AppData.Discount.LoadBranchList(discountData);
+                    await AppData.Discount.LoadFullDescription(discountData);
                 }
                 finally
                 {
                     IsLoadActivity = false;
                 }
 
-                await ViewPage.Navigation.PushAsync(new DiscountDetailPage(discountData), true);
+                await ViewPage.Navigation.PushAsync(new DiscountDetailPage(discountData.DocumentId), true);
             }
         }
 
@@ -197,11 +197,6 @@ namespace ScnDiscounts.ViewModels
 
             foreach (var item in AppData.Discount.MapPinCollection)
                 item.CalculateDistance();
-        }
-
-        internal void AppBar_BtnRightClick(object sender, EventArgs e)
-        {
-            (ViewPage as MainPage).IsShowRightPanel = !(ViewPage as MainPage).IsShowRightPanel;
         }
 
         public void ActivateMapPin()
@@ -232,15 +227,24 @@ namespace ScnDiscounts.ViewModels
 
             foreach (var item in AppData.Discount.MapPinCollection)
             {
-                var filterCategoryItem = AppParameters.Config.FilterCategoryList.FirstOrDefault<FilterCategoryItem>(x => x.Id == item.CategoryType);
-                if (filterCategoryItem != null)
+                var primaryCategoryShown = item.CategorieList.FirstOrDefault(c => 
+                    AppParameters.Config.FilterCategoryList
+                        .Where<FilterCategoryItem>(f => f.IsToggle)
+                        .FirstOrDefault<FilterCategoryItem>(f => f.Id == c.TypeCode)
+                    != null);
+                
+                if (primaryCategoryShown != null)
                 {
-                    if (filterCategoryItem.IsToggle)
-                        (ViewPage as MainPage).MapLocation.PinList.Add(item);
-                }
-                else
+                    item.PrimaryCategory = primaryCategoryShown;
                     (ViewPage as MainPage).MapLocation.PinList.Add(item);
+                }
             }
+        }
+
+        internal void AppBar_BtnRightClick(object sender, EventArgs e)
+        {
+            (ViewPage as MainPage).MapLocation.CloseDetailInfo();
+            (ViewPage as MainPage).IsShowRightPanel = !(ViewPage as MainPage).IsShowRightPanel;
         }
 
         internal void AppBar_BtnLeftClick(object sender, EventArgs e)

@@ -29,9 +29,9 @@ namespace ScnDiscounts.Views
             var appBar = new TitleBar(this, TitleBar.BarBtnEnum.bbBack)
             {
                 BarColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor],
-                Title = contentUI.Title,
                 TitleStyle = (Style)App.Current.Resources[LabelStyles.PageTitleStyle]
             };
+            appBar.SetBinding(TitleBar.TitleProperty, "Title");
             appBar.BtnBack.BackgroundColor = Color.Transparent;
             appBar.BtnBack.Source = contentUI.IconBack;
 

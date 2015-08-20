@@ -34,11 +34,11 @@ namespace ScnDiscounts.Views
                 BarColor = Color.Transparent,
                 HorizontalOptions = LayoutOptions.FillAndExpand  
             };
-            appBar.BtnRight.BackgroundColor = new Color(255, 255, 255, 0.7);
+            appBar.BtnRight.BackgroundColor = new Color(255, 255, 255, 0);
             appBar.BtnRight.Source = contentUI.IconMenuSideBar;
             appBar.BtnRight.Click += viewModel.AppBar_BtnRightClick;
 
-            appBar.BtnLeft.BackgroundColor = new Color(255, 255, 255, 0.7);
+            appBar.BtnLeft.BackgroundColor = new Color(255, 255, 255, 0);
             appBar.BtnLeft.Source = contentUI.IconFilter;
             appBar.BtnLeft.Click += viewModel.AppBar_BtnLeftClick;
 
@@ -48,7 +48,6 @@ namespace ScnDiscounts.Views
 
             LeftPanel.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor];
             LeftPanel.Opacity = 0.9;
-            LeftPanelWidth = Device.OnPlatform(300, 240, 300);
 
             MapLocation = new MapTile
             {
@@ -62,7 +61,7 @@ namespace ScnDiscounts.Views
             var btnLocation = new ImageButton();
             btnLocation.HeightRequest = appBar.HeightBar;
             btnLocation.WidthRequest = appBar.HeightBar;
-            btnLocation.BackgroundColor = new Color(255, 255, 255, 0.7);
+            btnLocation.BackgroundColor = new Color(255, 255, 255, 0);
             btnLocation.Source = contentUI.IconLocation;
             btnLocation.Click += viewModel.BtnLocation_Click;
 
@@ -116,7 +115,7 @@ namespace ScnDiscounts.Views
 
             var menuView = new ListViewExtended();
             menuView.SetBinding(ListView.ItemsSourceProperty, "MenuItemList");
-            menuView.RowHeight = Device.OnPlatform(40, 40, 60);
+            menuView.RowHeight = Device.OnPlatform(48, 48, 72);
             menuView.SeparatorVisibility = SeparatorVisibility.None;
             menuView.ItemTemplate = new DataTemplate(() => new MenuViewTemplate());
             menuView.ItemSelected += viewModel.OnMenuViewItemTapped;
@@ -136,7 +135,7 @@ namespace ScnDiscounts.Views
             var filterView = new ListViewExtended();
             filterView.IsScrollable = false;
             filterView.SetBinding(ListView.ItemsSourceProperty, "FilterCategoryList");
-            filterView.RowHeight = Device.OnPlatform(80, 60, 100);
+            filterView.RowHeight = Device.OnPlatform(48, 48, 72);
             filterView.SeparatorVisibility = SeparatorVisibility.None;
             filterView.ItemTemplate = new DataTemplate(() => new FilterViewTemplate(viewModel));
             filterView.ItemSelected += viewModel.OnMenuViewItemTapped;
@@ -187,18 +186,30 @@ namespace ScnDiscounts.Views
             public FilterViewTemplate(MainViewModel parentViewModel)
             {
                 IsHighlightSelection = false;
+                SelectColor = Color.Transparent;
 
-                SelectColor = (Color)App.Current.Resources[MainStyles.ListSelectColor];
 
-                var stackFilterItem = new StackLayout 
+                Grid gridFilterItem = new Grid
                 {
-                    Padding = new Thickness(20, 0),
+                    BackgroundColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor],
+                    Padding = new Thickness(16, 0),
+                    RowDefinitions = 
+                    {
+                        new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
+                    },
+                    ColumnDefinitions = 
+                    {
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star)},
+                        new ColumnDefinition { Width = GridLength.Auto}
+                    },
                 };
 
                 #region Title
                 var stackTitle = new StackLayout
                 {
+                    Spacing = 16,
                     Orientation = StackOrientation.Horizontal,
+                    HorizontalOptions = LayoutOptions.Start,
                 };
                 var imgFilterItem = new Image();
                 imgFilterItem.SetBinding(Image.SourceProperty, "Icon");
@@ -207,7 +218,6 @@ namespace ScnDiscounts.Views
                 var txtFilterItem = new Label
                 {
                     VerticalOptions = LayoutOptions.CenterAndExpand,
-                    //Style = (Style)App.Current.Resources[LabelStyles.MenuStyle]
                 };
                 txtFilterItem.SetBinding(Label.StyleProperty, "NameStyle");
                 txtFilterItem.SetBinding(Label.TextProperty, "Name");
@@ -219,48 +229,27 @@ namespace ScnDiscounts.Views
                 filterTitleGestures.SwipeLeft += parentViewModel.FilterGestures_Tap;
                 filterTitleGestures.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor];
 
-                stackFilterItem.Children.Add(filterTitleGestures);
+                gridFilterItem.Children.Add(filterTitleGestures, 0, 0);
                 #endregion
 
                 #region Toggle
-                var stackToggle = new StackLayout 
-                { 
-                    Orientation = StackOrientation.Horizontal,
-                };
-
-                var filterToggleGestures = new ViewGestures();
-                filterToggleGestures.HorizontalOptions = LayoutOptions.FillAndExpand;
-                filterToggleGestures.Tap += parentViewModel.FilterGestures_Tap;
-                filterToggleGestures.SwipeLeft += parentViewModel.FilterGestures_Tap;
-                filterToggleGestures.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainBackgroundColor];
-
-                if (Device.OS != TargetPlatform.Android)
+                var switchFilter = new SwitchExtended
                 {
-                    var txtSwitchValue = new Label
-                    {
-                        HorizontalOptions = LayoutOptions.End,
-                        Style = (Style)App.Current.Resources[LabelStyles.MenuHintStyle]
-                    };
-                    txtSwitchValue.SetBinding(Label.TextProperty, "ToggleValue");
-                    filterToggleGestures.Content = txtSwitchValue;
-                }
-                stackToggle.Children.Add(filterToggleGestures);
-
-                var switchFilter = new Switch
-                {
-                    VerticalOptions = LayoutOptions.Start,
+                    HorizontalOptions = LayoutOptions.End,
                 };
+                switchFilter.SetBinding(SwitchExtended.TextOffProperty, "TurnOffValue");
+                switchFilter.SetBinding(SwitchExtended.TextOnProperty, "TurnOnValue");
 
-                if (Device.OS == TargetPlatform.WinPhone)
-                    switchFilter.TranslationY = -30;
+                if (Device.OS == TargetPlatform.iOS)
+                    switchFilter.TranslationY = 8;
+                
                 switchFilter.SetBinding(Switch.IsToggledProperty, "IsToggle", BindingMode.TwoWay);
                 switchFilter.Toggled += parentViewModel.SwitchFilter_Toggled;
-                stackToggle.Children.Add(switchFilter);
 
-                stackFilterItem.Children.Add(stackToggle);
+                gridFilterItem.Children.Add(switchFilter, 1, 0);
                 #endregion
 
-                View = stackFilterItem;
+                View = gridFilterItem;
             }
         }
 

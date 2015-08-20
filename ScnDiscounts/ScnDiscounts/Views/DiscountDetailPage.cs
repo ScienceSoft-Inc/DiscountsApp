@@ -1,6 +1,7 @@
 ﻿using ScnDiscounts.Control;
 using ScnDiscounts.Models.Data;
 using ScnDiscounts.ValueConverter;
+using ScnDiscounts.ValueConverters;
 using ScnDiscounts.ViewModels;
 using ScnDiscounts.Views.ContentUI;
 using ScnDiscounts.Views.Styles;
@@ -26,10 +27,11 @@ namespace ScnDiscounts.Views
         public ListView BranchListView;
         private StackLayout discountLayout;
 
-        public DiscountDetailPage(DiscountData discountData)
+        public DiscountDetailPage(string discountID)
             : base(typeof(DiscountDetailViewModel), typeof(DiscountDetailContentUI))
         {
-            viewModel.SetDiscount(discountData);
+            viewModel.SetDiscount(discountID);
+            var fileNameConverter = new FileNameToImageConverter();
 
             BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
 
@@ -37,16 +39,17 @@ namespace ScnDiscounts.Views
 
             var appBar = new TitleBar(this, TitleBar.BarBtnEnum.bbBack)
             {
-                BarColor = Color.Transparent
+                BarColor = Color.Transparent,
             };
-            appBar.BoxPadding.Color = new Color(0, 0, 0, 0.4);
+            appBar.BoxPadding.BackgroundColor = (Color)App.Current.Resources[MainStyles.StatusBarColor];
+            appBar.BoxPadding.Opacity = 0.9;
 
-            appBar.BtnBack.BackgroundColor = new Color(0, 0, 0, 0.4);
+            appBar.BtnBack.BackgroundColor = (Color)App.Current.Resources[MainStyles.StatusBarColor];
+            appBar.BtnBack.Opacity = 0.9;
             appBar.BtnBack.Source = contentUI.IconBack;
 
             discountLayout = new StackLayout
             {
-                VerticalOptions = LayoutOptions.Start,
                 Spacing = Device.OnPlatform(0, 0, 4),
             };
 
@@ -60,11 +63,15 @@ namespace ScnDiscounts.Views
             {
                 Aspect = Aspect.AspectFill,
             };
-            imgPhoto.SetBinding(Image.SourceProperty, new Binding("ImgPhoto", BindingMode.Default, new FileStreamToImageSource(), FileStreamToImageSource.SizeImage.siBig));
+            imgPhoto.SetBinding(Image.SourceProperty, new Binding("ImageFileName", BindingMode.Default, fileNameConverter));
+
+            //imgPhoto.SetBinding(Image.SourceProperty, new Binding("ImgPhoto", BindingMode.Default, new FileStreamToImageSource(), FileStreamToImageSource.SizeImage.siBig));
 
             imageLayout.Children.Add(imgPhoto,
                 Constraint.Constant(0),
-                Constraint.Constant(0), Constraint.RelativeToParent(parent => { return parent.Width; }), Constraint.RelativeToParent(parent => { return parent.Height; })
+                Constraint.Constant(0), 
+                Constraint.RelativeToParent(parent => { return parent.Width; }),
+                Constraint.RelativeToParent(parent => { return parent.Height; })
                 );
             #endregion
 
@@ -128,6 +135,7 @@ namespace ScnDiscounts.Views
             #region Header
             Grid gridHeader = new Grid
             {
+                VerticalOptions = LayoutOptions.Start,
                 Padding = new Thickness(10),
                 RowDefinitions = 
                     {
@@ -147,7 +155,8 @@ namespace ScnDiscounts.Views
                 HeightRequest = Device.OnPlatform(64, 64, 64),
                 Aspect = Aspect.AspectFit
             };
-            imgCompanyLogo.SetBinding(Image.SourceProperty, new Binding("ImgLogo", BindingMode.Default, new FileStreamToImageSource(), FileStreamToImageSource.SizeImage.siSmall));
+            imgCompanyLogo.SetBinding(Image.SourceProperty, new Binding("LogoFileName", BindingMode.Default, fileNameConverter));
+            //imgCompanyLogo.SetBinding(Image.SourceProperty, new Binding("ImgLogo", BindingMode.Default, new FileStreamToImageSource(), FileStreamToImageSource.SizeImage.siSmall));
 
             var stackCompanyLogo = new StackLayout
             {
@@ -237,11 +246,11 @@ namespace ScnDiscounts.Views
             #region Description
             var txtDescription = new Label
             {
-                VerticalOptions = LayoutOptions.Start,
                 Style = (Style)App.Current.Resources[LabelStyles.DescriptionStyle],
                 LineBreakMode = LineBreakMode.WordWrap
             };
             txtDescription.SetBinding(Label.TextProperty, "Description");
+
             var descriptionLayout = new StackLayout
             {
                 Padding = new Thickness(18, 0),
@@ -253,12 +262,15 @@ namespace ScnDiscounts.Views
             discountLayout.Children.Add(descriptionLayout);
             #endregion
 
+            discountLayout.VerticalOptions = LayoutOptions.Start;
             var scrollDiscount = new ScrollView
             {
+                VerticalOptions = LayoutOptions.Start,
                 Content = discountLayout,
-                HeightRequest = Device.OnPlatform(600, 600, -1), 
+                HeightRequest = Device.OnPlatform(600, 600, -1),
             };
 
+            mainLayout.VerticalOptions = LayoutOptions.StartAndExpand ;
             AbsoluteLayout.SetLayoutFlags(scrollDiscount, AbsoluteLayoutFlags.All);
             AbsoluteLayout.SetLayoutBounds(scrollDiscount, new Rectangle(0f, 0f, 1f, 1f));
             mainLayout.Children.Add(scrollDiscount);
@@ -283,11 +295,12 @@ namespace ScnDiscounts.Views
             BranchListView.ItemTapped += viewModel.OnBranchViewItemTapped;
             BranchListView.SetBinding(ListView.ItemsSourceProperty, "BranchItems");
             BranchListView.ItemTemplate = new DataTemplate(() => new BranchInfoViewTemplate(BranchListView, contentUI, viewModel));
-            BranchListView.SetBinding(ListView.HeightRequestProperty, new Binding("BranchItemsCount", BindingMode.Default, new ListViewHeightConverter(), (Device.OnPlatform(160, 190, 250))));
+            BranchListView.SetBinding(ListView.HeightRequestProperty, new Binding("BranchItemsCount", BindingMode.Default, new ListViewHeightConverter(), (Device.OnPlatform(160, 190, 220))));
             BranchListView.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
 
             var stackBranchView = new StackLayout
             {
+                VerticalOptions = LayoutOptions.FillAndExpand,
                 Padding = Device.OnPlatform(new Thickness(0), new Thickness(0), new Thickness(0, 0, -4, 0)),
                 Children = { BranchListView }
             };
@@ -366,7 +379,6 @@ namespace ScnDiscounts.Views
                     Style = (Style)App.Current.Resources[LabelStyles.LinkStyle],
                     IsUnderline = true
                 };
-                txtShowOnMap.SetBinding(LabelExtended.TagProperty, "Id");
 
                 var locationLayout = new StackLayout
                 {
@@ -375,25 +387,20 @@ namespace ScnDiscounts.Views
                     Children =
                     {
                         txtPartnerAddress,
+                        txtShowOnMap
                     }
                 };
                 
-                var viewGesturesMap = new ViewGestures
+                var viewGesturesShowOnMap = new ViewGestures
                 {
-                    Content = txtShowOnMap,
+                    Content = locationLayout,
                     DeformationValue = -5,
                 };
-                viewGesturesMap.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
-                viewGesturesMap.Tap += parentViewModel.txtShowOnMap_Click;
-                locationLayout.Children.Add(viewGesturesMap);
+                viewGesturesShowOnMap.BackgroundColor = (Color)App.Current.Resources[MainStyles.MainLightBackgroundColor];
+                viewGesturesShowOnMap.Tap += parentViewModel.ShowOnMap_Click;
+                viewGesturesShowOnMap.SetBinding(ViewGestures.TagProperty, "DocumentId");
 
-                var scroll = new ScrollView
-                {
-                    Orientation = ScrollOrientation.Horizontal,
-                    Content = locationLayout
-                };
-
-                gridLocation.Children.Add(scroll, 2, 0);
+                gridLocation.Children.Add(viewGesturesShowOnMap, 2, 0);
 
                 stackBranch.Children.Add(gridLocation);
 
