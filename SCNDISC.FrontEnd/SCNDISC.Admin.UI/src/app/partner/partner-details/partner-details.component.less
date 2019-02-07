@@ -1,0 +1,68 @@
+@import "../../shared/shared-styles";
+
+.x-body {
+  font: normal 13px/15px Arial, helvetica, sans-serif;
+}
+.x-modal-body{
+  position: relative;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  width: 580px;
+}
+.modal-content-x{
+  width: 664px;
+  padding: 20px 3em;
+}
+
+.x-delete-btn{
+  float: right;
+  .x-item;
+  .x-item-button;
+  background-color: #dd361e;
+  &:hover {
+    background-color: #ff858f;
+  }
+}
+
+.x-primary-btn {
+  margin-left: 100px !important;
+}
+
+.x-primary-btn {
+  .x-item;
+  .x-item-button;
+  background-color: #0082dd;
+  &:hover{
+    background-color: #73cdff;
+  }
+}
+
+.x-cancel-btn{
+  color: #111111 !important;
+  .x-item;
+  .x-item-button;
+  background-color: @color-white;
+  &:hover{
+    background-color: #a9a9a9;
+  }
+}
+.x-primary-btn, .x-cancel-btn, .x-delete-btn {
+  -ms-border-radius: 2px;
+  border-radius: 2px;
+  border-width: 0;
+  color: #fff;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 30px;
+  padding: 0 15px;
+  text-transform: uppercase;
+}
+
+.modal-footer-x {
+  margin-bottom: 20px;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}

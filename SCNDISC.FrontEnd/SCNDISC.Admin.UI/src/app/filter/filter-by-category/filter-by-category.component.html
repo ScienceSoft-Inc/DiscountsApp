@@ -1,0 +1,9 @@
+<span title="{{'Home.selectAllCategories'| translate}}">
+       <input id="selectAll" class="x-input" type="checkbox"
+              (click)="onClickedSelectAll()" [(ngModel)]="selectAllCategories">
+       <label for="selectAll">{{ 'categories.selectAllCategories' | translate }}</label>
+       </span>
+<div class="x-form-category-item">
+  <app-category-filter (changeCategoryIds)="changeCategoryIds()"
+                       [categoryIds]="categoryIds"></app-category-filter>
+</div>

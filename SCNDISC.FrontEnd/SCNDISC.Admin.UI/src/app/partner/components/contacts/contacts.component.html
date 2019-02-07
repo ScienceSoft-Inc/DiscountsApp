@@ -1,0 +1,16 @@
+<div class="x-content">
+  <div>
+    <div class="x-form-title ">{{'partner.Contacts' | translate}}
+      <div class="x-form-contacts-toolbar">
+        <a *ngIf="display" class="x-form-delete" (click)="removeContact()"></a>
+        <a class="x-form-add" (click)="onClickedAddNewContact()"></a>
+        <div class="div-clear"></div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngFor="let contact of partner.contacts">
+    <app-contact [contact]="contact"></app-contact>
+  </div>
+</div>
+

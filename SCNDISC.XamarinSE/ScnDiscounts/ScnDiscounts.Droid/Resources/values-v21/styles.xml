@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+  <style name="MyTheme" parent="BaseTheme">
+    <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    <item name="android:statusBarColor">#28000000</item>
+  </style>
+
+  <style name="MyTheme.Splash" parent="BaseTheme.Splash">
+    <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    <item name="android:statusBarColor">#28000000</item>
+  </style>
+</resources>

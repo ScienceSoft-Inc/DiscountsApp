@@ -1,0 +1,9 @@
+<div>
+  <li>
+    <input id="{{category.id}}" [ngStyle]="getColorClass()" [(ngModel)]="enterCategory" (click)="onClickedCategory()" type="checkbox">
+    <label for="{{category.id}}" [ngStyle]="getColorClass()">
+      <span *ngIf="lang_en" class="x-label-ru">{{category.name_En}}</span>
+      <span *ngIf="!lang_en" class="x-label-ru">{{category.name_Ru}}</span>
+    </label>
+  </li>
+</div>

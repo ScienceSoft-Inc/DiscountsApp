@@ -1,0 +1,119 @@
+@color-gray: #817e7e;
+@font: Monospace;
+
+@import "../../shared/shared-styles";
+
+table, td, th {
+  border: none;
+}
+
+.x-message{
+  width: 460px;
+  max-width: 460px;
+  word-wrap: break-word;
+}
+
+.x-name {
+  max-width: 150px;
+}
+
+.x-date {
+  max-width: 140px;
+}
+th {
+  margin-bottom: 10px;
+}
+td, th {
+  padding: 0px;
+}
+
+table {
+  width: 750px;
+  border-collapse:collapse;
+  margin: 0 auto;
+  color: @color-white;
+  float: left;
+}
+
+.modal-content-x{
+  width: 798px;
+  background-color: #111111;
+}
+
+.title{
+  margin-bottom: 25px;
+}
+.color {
+  color: @color-white;
+}
+
+.height {
+  height: 400px;
+}
+
+div {
+  .x-feedback-title-font;
+  font-size: 1em;
+}
+
+.x-feedback-title-font {
+  font-family: @font;
+}
+
+.x-modal() {
+  display: -ms-flexbox;
+  display: flex;
+  padding: 1rem;
+}
+
+.x-modal-footer {
+  .x-modal;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+
+}
+
+.x-color {
+  color: @color-gray;
+}
+
+.x-background {
+  background-color: black;
+}
+
+.x-page {
+  float: right;
+}
+
+.x-item-pre{
+  .x-item;
+  color: @color-gray;
+  &:hover {
+    background-color: black;
+  }
+}
+
+.x-item{
+  .x-item-button;
+  &:hover {
+    background-color: #DCE9EF;
+  }
+}
+
+.x-item-cancel{
+  float: right;
+  .x-item;
+  .x-item-button;
+  background-color: #111111;
+  &:hover {
+    background-color: #111111;
+    color: #ff858f;
+  }
+}
+
+.separator {
+  border: 0;
+  border-top: 1px solid #EBEBEB;
+}

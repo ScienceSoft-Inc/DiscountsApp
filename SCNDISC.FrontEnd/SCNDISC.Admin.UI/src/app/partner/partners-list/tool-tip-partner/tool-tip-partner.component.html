@@ -1,0 +1,19 @@
+<a title="{{'Home.ClickToEdit'| translate}}" class="x-item"
+   [routerLink]="[ 'partner', toolTipPartner.id ]">
+  <app-image-loading [id]="toolTipPartner.id"></app-image-loading>
+  <div class="x-item-logo" [ngStyle]=getLogoStyle()></div>
+  <div *ngIf="!lang_en" class="x-item-title"> {{toolTipPartner.name_Ru}}</div>
+  <div *ngIf="lang_en" class="x-item-title"> {{toolTipPartner.name_En}}</div>
+  <div class="x-types-container-y" *ngIf="toolTipPartner.categories && toolTipPartner.categories.length > 0">
+    <div *ngFor="let category of toolTipPartner.categories" class="x-types-container">
+      <div class="x-form-category-y">
+        <label [ngStyle]="getColorClass(category)">
+          <span *ngIf="!lang_en" class="x-label-ru">{{category.name_Ru}}</span>
+          <span *ngIf="lang_en" class="x-label-ru">{{category.name_En}}</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!lang_en" class="x-item-desc"> {{toolTipPartner.description_Ru}}</div>
+  <div *ngIf="lang_en" class="x-item-desc"> {{toolTipPartner.description_En}}</div>
+</a>

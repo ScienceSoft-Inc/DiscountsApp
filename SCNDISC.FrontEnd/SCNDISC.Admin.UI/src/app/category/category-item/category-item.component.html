@@ -1,0 +1,19 @@
+<div>
+  <div class="x-category">
+    <div class="x-category-name-box">
+      <div class="x-form-item">
+        <label class="x-form-side-label">{{'categories.Name' | translate }}</label>
+        <input *ngIf="lang_en" maxlength="30" type="text" [(ngModel)]="category.name_En" class="x-form-service-field">
+        <input *ngIf="!lang_en" maxlength="30" type="text" [(ngModel)]="category.name_Ru" class="x-form-service-field">
+      </div>
+
+    </div>
+    <div class="x-form-item x-category-color-box ">
+      <input type="color" class="x-form-color-field"
+             [(ngModel)]="category.color">
+    </div>
+    <input type="submit" value="{{'categories.Delete' | translate }}" (click)="onClickedRemove()"
+           class="x-delete-btn x-delete-category-btn">
+  </div>
+</div>
+<hr class="separator">

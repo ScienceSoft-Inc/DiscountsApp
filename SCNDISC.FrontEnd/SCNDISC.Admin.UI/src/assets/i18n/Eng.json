@@ -1,0 +1,78 @@
+{
+  "partner": {
+    "Name": "Name*",
+    "Description": "Description*",
+    "Discount": "Discount*",
+    "category": "Category",
+    "Comment": "Comment",
+    "Files": "Files",
+    "ChooseAvatar": "Choose Avatar",
+    "ChooseTheme": "Choose Theme",
+    "Contacts": "Contacts",
+    "PhoneNumber": "Phone",
+    "Address": "Address",
+    "Hint": "Avatar must be of resolution at least 48x48. Theme minimal resoultion is 340x180. For optimal scaling keep the abovementioned ratios.",
+    "errorCoordinates": "Error in coordinate field. The value must be formatted as follows: 53.932160, 27.558136",
+    "errorPhone": "Error entering phone number.",
+    "ErrorName": " Field \"Name\" is required.",
+    "ErrorDescription": " Field \"Description\" is required.",
+    "ErrorDiscount": " Field \"Discount\" is required.",
+    "errorDiscount": "The discount value in Belarusian rubles should be in the range from 0 to 1000. The discount value in percent should be in the range from 0 to 100.",
+    "errorAddress": "Field Address is required.",
+    "ErrorAddressForContact": "This address was not found.",
+    "DeleteQuestion": "Are you sure you want to delete this partner?",
+    "WebAddress": "Add URL",
+    "Coordinates": "Check coordinates",
+    "GetCoordinates": "Click to get coordinates"
+  },
+  "Home": {
+    "Login": "Login",
+    "Password": "Password",
+    "ErrorLoginAndPassword": "Login or(and) password are incorrect",
+    "Entrance": "Log in",
+    "Title": "Skidon - free discounts service",
+    "Name": "Skidon",
+    "DiscountName": "Discount name",
+    "More": "More...",
+    "categories": "Categories",
+    "Feedback": "Feedback",
+    "AddPartner": "Add partner",
+    "ErrorServer": "Can not receive response from server",
+    "ClickToEdit": "Click to edit",
+    "selectAllCategories": "Select all",
+    "ClickToAddPartner": "Click to add a partner",
+    "ClickToQuit": "Click to quit",
+    "Search": "Search",
+    "Ok": "Ok"
+  },
+  "categories": {
+    "categories": "Categories",
+    "Name": "Name",
+    "Delete": "Delete",
+    "Add": "Add",
+    "selectAllCategories": "Select All",
+    "Sport": "Sport",
+    "Entertainment": "Entertainment",
+    "ErrorSaveCategories": "All categories must have different names."
+  },
+  "Button": {
+    "Save": "Save",
+    "Delete": "Delete",
+    "Cancel": "Cancel",
+    "Close": "[C]lose"
+
+  },
+  "Title": {
+    "categories": "Categories",
+    "Service": "Service"
+  },
+  "Feedback": {
+    "UserName": "USER NAME",
+    "Message": "MESSAGE",
+    "Date": "DATE (YYYY-MM-DD)",
+    "Previous": "Previous",
+    "Next": "Next",
+    "Showing": "Showing from",
+    "To": "to"
+  }
+}

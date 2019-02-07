@@ -1,0 +1,4 @@
+<a class="x-form-add" (click)="onClickedAddWebAddress()"></a>
+<div *ngFor="let address of partner.webAddresses; let i = index">
+  <app-web-address [id]="i" [webAddress]="address" (removeAddress)="onClickedRemove($event)"></app-web-address>
+</div>

@@ -1,0 +1,28 @@
+<div class="modal-content-x">
+<div class="modal-body x-background x-feedback-font">
+  <div class="color title">HTML DOS v6.0 \> {{"Home.Feedback" | translate}}</div>
+  <span class="x-color">{{"Feedback.Showing" | translate}} {{minNumber}} {{"Feedback.To" | translate}} {{maxNumber}}</span>
+  <div class="x-page">
+    <span [ngClass]="getClassForPrevious()" (click)="onClickedPage(-1, 'previous')">{{'Feedback.Previous'|translate}}</span>
+    <span class="x-item" *ngFor="let i of pages" [ngStyle]="getStyleForNumberOfPage(i)" (click)="onClickedPage(i)"> {{i+1}} </span>
+    <span [ngClass]="getClassForNext()" (click)="onClickedPage(-1, 'next')">{{'Feedback.Next'|translate}}</span>
+  </div>
+  <div class="height x-feedback-font">
+  <table class="table">
+    <tr>
+      <th class="x-name">{{'Feedback.UserName'|translate}}</th>
+      <th class="x-message">{{'Feedback.Message'|translate}}</th>
+      <th class="div-right x-date">{{'Feedback.Date'|translate}}</th>
+    </tr>
+    <tr *ngFor="let feedback of feedbacks">
+      <td class="x-name">{{feedback.name}}</td>
+      <td class="x-message">{{feedback.message}}</td>
+      <td class="div-right x-date">{{feedback.created | date: 'yyyy-MM-dd H:mm'}}</td>
+    </tr>
+  </table>
+  </div>
+</div>
+<div class="x-modal-footer x-background x-feedback-font">
+  <button type="button" class="x-item-cancel" (click)="onClickedCancel()">{{'Button.Close' | translate}}</button>
+</div>
+</div>

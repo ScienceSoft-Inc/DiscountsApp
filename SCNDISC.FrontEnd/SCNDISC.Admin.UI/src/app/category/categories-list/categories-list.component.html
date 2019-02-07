@@ -1,0 +1,24 @@
+<div class="modal-content-x">
+  <div class="x-modal-body">
+    <div class="div-right">
+      <app-language></app-language>
+    </div>
+    <div class="x-form-title">{{'categories.categories' | translate}}</div>
+    <div *ngFor="let category of categories">
+      <app-category-for-manager [category]="category" (remove)="onClickedRemove($event)"></app-category-for-manager>
+    </div>
+    <div>
+      <input type="submit" value="{{'categories.Add' | translate}}"
+             (click)="onClickedAddNewCategory()" class="x-form-action-btn">
+    </div>
+    <div class="x-form-error-ct">
+      <div *ngIf="errorSaveCategories">{{'categories.errorSaveCategories' | translate}}</div>
+    </div>
+  </div>
+  <div class="modal-footer-x">
+    <button type="button" class="x-primary-btn" (click)="onClickedSave()">{{'Button.Save' | translate}}</button>
+    <button type="button" class="x-cancel-btn" (click)="onClickedCancel()">{{'Button.Cancel' |
+      translate}}
+    </button>
+  </div>
+</div>

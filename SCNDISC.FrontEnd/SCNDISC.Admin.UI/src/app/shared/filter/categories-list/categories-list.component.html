@@ -1,0 +1,11 @@
+<div>
+  <ul class="x-form-types">
+    <div *ngIf="categories && categories.length > 0 ">
+      <div *ngFor="let category of categories">
+        <app-category-for-filter [categoryIds]="categoryIds"
+                                 [category]="category"
+                                 (changeCategoryIds)="onClickedCategory()"></app-category-for-filter>
+      </div>
+    </div>
+  </ul>
+</div>

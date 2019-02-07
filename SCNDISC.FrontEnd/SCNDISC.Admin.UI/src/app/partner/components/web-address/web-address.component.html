@@ -1,0 +1,17 @@
+<div class="div-clear"></div>
+<div>
+  <label class="x-form-side-label">URL# {{id + 1}}</label>
+  <input type="text" [(ngModel)]="webAddress.url" class="x-form-http-field">
+  <select [(ngModel)]="webAddress.socialNetwork" class="x-http-type">
+    <option selected="selected" value="0">HTTP Url</option>
+    <option value="1">VK</option>
+    <option value="2">Facebook</option>
+    <option value="3">Instagram</option>
+    <option value="4">Youtube</option>
+    <option value="5">Google+</option>
+    <option value="6">Odnoklassniki</option>
+    <option value="7">Twitter</option>
+  </select>
+  <a title="{{'Button.Delete' | translate}}" (click)="onClickedRemove()" class="x-form-delete"></a>
+</div>
+<div class="div-clear"></div>

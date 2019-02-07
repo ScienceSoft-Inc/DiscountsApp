@@ -1,0 +1,33 @@
+.container {
+  height: 10em;
+  position: relative
+}
+
+.position-center(@height: 50%) {
+  position: absolute;
+  left: 50%;
+  top: @height;
+  transform: translate(-50%, -50%);
+}
+
+.img {
+  .position-center();
+  background-image: url('../../../assets/images/errorstop.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+  height: 100px;
+  width: 100px;
+}
+.warning {
+.position-center(100%);
+  margin-top: 1.5em;
+}
+
+.link {
+.position-center(150%);
+}
+
+a{
+font-size: 14px;
+}

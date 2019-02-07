@@ -1,0 +1,80 @@
+@import "../../../shared/shared-styles";
+
+.x-item-logo {
+  .x-item-image;
+  background-image: url('../../../../assets/images/camera-128x128.png');
+  background-size: cover;
+  overflow: hidden;
+  border: 7px solid white;
+  float: left;
+  height: 72px;
+  width: 72px;
+}
+
+.x-item {
+  background-color: @color-white;
+  color: #111;
+  float: left;
+  height: 288px;
+  margin: 0 12px 12px 0;
+  position: relative;
+  text-decoration: none;
+  width: @wight-tool;
+  &:hover {
+    -ms-box-shadow: 0 0 0 3px #0082dd;
+    -webkit-box-shadow: 0 0 0 3px #0082dd;
+    box-shadow: 0 0 0 3px #0082dd;
+  }
+}
+
+.x-item-title {
+  color: #444;
+  font-size: 15px;
+  height: 15px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  margin-top: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.x-types-container-y {
+
+  height: 21px;
+  overflow: hidden;
+
+}
+
+.x-types-container {
+  .x-types-container-y;
+
+  max-width: 268px;
+  float: left;
+}
+
+.x-form-category-y {
+  white-space: pre;
+  float: left;
+  margin: 2px 0px 0 2px;
+}
+
+.x-item-desc {
+  .x-types-container;
+  word-wrap: break-word;
+  white-space: inherit;
+  box-sizing: border-box;
+  height: 50px;
+  line-height: 16px;
+  padding-right: 15px;
+  margin-top: 4px;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+label {
+  color: #fff;
+  float: left;
+  line-height: 20px;
+  padding: 0 7px 0 5px;
+}

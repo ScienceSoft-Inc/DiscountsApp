@@ -1,0 +1,8 @@
+<div class="dropdown">
+  <button (click)="onClickedMenu($event)" class="dropbtn">{{'Home.More' | translate }}</button>
+  <div *ngIf="menuDisplay" class="dropdown-content">
+    <a class="x-select" (click)="onClickedManageCategories()">{{'Home.categories' | translate}}</a>
+    <a class="x-select" (click)="onClickedFeedback()" >{{'Home.Feedback' | translate }}</a>
+    <a class="x-select" (click)="onClickedNewPartner()">{{'Home.AddPartner' | translate}}</a>
+  </div>
+</div>

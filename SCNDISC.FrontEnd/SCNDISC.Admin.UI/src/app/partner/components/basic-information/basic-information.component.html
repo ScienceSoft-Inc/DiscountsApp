@@ -1,0 +1,54 @@
+<div class="x-content">
+  <div class="x-form-title">{{'Title.Service' | translate}}</div>
+  <div>
+    <app-language></app-language>
+    <div>
+      <div class="x-form-item">
+        <label class="x-form-side-label">{{ 'partner.Name' | translate }}</label>
+        <input *ngIf="!language_en" maxlength="50" type="text" [(ngModel)]="partner.name_Ru"
+               class="x-form-service-field">
+        <input *ngIf="language_en" maxlength="50" type="text" [(ngModel)]="partner.name_En"
+               class="x-form-service-field">
+        <div class="div-clear"></div>
+      </div>
+      <div class="x-form-item">
+        <label class="x-form-side-label">{{'partner.Description' | translate}}</label>
+        <textarea *ngIf="!language_en" maxlength="2000" rows="2" cols="20"
+                  [(ngModel)]="partner.description_Ru" id="uxDescription_Ru"></textarea>
+        <textarea *ngIf="language_en" maxlength="2000" rows="2" cols="20"
+                  [(ngModel)]="partner.description_En" id="uxDescription_En"></textarea>
+        <div class="div-clear"></div>
+      </div>
+
+    </div>
+
+    <div class="x-form-category-item">
+      <label class="x-form-side-label">{{'partner.category' | translate}}</label>
+      <div class="x-block-category-item">
+        <app-category-filter [categoryIds]="categoryIds"
+                             [categoriesForPartner]="true"></app-category-filter>
+      </div>
+
+      <div class="div-clear"></div>
+      <label class="x-form-side-label">{{'partner.Discount' | translate}}</label>
+      <input type="number" [min]="0" [max]="1000" [(ngModel)]="partner.discount" id="uxFormDiscount"
+             class="x-form-discount-field">
+      <select [(ngModel)]="partner.selectDiscount" class="x-discount-type">
+        <option selected="selected" value="0">%</option>
+        <option value="1">Br</option>
+      </select>
+      <div class="div-clear"></div>
+
+    </div>
+    <div class="x-form-item">
+      <label class="x-form-side-label">{{'partner.WebAddress' | translate}}</label>
+      <app-web-addresses [partner]="partner"></app-web-addresses>
+      <div class="div-clear"></div>
+    </div>
+    <div class="x-form-item">
+      <label class="x-form-side-label">{{'partner.Comment' | translate}}</label>
+      <textarea rows="2" cols="20" maxlength="2000" [(ngModel)]="partner.comment"></textarea>
+      <div class="div-clear"></div>
+    </div>
+  </div>
+</div>

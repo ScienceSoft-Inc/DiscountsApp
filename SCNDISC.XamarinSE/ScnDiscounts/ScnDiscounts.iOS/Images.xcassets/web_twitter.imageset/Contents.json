@@ -1,0 +1,24 @@
+{
+  "images": [
+    {
+      "scale": "1x",
+      "idiom": "universal",
+      "filename": "web_twitter.png"
+    },
+    {
+      "scale": "2x",
+      "idiom": "universal",
+      "filename": "web_twitter@2x.png"
+    },
+    {
+      "scale": "3x",
+      "idiom": "universal",
+      "filename": "web_twitter@3x.png"
+    }
+  ],
+  "properties": {},
+  "info": {
+    "version": 1,
+    "author": ""
+  }
+}

@@ -1,0 +1,17 @@
+<div>
+  <app-header></app-header>
+  <div>
+    <div class="x-y-body">
+      <app-filter-by-category></app-filter-by-category>
+      <div class="div-clear"></div>
+      <div>
+        <app-discounts></app-discounts>
+      </div>
+      <div>
+        <a title="{{'Home.ClickToAddPartner'| translate}}" class="x-item-plus"
+           [routerLink]="[ 'partner', this.path]"></a>
+      </div>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</div>

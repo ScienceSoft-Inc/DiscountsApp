@@ -1,0 +1,24 @@
+<div class="x-header">
+  <div id="ctl07">
+    <div class="x-menu-btn"></div>
+    <div class="x-name">
+      {{ 'Home.Name' | translate}}
+      <span>&nbsp;*Beta</span>
+    </div>
+    <div class="x-filter-input">
+      <div class="x-filter">
+        <app-filter-by-name></app-filter-by-name>
+      </div>
+    </div>
+  </div>
+  <div class="right-panel">
+    <a id="uxLogout" title="{{'Home.ClickToQuit'| translate}}" class="x-settings-btn" (click)="logOut()"
+       [routerLink]="['login']"></a>
+    <div class="language">
+      <app-language></app-language>
+    </div>
+    <div class="div-right">
+      <app-menu></app-menu>
+    </div>
+  </div>
+</div>

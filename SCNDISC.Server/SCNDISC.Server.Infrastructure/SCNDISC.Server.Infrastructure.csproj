@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{517780C8-1AC5-4651-916E-69605DE67043}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SCNDISC.Server.Infrastructure</RootNamespace>
+    <AssemblyName>SCNDISC.Server.Infrastructure</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DEMO|AnyCPU'">
+    <OutputPath>bin\DEMO\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging|AnyCPU'">
+    <OutputPath>bin\Staging\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DEV|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DEV\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DnsClient, Version=1.0.7.0, Culture=neutral, PublicKeyToken=4574bb5573c51424, processorArchitecture=MSIL">
+      <HintPath>..\packages\DnsClient.1.0.7\lib\net45\DnsClient.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson, Version=2.0.0.828, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Bson.2.0.0\lib\net45\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=2.0.0.828, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.2.0.0\lib\net45\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver.Core, Version=2.0.0.828, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.Core.2.0.0\lib\net45\MongoDB.Driver.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.3.0\lib\netstandard1.1\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.0.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Imaging\IImageConverter.cs" />
+    <Compile Include="Imaging\ImageConverter.cs" />
+    <Compile Include="Imaging\ImageOptions.cs" />
+    <Compile Include="Imaging\ImageType.cs" />
+    <Compile Include="Persistence\Commands\Categories\DeleteCategoryCommand.cs" />
+    <Compile Include="Persistence\Commands\Feedback\InsertFeedbackCommand.cs" />
+    <Compile Include="Persistence\Commands\Parameters\DeleteParameterCommand.cs" />
+    <Compile Include="Persistence\Commands\Parameters\UpsertParameterCommand.cs" />
+    <Compile Include="Persistence\Commands\Partners\DeleteBranchCommand.cs" />
+    <Compile Include="Persistence\Commands\Partners\DeletePartnerCommand.cs" />
+    <Compile Include="Persistence\Commands\Categories\UpsertCategoryCommand.cs" />
+    <Compile Include="Persistence\Commands\Partners\UpsertPartnerCommand.cs" />
+    <Compile Include="Persistence\Commands\Partners\UpsertBranchCommand.cs" />
+    <Compile Include="Persistence\Mappings\IMongoMappingsService.cs" />
+    <Compile Include="Persistence\Mappings\MongoMappingsService.cs" />
+    <Compile Include="Persistence\Providers\IMongoCollectionProvider.cs" />
+    <Compile Include="Persistence\Providers\MongoCollectionProvider.cs" />
+    <Compile Include="Persistence\Queries\Categories\CategoryListQuery.cs" />
+    <Compile Include="Persistence\Queries\Discounts\DiscountImageQuery.cs" />
+    <Compile Include="Persistence\Queries\Feedback\FeedbackListQuery.cs" />
+    <Compile Include="Persistence\Queries\MongoCommandQueryBase.cs" />
+    <Compile Include="Persistence\Queries\Discounts\DiscountListQuery.cs" />
+    <Compile Include="Persistence\Queries\Parameters\ModificationHashQuery.cs" />
+    <Compile Include="Persistence\Queries\Parameters\UpdateModificationHashQuery.cs" />
+    <Compile Include="Persistence\Queries\Partners\BranchToolTipQuery.cs" />
+    <Compile Include="Persistence\Queries\Partners\PartnerDetailsQuery.cs" />
+    <Compile Include="Persistence\Queries\Partners\PartnersOnlyQuery.cs" />
+    <Compile Include="Persistence\Queries\Partners\WebAddressCategoryQuery.cs" />
+    <Compile Include="Persistence\Queries\Spatial\SpatialDiscountsQuery.cs" />
+    <Compile Include="Persistence\Queries\Spatial\SpatialProximityQuery.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\ISettingsInfService.cs" />
+    <Compile Include="Settings\SettingsInfService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SCNDISC.Server.Domain\SCNDISC.Server.Domain.csproj">
+      <Project>{702991EF-73BB-4E8D-AEDE-64B21330B8CB}</Project>
+      <Name>SCNDISC.Server.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,32 @@
+<div class="modal-content-x">
+  <div class="x-modal-body">
+    <div class="x-body">
+      <div>
+        <app-basic-information [categoryIds]="categoryIds"
+                               [partner]="partner"></app-basic-information>
+      </div>
+      <div>
+        <app-files [partner]="partner"></app-files>
+      </div>
+      <div>
+        <app-contacts [partner]="partner"></app-contacts>
+      </div>
+      <div class="x-form-error-ct">
+        <div *ngIf="errorPhone">{{'partner.errorPhone' | translate}}</div>
+        <div *ngIf="errorCoordinates">{{'partner.errorCoordinates' | translate}}</div>
+        <div *ngIf="errorName">{{'partner.ErrorName' | translate}} </div>
+        <div *ngIf="errorDescription">{{'partner.ErrorDescription' | translate}} </div>
+        <div *ngIf="errorDiscountValue">{{'partner.ErrorDiscount' | translate}} </div>
+        <div *ngIf="errorDiscount">{{'partner.errorDiscount' | translate}}</div>
+        <div *ngIf="errorAddress">{{'partner.errorAddress' | translate}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer-x">
+    <button type="button" class="x-primary-btn" (click)="onClickedSave()">{{'Button.Save' | translate}}</button>
+    <button type="button" class="x-cancel-btn" (click)="onClickedCancel()">{{'Button.Cancel' | translate}}</button>
+    <button *ngIf="partner.id" type="button" class="x-delete-btn" (click)="onClickedRemove()">
+      {{'Button.Delete' | translate}}
+    </button>
+  </div>
+</div>
