@@ -6,5 +6,5 @@ Store links:
 - Google Play: https://play.google.com/store/apps/details?id=com.scnsoft.discounts
 
 Versions:
-- iOS app is version 1.3
-- Android app is version 1.6.0
+- iOS app is version 1.6.10
+- Android app is version 1.6.10
