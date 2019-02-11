@@ -40,19 +40,6 @@ namespace ScnDiscounts
             };
         }
 
-        protected override void OnStart()
-        {
-            base.OnStart();
-
-            if (!Functions.IsDebug)
-            {
-                AppCenter.Start(
-                    "android=469a0c8f-1072-4ee8-90a3-e6d9ae841ed2;" +
-                    "ios=b51abe8b-9277-4ea6-8f8d-b5fdf5d97d91",
-                    typeof(Analytics), typeof(Crashes));
-            }
-        }
-
         protected override void OnResume()
         {
             base.OnResume();
