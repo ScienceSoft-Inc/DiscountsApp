@@ -38,9 +38,9 @@ namespace ScnDiscounts.iOS.Renderers
 
             var mapTile = Element;
 
-            mapTile.PinUpdating += (sender, args) => UpdatePins();
-            mapTile.LocationUpdating += (sender, args) => UpdateLocationPinPosition();
-            mapTile.HeadingUpdating += (sender, args) => UpdateLocationPinHeading();
+            mapTile.PinUpdating += (sender, args) => Functions.SafeCall(UpdatePins);
+            mapTile.LocationUpdating += (sender, args) => Functions.SafeCall(UpdateLocationPinPosition);
+            mapTile.HeadingUpdating += (sender, args) => Functions.SafeCall(UpdateLocationPinHeading);
 
             mapTile.RegionMoved += RegionMoved;
 

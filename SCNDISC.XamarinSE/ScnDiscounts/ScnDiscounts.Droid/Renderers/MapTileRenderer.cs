@@ -34,9 +34,9 @@ namespace ScnDiscounts.Droid.Renderers
             LocationMarkerOptions.InvokeZIndex(1);
 
             var mapTile = (MapTile) Element;
-            mapTile.PinUpdating += (sender, args) => UpdatePins();
-            mapTile.LocationUpdating += (sender, args) => UpdateLocationPinPosition();
-            mapTile.HeadingUpdating += (sender, args) => UpdateLocationPinHeading();
+            mapTile.PinUpdating += (sender, args) => Functions.SafeCall(UpdatePins);
+            mapTile.LocationUpdating += (sender, args) => Functions.SafeCall(UpdateLocationPinPosition);
+            mapTile.HeadingUpdating += (sender, args) => Functions.SafeCall(UpdateLocationPinHeading);
 
             NativeMap.MapClick += Map_MapClick;
             NativeMap.CameraMoveStarted += Map_CameraMoveStarted;
