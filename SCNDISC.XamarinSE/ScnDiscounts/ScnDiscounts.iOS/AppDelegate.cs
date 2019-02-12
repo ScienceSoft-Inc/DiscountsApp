@@ -1,6 +1,8 @@
 ﻿using FFImageLoading.Forms.Platform;
 using Foundation;
 using Google.Maps;
+using ScnDiscounts.DependencyInterface;
+using ScnDiscounts.iOS.DependencyInterface;
 using ScnViewGestures.Plugin.Forms.iOS.Renderers;
 using UIKit;
 using Xamarin;
@@ -25,6 +27,9 @@ namespace ScnDiscounts.iOS
 
             App.ScreenWidth = UIScreen.MainScreen.Bounds.Width;
             App.ScreenHeight = UIScreen.MainScreen.Bounds.Height;
+
+            DependencyService.Register<IPhoneService, PhoneService>();
+            DependencyService.Register<IImageService, ImageService>();
 
             LoadApplication(new App());
 

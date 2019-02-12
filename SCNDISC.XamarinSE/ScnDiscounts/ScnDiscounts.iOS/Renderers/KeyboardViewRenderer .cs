@@ -13,6 +13,8 @@ namespace ScnDiscounts.iOS.Renderers
         private NSObject _keyboardShowObserver;
         private NSObject _keyboardHideObserver;
 
+        private Thickness _oldMargin;
+
         protected override void OnElementChanged(ElementChangedEventArgs<View> e)
         {
             base.OnElementChanged(e);
@@ -55,14 +57,17 @@ namespace ScnDiscounts.iOS.Renderers
                 var key = new NSString(UIKeyboard.FrameEndUserInfoKey);
                 var result = (NSValue) args.Notification.UserInfo.ObjectForKey(key);
                 var keyboardSize = result.RectangleFValue.Size;
-                Element.Margin = new Thickness(0, 0, 0, keyboardSize.Height);
+
+                _oldMargin = Element.Margin;
+                Element.Margin = new Thickness(_oldMargin.Left, _oldMargin.Top, _oldMargin.Right,
+                    _oldMargin.Bottom + keyboardSize.Height);
             }
         }
 
         private void OnKeyboardHide(object sender, UIKeyboardEventArgs args)
         {
             if (Element != null)
-                Element.Margin = 0;
+                Element.Margin = _oldMargin;
         }
     }
 }

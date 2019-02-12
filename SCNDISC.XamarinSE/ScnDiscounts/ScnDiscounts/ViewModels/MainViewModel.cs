@@ -60,8 +60,9 @@ namespace ScnDiscounts.ViewModels
 
             MainPage.IsShowRightPanel = true;
 
-            AppMobileService.Locaion.StartListening();
             AppMobileService.Locaion.PositionUpdated += MapLocation_Position;
+            AppMobileService.Locaion.HeadingUpdated += MapLocation_Heading;
+            AppMobileService.Locaion.StartListening();
         }
 
         private void Filter_DataRefreshing(object sender, EventArgs e)
@@ -299,6 +300,11 @@ namespace ScnDiscounts.ViewModels
             mapPinCollection.ForEach(i => i.CalculateDistance());
         }
 
+        private void MapLocation_Heading(object sender, EventArgs e)
+        {
+            MainPage.MapLocation.HeadingUpdate();
+        }
+
         private void ActivateMapPin()
         {
             var pinId = AppData.Discount.ActiveMapPinId;
@@ -344,7 +350,7 @@ namespace ScnDiscounts.ViewModels
             BtnLocation_Click(sender, e);
         }
 
-        private static async Task<PermissionStatus> RequestForLocationPermission()
+        private static async Task<PermissionStatus> AskForLocationPermission()
         {
             var result = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
 
@@ -362,7 +368,7 @@ namespace ScnDiscounts.ViewModels
         {
             MainPage.MapLocation.CloseDetailInfo();
 
-            var result = await RequestForLocationPermission();
+            var result = await AskForLocationPermission();
 
             if (result == PermissionStatus.Granted && LocationHelper.IsGeoServiceEnabled)
             {

@@ -40,9 +40,13 @@ namespace ScnDiscounts.Views
             };
             txtDistanceValue.SetBinding(Label.TextProperty, "DistanceString");
 
+            gridLocation.Children.Add(txtDistanceValue, 0, 0);
+
             var distanceLabel = new StackLayout
             {
                 VerticalOptions = LayoutOptions.Center,
+                Margin = new Thickness(0, 0, 10, 0),
+                TranslationY = 2,
                 Spacing = 0,
                 Children =
                 {
@@ -58,7 +62,6 @@ namespace ScnDiscounts.Views
                 }
             };
 
-            gridLocation.Children.Add(txtDistanceValue, 0, 0);
             gridLocation.Children.Add(distanceLabel, 1, 0);
 
             var txtPartnerAddress = new Label
@@ -173,7 +176,7 @@ namespace ScnDiscounts.Views
             var borderPhone = new Frame
             {
                 Padding = 0,
-                CornerRadius = 0,
+                CornerRadius = 1,
                 BackgroundColor = Color.Transparent,
                 BorderColor = MainStyles.MainBackgroundColor.FromResources<Color>(),
                 HasShadow = false,

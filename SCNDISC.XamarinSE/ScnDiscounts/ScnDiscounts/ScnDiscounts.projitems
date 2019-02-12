@@ -61,6 +61,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)ValueConverter\CustomSafeAreaConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueConverter\FileNameToImageConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueConverter\PartnerNameComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueConverter\CategoryColorConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueConverter\TextCapitalizationConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\FeedbackViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\AboutViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\DiscountDetailViewModel.cs" />
@@ -70,6 +72,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SettingsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\AboutPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\BranchInfoViewTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\CategoryItemTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\FilterViewTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\MenuViewTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\ContentUI\FeedbackContentUI.cs" />

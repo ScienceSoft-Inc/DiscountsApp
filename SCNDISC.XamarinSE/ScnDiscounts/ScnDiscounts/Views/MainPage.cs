@@ -81,6 +81,8 @@ namespace ScnDiscounts.Views
                     SafeAreaHelper.CustomSafeAreaFlags.Top | SafeAreaHelper.CustomSafeAreaFlags.Left);
             if (btnLocation != null)
                 safeAreaHelper.UseSafeArea(btnLocation, SafeAreaHelper.CustomSafeAreaFlags.Left);
+            if (Device.RuntimePlatform == Device.Android)
+                safeAreaHelper.UseSafeArea(MapLocation.MapPinDetail, SafeAreaHelper.CustomSafeAreaFlags.All);
 
             ContentLayout.Children.Add(mainLayout);
         }

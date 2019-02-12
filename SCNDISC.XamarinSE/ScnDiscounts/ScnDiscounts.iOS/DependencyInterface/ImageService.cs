@@ -15,7 +15,7 @@ namespace ScnDiscounts.iOS.DependencyInterface
         {
             var image = UIImage.FromBundle("ic_pin_disabled.png");
 
-            UIGraphics.BeginImageContext(image.Size);
+            UIGraphics.BeginImageContextWithOptions(image.Size, false, image.CurrentScale);
             using (var context = UIGraphics.GetCurrentContext())
             {
                 context.TranslateCTM(0, image.Size.Height);

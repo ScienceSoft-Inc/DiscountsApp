@@ -7,7 +7,7 @@ namespace ScnDiscounts.Helpers
 {
     public class IsolatedStorageHelper
     {
-        protected static ILocalStorage Instance = DependencyService.Get<ILocalStorage>();
+        protected static readonly ILocalStorage Instance = DependencyService.Get<ILocalStorage>();
 
         public static async Task<string> SaveBase64Async(string fileName, string base64)
         {

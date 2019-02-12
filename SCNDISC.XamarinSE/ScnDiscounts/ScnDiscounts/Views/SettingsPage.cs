@@ -101,7 +101,7 @@ namespace ScnDiscounts.Views
             };
 
             var safeAreaHelper = new SafeAreaHelper();
-            safeAreaHelper.UseSafeArea(this, SafeAreaHelper.CustomSafeAreaFlags.Vertical);
+            safeAreaHelper.UseSafeArea(this, SafeAreaHelper.CustomSafeAreaFlags.Top);
             safeAreaHelper.UseSafeArea(appBar.BtnBack, SafeAreaHelper.CustomSafeAreaFlags.Left);
             safeAreaHelper.UseSafeArea(layoutSettings, SafeAreaHelper.CustomSafeAreaFlags.Horizontal);
 

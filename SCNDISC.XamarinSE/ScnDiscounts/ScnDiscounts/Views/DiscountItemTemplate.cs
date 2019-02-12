@@ -10,10 +10,9 @@ namespace ScnDiscounts.Views
 {
     public class DiscountItemTemplate : ViewCell
     {
-        protected static FileNameToImageConverter FileNameConverter = new FileNameToImageConverter();
+        protected static readonly FileNameToImageConverter FileNameConverter = new FileNameToImageConverter();
 
         protected CachedImage ImgCompanyLogo;
-        protected StackLayout CategoriesLayout;
 
         public DiscountItemTemplate()
         {
@@ -81,13 +80,18 @@ namespace ScnDiscounts.Views
 
             #region Category layout
 
-            CategoriesLayout = new StackLayout
+            var categoriesLayout = new StackLayout
             {
                 Spacing = 5,
                 Orientation = StackOrientation.Horizontal
             };
 
-            gridDiscountItem.Children.Add(CategoriesLayout, 1, 3, 1, 2);
+            var categoryItemTemplate = new DataTemplate(typeof(CategoryItemTemplate));
+            BindableLayout.SetItemTemplate(categoriesLayout, categoryItemTemplate);
+
+            categoriesLayout.SetBinding(BindableLayout.ItemsSourceProperty, "CategoryList");
+
+            gridDiscountItem.Children.Add(categoriesLayout, 1, 3, 1, 2);
 
             #endregion
 
@@ -108,7 +112,7 @@ namespace ScnDiscounts.Views
             {
                 Margin = new Thickness(8, 4),
                 Padding = 8,
-                CornerRadius = 0,
+                CornerRadius = 1,
                 BackgroundColor = MainStyles.ListBackgroundColor.FromResources<Color>(),
                 BorderColor = MainStyles.ListBorderColor.FromResources<Color>(),
                 HasShadow = false,
@@ -123,8 +127,6 @@ namespace ScnDiscounts.Views
             base.OnBindingContextChanged();
 
             var viewModel = (DiscountData) BindingContext;
-            RebindCategories(CategoriesLayout, viewModel);
-
             RebindLogoImage(ImgCompanyLogo, viewModel);
         }
 
@@ -139,32 +141,6 @@ namespace ScnDiscounts.Views
 
             if (!string.IsNullOrEmpty(imagePath))
                 imgCompanyLogo.Source = imagePath;
-        }
-
-        private static void RebindCategories(IViewContainer<View> categoriesLayout, DiscountData viewModel)
-        {
-            categoriesLayout.Children.Clear();
-
-            if (viewModel != null)
-            {
-                foreach (var category in viewModel.CategoryList)
-                {
-                    var txtCategory = new Label
-                    {
-                        Style = LabelStyles.CategoryStyle.FromResources<Style>(),
-                        Text = category.Name?.ToUpper()
-                    };
-
-                    var categoryLayout = new ContentView
-                    {
-                        Padding = 4,
-                        BackgroundColor = category.GetColorTheme(),
-                        Content = txtCategory
-                    };
-
-                    categoriesLayout.Children.Add(categoryLayout);
-                }
-            }
         }
     }
 }

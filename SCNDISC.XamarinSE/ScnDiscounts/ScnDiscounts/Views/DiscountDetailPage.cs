@@ -159,19 +159,10 @@ namespace ScnDiscounts.Views
 
             foreach (var category in viewModel.Categories)
             {
-                var txtCategory = new Label
+                var categoryLayout = new CategoryItemTemplate
                 {
-                    Style = LabelStyles.CategoryStyle.FromResources<Style>(),
-                    Text = category.Name?.ToUpper(),
-                    LineBreakMode = LineBreakMode.NoWrap
-                };
-
-                var categoryLayout = new ContentView
-                {
-                    Padding = 4,
-                    BackgroundColor = category.GetColorTheme(),
-                    Content = txtCategory,
-                    Margin = new Thickness(0, 0, 5, 5)
+                    Margin = new Thickness(0, 0, 5, 5),
+                    BindingContext = category
                 };
 
                 flexCategories.Children.Add(categoryLayout);

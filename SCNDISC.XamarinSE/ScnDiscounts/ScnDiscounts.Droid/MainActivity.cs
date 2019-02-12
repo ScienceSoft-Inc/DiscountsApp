@@ -5,6 +5,8 @@ using Android.Runtime;
 using Android.Views;
 using FFImageLoading.Forms.Platform;
 using Plugin.Permissions;
+using ScnDiscounts.DependencyInterface;
+using ScnDiscounts.Droid.DependencyInterface;
 using ScnViewGestures.Plugin.Forms.Droid.Renderers;
 using Xamarin;
 using Xamarin.Forms;
@@ -37,6 +39,9 @@ namespace ScnDiscounts.Droid
 
             App.ScreenWidth = this.FromPixels(Resources.DisplayMetrics.WidthPixels);
             App.ScreenHeight = this.FromPixels(Resources.DisplayMetrics.HeightPixels);
+
+            DependencyService.Register<IPhoneService, PhoneService>();
+            DependencyService.Register<IImageService, ImageService>();
 
             LoadApplication(new App());
         }

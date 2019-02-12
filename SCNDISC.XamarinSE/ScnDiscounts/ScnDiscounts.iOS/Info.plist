@@ -11,9 +11,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.sciencesoft.discounts</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.6.10</string>
+	<string>1.6.11</string>
 	<key>CFBundleVersion</key>
-	<string>1.6.10</string>
+	<string>1.6.11</string>
 	<key>MinimumOSVersion</key>
 	<string>8.0</string>
 	<key>UIDeviceFamily</key>

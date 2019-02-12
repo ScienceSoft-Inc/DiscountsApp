@@ -5,11 +5,6 @@ namespace ScnDiscounts.Models.Data
 {
     public class CategoryData
     {
-        public CategoryData()
-        {
-            _name = new Dictionary<LanguageHelper.LangTypeEnum, string>();
-        }
-
         public int Id { get; set; }
         public string DocumentId { get; set; }
 
@@ -17,14 +12,18 @@ namespace ScnDiscounts.Models.Data
 
         #region Name
 
-        private readonly Dictionary<LanguageHelper.LangTypeEnum, string> _name;
+        private readonly Dictionary<LanguageHelper.LangTypeEnum, string> _name =
+            new Dictionary<LanguageHelper.LangTypeEnum, string>();
+
         public void SetName(string langCode, string value)
         {
             var lang = LanguageHelper.LangCodeToEnum(langCode);
-            _name.Add(lang, value);
+            _name[lang] = value;
         }
 
-        public string Name => _name.ContainsKey(AppParameters.Config.SystemLang) ? _name[AppParameters.Config.SystemLang] : string.Empty;
+        public string Name => _name.ContainsKey(AppParameters.Config.SystemLang)
+            ? _name[AppParameters.Config.SystemLang]
+            : string.Empty;
 
         #endregion
     }

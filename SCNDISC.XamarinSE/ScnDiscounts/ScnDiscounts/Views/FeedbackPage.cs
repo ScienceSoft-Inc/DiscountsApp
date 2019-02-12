@@ -90,9 +90,7 @@ namespace ScnDiscounts.Views
                     new RowDefinition {Height = GridLength.Star},
                     new RowDefinition {Height = GridLength.Auto},
                     new RowDefinition {Height = GridLength.Auto}
-                },
-                VerticalOptions = LayoutOptions.FillAndExpand,
-                Padding = 24
+                }
             };
 
             layoutFeedback.Children.Add(txtNameTitle, 0, 0);
@@ -102,13 +100,20 @@ namespace ScnDiscounts.Views
             layoutFeedback.Children.Add(btnSubmit, 0, 4);
             layoutFeedback.Children.Add(activityIndicator, 0, 5);
 
+            var layoutContainer = new ContentView
+            {
+                Padding = 24,
+                Content = layoutFeedback,
+                VerticalOptions = LayoutOptions.FillAndExpand
+            };
+
             var safeAreaHelper = new SafeAreaHelper();
-            safeAreaHelper.UseSafeArea(this, SafeAreaHelper.CustomSafeAreaFlags.Vertical);
+            safeAreaHelper.UseSafeArea(this, SafeAreaHelper.CustomSafeAreaFlags.Top);
             safeAreaHelper.UseSafeArea(appBar.BtnBack, SafeAreaHelper.CustomSafeAreaFlags.Left);
-            safeAreaHelper.UseSafeArea(layoutFeedback, SafeAreaHelper.CustomSafeAreaFlags.Horizontal);
+            safeAreaHelper.UseSafeArea(layoutContainer, SafeAreaHelper.CustomSafeAreaFlags.Horizontal);
 
             ContentLayout.Children.Add(appBar);
-            ContentLayout.Children.Add(layoutFeedback);
+            ContentLayout.Children.Add(layoutContainer);
         }
     }
 }

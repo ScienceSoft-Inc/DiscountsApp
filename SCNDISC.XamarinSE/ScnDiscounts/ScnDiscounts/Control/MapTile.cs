@@ -10,6 +10,8 @@ namespace ScnDiscounts.Control
 {
     public class MapTile : Map
     {
+        public const int MinCompassRotation = 5;
+
         public MapTile()
         {
             MapLayout = new AbsoluteLayout();
@@ -17,17 +19,17 @@ namespace ScnDiscounts.Control
             AbsoluteLayout.SetLayoutFlags(this, AbsoluteLayoutFlags.All);
             AbsoluteLayout.SetLayoutBounds(this, new Rectangle(0f, 0f, 1f, 1f));
 
-            _mapPinDetail = new MapPinDetail
+            MapPinDetail = new MapPinDetail
             {
                 IsVisible = false
             };
 
-            AbsoluteLayout.SetLayoutFlags(_mapPinDetail, AbsoluteLayoutFlags.PositionProportional);
-            AbsoluteLayout.SetLayoutBounds(_mapPinDetail,
+            AbsoluteLayout.SetLayoutFlags(MapPinDetail, AbsoluteLayoutFlags.PositionProportional);
+            AbsoluteLayout.SetLayoutBounds(MapPinDetail,
                 new Rectangle(0.5, 0.5, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
             
             MapLayout.Children.Add(this);
-            MapLayout.Children.Add(_mapPinDetail);
+            MapLayout.Children.Add(MapPinDetail);
         }
 
         public new void MoveToRegion(MapSpan mapSpan)
@@ -92,9 +94,10 @@ namespace ScnDiscounts.Control
         public MainContentUI Context { get; set; }
 
         #region DetailInfo
-        private readonly MapPinDetail _mapPinDetail;
+        public MapPinDetail MapPinDetail { get; }
 
         public bool IsShowDetailInfo { get; set; }
+
         public string SelectedPinId { get; set; }
 
         public async void ShowPinDetailInfo(string id)
@@ -108,16 +111,16 @@ namespace ScnDiscounts.Control
 
             IsShowDetailInfo = true;
 
-            _mapPinDetail.DiscountCaption = Context?.TxtDiscount;
-            _mapPinDetail.DistanceIcon = Context?.ImgDistance;
-            _mapPinDetail.DistanceCaption = Context?.TxtDistanceScaleValue;
-            _mapPinDetail.DetailIcon = Context?.ImgDetail;
-            _mapPinDetail.DiscountValue = mapPinData.Discount + mapPinData.DiscountType;
-            _mapPinDetail.PrimaryCategory =  mapPinData.PrimaryCategory;
-            _mapPinDetail.Title = mapPinData.Name;
-            _mapPinDetail.DistanceValue = mapPinData.Distance;
+            MapPinDetail.DiscountCaption = Context?.TxtDiscount;
+            MapPinDetail.DistanceIcon = Context?.ImgDistance;
+            MapPinDetail.DistanceCaption = Context?.TxtDistanceScaleValue;
+            MapPinDetail.DetailIcon = Context?.ImgDetail;
+            MapPinDetail.DiscountValue = mapPinData.Discount + mapPinData.DiscountType;
+            MapPinDetail.PrimaryCategory =  mapPinData.PrimaryCategory;
+            MapPinDetail.Title = mapPinData.Name;
+            MapPinDetail.DistanceValue = mapPinData.Distance;
 
-            await _mapPinDetail.Show();
+            await MapPinDetail.Show();
             
             var tapPinDetail = new TapGestureRecognizer();
             tapPinDetail.Tapped += (sender, e) =>
@@ -126,13 +129,13 @@ namespace ScnDiscounts.Control
                 OnClickPinDetail(new MapPinDataEventArgs(mapPinData));
             };
 
-            _mapPinDetail.TapGesture = tapPinDetail;
+            MapPinDetail.TapGesture = tapPinDetail;
         }
 
         public async void CloseDetailInfo()
         {
             IsShowDetailInfo = false;
-            await _mapPinDetail.Hide();
+            await MapPinDetail.Hide();
         }
 
         public void LocationUpdate()
@@ -144,6 +147,17 @@ namespace ScnDiscounts.Control
         public void OnLocationUpdating()
         {
             LocationUpdating?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void HeadingUpdate()
+        {
+            OnHeadingUpdating();
+        }
+
+        public event EventHandler HeadingUpdating;
+        public void OnHeadingUpdating()
+        {
+            HeadingUpdating?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

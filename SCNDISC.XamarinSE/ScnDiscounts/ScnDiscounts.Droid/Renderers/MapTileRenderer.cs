@@ -3,12 +3,12 @@ using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.Graphics;
 using ScnDiscounts.Control;
+using ScnDiscounts.DependencyInterface;
 using ScnDiscounts.Droid.Renderers;
 using ScnDiscounts.Helpers;
 using ScnDiscounts.Models;
 using System;
 using Xamarin.Forms;
-using Xamarin.Forms.Maps;
 using Xamarin.Forms.Maps.Android;
 using Xamarin.Forms.Platform.Android;
 
@@ -18,48 +18,61 @@ namespace ScnDiscounts.Droid.Renderers
 {
     public class MapTileRenderer : MapRenderer
     {
-        protected readonly object Locker = new object();
+        protected Marker LocationMarker;
+        protected MarkerOptions LocationMarkerOptions = new MarkerOptions();
 
         public MapTileRenderer(Context context) 
             : base(context)
         {
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<Map> e)
-        {
-            base.OnElementChanged(e);
-
-            var mapTile = (MapTile) Element;
-            if (mapTile != null)
-            {
-                mapTile.PinUpdating += (sender, args) =>
-                {
-                    lock (Locker)
-                    {
-                        Functions.SafeCall(UpdatePins);
-                    }
-                };
-
-                mapTile.LocationUpdating += (sender, args) =>
-                {
-                    lock (Locker)
-                    {
-                        Functions.SafeCall(UpdatePins);
-                    }
-                };
-
-                if (NativeMap == null)
-                    Control.GetMapAsync(this);
-            }
-        }
-
         protected override void OnMapReady(GoogleMap googleMap)
         {
+            var icon = BitmapDescriptorFactory.FromResource(Resource.Drawable.ic_pin_navigation);
+            LocationMarkerOptions.SetIcon(icon);
+            LocationMarkerOptions.Anchor(0.5f, 0.5f);
+            LocationMarkerOptions.InvokeZIndex(1);
+
+            var mapTile = (MapTile) Element;
+            mapTile.PinUpdating += (sender, args) => UpdatePins();
+            mapTile.LocationUpdating += (sender, args) => UpdateLocationPinPosition();
+            mapTile.HeadingUpdating += (sender, args) => UpdateLocationPinHeading();
+
             NativeMap.MapClick += Map_MapClick;
             NativeMap.CameraMoveStarted += Map_CameraMoveStarted;
             NativeMap.CameraIdle += Map_CameraPositionIdle;
             NativeMap.MarkerClick += Map_MarkerClick;
             NativeMap.UiSettings.ZoomControlsEnabled = false;
+
+            Element.SizeChanged += (sender, args) => SetSafeAreaPadding();
+
+            SetSafeAreaPadding();
+        }
+
+        private void SetSafeAreaPadding()
+        {
+            var safeAreaInsets = DependencyService.Get<IPhoneService>().SafeAreaInsets;
+            var left = (int) Context.ToPixels(safeAreaInsets.Left);
+            var top = (int) Context.ToPixels(safeAreaInsets.Top);
+            var right = (int) Context.ToPixels(safeAreaInsets.Right);
+            var bottom = (int) Context.ToPixels(safeAreaInsets.Bottom);
+            NativeMap.SetPadding(left, top, right, bottom);
+        }
+
+        private void CloseDetailInfo()
+        {
+            var mapTile = (MapTile) Element;
+            mapTile.CloseDetailInfo();
+        }
+
+        private void Map_CameraMoveStarted(object sender, GoogleMap.CameraMoveStartedEventArgs e)
+        {
+            CloseDetailInfo();
+        }
+
+        private void Map_MapClick(object sender, GoogleMap.MapClickEventArgs e)
+        {
+            CloseDetailInfo();
         }
 
         private void Map_CameraPositionIdle(object sender, EventArgs e)
@@ -71,18 +84,6 @@ namespace ScnDiscounts.Droid.Renderers
                 mapTile.ShowPinDetailInfo(mapTile.SelectedPinId);
                 mapTile.SelectedPinId = null;
             }
-        }
-
-        private void Map_CameraMoveStarted(object sender, GoogleMap.CameraMoveStartedEventArgs e)
-        {
-            var mapTile = (MapTile) Element;
-            mapTile.CloseDetailInfo();
-        }
-
-        private void Map_MapClick(object sender, GoogleMap.MapClickEventArgs e)
-        {
-            var mapTile = (MapTile) Element;
-            mapTile.CloseDetailInfo();
         }
 
         private void UpdatePins()
@@ -105,19 +106,45 @@ namespace ScnDiscounts.Droid.Renderers
                 NativeMap.AddMarker(marker);
             }
 
+            if (LocationMarkerOptions.Position != null)
+                LocationMarker = NativeMap.AddMarker(LocationMarkerOptions);
+
+            UpdateLocationPinPosition();
+        }
+
+        private void UpdateLocationPinPosition()
+        {
             if (LocationHelper.IsGeoServiceAvailable)
             {
                 var position = AppMobileService.Locaion.CurrentLocation;
                 if (position != null)
                 {
-                    var icon = BitmapDescriptorFactory.FromResource(Resource.Drawable.ic_pin_navigation);
+                    var latLng = new LatLng(position.Latitude, position.Longitude);
 
-                    var marker = new MarkerOptions();
-                    marker.SetPosition(new LatLng(position.Latitude, position.Longitude));
-                    marker.SetIcon(icon);
-                    marker.InvokeZIndex(1);
+                    LocationMarkerOptions.SetPosition(latLng);
 
-                    NativeMap.AddMarker(marker);
+                    if (LocationMarker != null)
+                        LocationMarker.Position = latLng;
+                    else
+                        LocationMarker = NativeMap.AddMarker(LocationMarkerOptions);
+                }
+            }
+        }
+
+        private void UpdateLocationPinHeading()
+        {
+            if (LocationHelper.IsGeoServiceAvailable)
+            {
+                var oldRotation = LocationMarkerOptions.Rotation;
+                var newRotation = (float) AppMobileService.Locaion.CurrentHeading - 45 -
+                                  (NativeMap.CameraPosition?.Bearing).GetValueOrDefault();
+
+                if (Math.Abs(newRotation - oldRotation) > MapTile.MinCompassRotation)
+                {
+                    LocationMarkerOptions.SetRotation(newRotation);
+
+                    if (LocationMarker != null)
+                        LocationMarker.Rotation = newRotation;
                 }
             }
         }

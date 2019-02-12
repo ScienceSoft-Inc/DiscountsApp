@@ -13,17 +13,22 @@ namespace ScnDiscounts.Helpers
 
         private static ConcurrentDictionary<int, byte[]> Icons { get; } = new ConcurrentDictionary<int, byte[]>();
 
-        public static Color GetColorTheme(this CategoryData category)
+        public static Color GetColorTheme(this string color)
         {
             var result = Color.Default;
 
-            if (category != null && !string.IsNullOrEmpty(category.Color))
-                result = Color.FromHex(category.Color);
+            if (!string.IsNullOrEmpty(color))
+                result = Color.FromHex(color);
 
             if (result == Color.Default)
                 result = Color.Black;
 
             return result;
+        }
+
+        public static Color GetColorTheme(this CategoryData category)
+        {
+            return category != null ? GetColorTheme(category.Color) : Color.Black;
         }
 
         public static byte[] GetIconThemeBytes(this CategoryData category, bool isEnabled = true)

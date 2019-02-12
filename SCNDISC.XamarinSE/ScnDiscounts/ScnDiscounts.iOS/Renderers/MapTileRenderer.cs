@@ -1,3 +1,4 @@
+using CoreGraphics;
 using CoreLocation;
 using Foundation;
 using Google.Maps;
@@ -16,7 +17,17 @@ namespace ScnDiscounts.iOS.Renderers
 {
     public class MapTileRenderer : ViewRenderer<MapTile, MapView>
     {
-        protected readonly object Locker = new object();
+        protected Marker LocationMarker;
+
+        public MapTileRenderer()
+        {
+            LocationMarker = new Marker
+            {
+                Icon = UIImage.FromBundle("ic_pin_navigation.png"),
+                GroundAnchor = new CGPoint(0.5, 0.5),
+                ZIndex = 1
+            };
+        }
 
         protected override void OnElementChanged(ElementChangedEventArgs<MapTile> e)
         {
@@ -27,23 +38,13 @@ namespace ScnDiscounts.iOS.Renderers
 
             var mapTile = Element;
 
-            mapTile.PinUpdating += (sender, args) =>
-            {
-                lock (Locker)
-                {
-                    Functions.SafeCall(UpdatePins);
-                }
-            };
-
-            mapTile.LocationUpdating += (sender, args) =>
-            {
-                lock (Locker)
-                {
-                    Functions.SafeCall(UpdatePins);
-                }
-            };
+            mapTile.PinUpdating += (sender, args) => UpdatePins();
+            mapTile.LocationUpdating += (sender, args) => UpdateLocationPinPosition();
+            mapTile.HeadingUpdating += (sender, args) => UpdateLocationPinHeading();
 
             mapTile.RegionMoved += RegionMoved;
+
+            mapTile.SizeChanged += (sender, args) => CloseDetailInfo();
 
             if (Control == null)
                 SetGoogleMapControl();
@@ -68,6 +69,27 @@ namespace ScnDiscounts.iOS.Renderers
             SetNativeControl(mapView);
         }
 
+        private void CloseDetailInfo()
+        {
+            var mapTile = Element;
+            mapTile.CloseDetailInfo();
+        }
+
+        private void Map_CoordinateTapped(object sender, GMSCoordEventArgs e)
+        {
+            CloseDetailInfo();
+        }
+
+        private void Map_PoiWithPlaceIdTapped(object o, GMSPoiWithPlaceIdEventEventArgs gmsPoiWithPlaceIdEventEventArgs)
+        {
+            CloseDetailInfo();
+        }
+
+        private void Map_WillMove(object sender, GMSWillMoveEventArgs e)
+        {
+            CloseDetailInfo();
+        }
+
         private void Map_CameraPositionIdle(object sender, GMSCameraEventArgs e)
         {
             var mapTile = Element;
@@ -77,24 +99,6 @@ namespace ScnDiscounts.iOS.Renderers
                 mapTile.ShowPinDetailInfo(mapTile.SelectedPinId);
                 mapTile.SelectedPinId = null;
             }
-        }
-
-        private void Map_CoordinateTapped(object sender, GMSCoordEventArgs e)
-        {
-            var mapTile = Element;
-            mapTile.CloseDetailInfo();
-        }
-
-        private void Map_PoiWithPlaceIdTapped(object o, GMSPoiWithPlaceIdEventEventArgs gmsPoiWithPlaceIdEventEventArgs)
-        {
-            var mapTile = Element;
-            mapTile.CloseDetailInfo();
-        }
-
-        private void Map_WillMove(object sender, GMSWillMoveEventArgs e)
-        {
-            var mapTile = Element;
-            mapTile.CloseDetailInfo();
         }
 
         private void UpdatePins()
@@ -108,7 +112,7 @@ namespace ScnDiscounts.iOS.Renderers
             foreach (var pinItem in pinItems)
             {
                 var imageBytes = pinItem.PrimaryCategory.GetIconThemeBytes();
-                var icon = UIImage.LoadFromData(NSData.FromArray(imageBytes));
+                var icon = UIImage.LoadFromData(NSData.FromArray(imageBytes), UIScreen.MainScreen.Scale);
 
                 var marker = new Marker
                 {
@@ -119,19 +123,35 @@ namespace ScnDiscounts.iOS.Renderers
                 marker.Map = map;
             }
 
+            LocationMarker.Map = map;
+
+            UpdateLocationPinPosition();
+        }
+
+        private void UpdateLocationPinPosition()
+        {
             if (LocationHelper.IsGeoServiceAvailable)
             {
                 var position = AppMobileService.Locaion.CurrentLocation;
                 if (position != null)
                 {
-                    var marker = new Marker
-                    {
-                        Position = new CLLocationCoordinate2D(position.Latitude, position.Longitude),
-                        Icon = UIImage.FromBundle("ic_pin_navigation.png"),
-                        ZIndex = 1
-                    };
-                    marker.Map = map;
+                    var latLng = new CLLocationCoordinate2D(position.Latitude, position.Longitude);
+
+                    LocationMarker.Position = latLng;
                 }
+            }
+        }
+
+        private void UpdateLocationPinHeading()
+        {
+            if (LocationHelper.IsGeoServiceAvailable)
+            {
+                var oldRotation = LocationMarker.Rotation;
+                var newRotation = AppMobileService.Locaion.CurrentHeading - 45 -
+                                  (Control.Camera?.Bearing).GetValueOrDefault();
+
+                if (Math.Abs(newRotation - oldRotation) > MapTile.MinCompassRotation)
+                    LocationMarker.Rotation = newRotation;
             }
         }
 

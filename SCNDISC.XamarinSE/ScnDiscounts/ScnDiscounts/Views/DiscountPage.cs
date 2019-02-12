@@ -69,14 +69,22 @@ namespace ScnDiscounts.Views
             InitSearchBar(appBar);
             InitFilterPanel();
 
-            var listViewFooter = new ContentView();
+            var listViewFooter = new ContentView
+            {
+                HeightRequest = 4
+            };
+
             var discountListView = new ListView(ListViewCachingStrategy.RetainElement)
             {
                 BackgroundColor = MainStyles.MainLightBackgroundColor.FromResources<Color>(),
                 SeparatorVisibility = SeparatorVisibility.None,
                 SelectionMode = ListViewSelectionMode.None,
-                ItemTemplate = new DataTemplate(() => new DiscountItemTemplate()),
-                HasUnevenRows = true,
+                ItemTemplate = new DataTemplate(typeof(DiscountItemTemplate)),
+                RowHeight = Functions.OnPlatform(125, 135),
+                Header = new ContentView
+                {
+                    HeightRequest = 4
+                },
                 Footer = new ContentView
                 {
                     Content = listViewFooter
