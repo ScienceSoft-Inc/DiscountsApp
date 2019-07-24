@@ -17,11 +17,17 @@ namespace ScnDiscounts.Views
 
         private DiscountContentUI contentUI => (DiscountContentUI) ContentUI;
 
+        protected StackLayout StackByDistance;
+
         public DiscountPage()
             : base(typeof(DiscountViewModel), typeof(DiscountContentUI), PanelSetEnum.psRight)
         {
             BackgroundColor = MainStyles.StatusBarColor.FromResources<Color>();
             Content.BackgroundColor = MainStyles.MainLightBackgroundColor.FromResources<Color>();
+
+            var loadingColor = MainStyles.LoadingColor.FromResources<Color>();
+            LoadingActivityIndicator.Color = loadingColor;
+            LoadingActivityText.TextColor = loadingColor;
 
             var appBar = new TitleBar(this, TitleBar.BarBtnEnum.bbBackRight)
             {
@@ -142,7 +148,7 @@ namespace ScnDiscounts.Views
             TransparentSize = new Thickness(50, 50, 0, 0);
 
             RightPanel.BackgroundColor = MainStyles.MainBackgroundColor.FromResources<Color>();
-            RightPanel.Opacity = 0.9;
+            RightPanel.Opacity = 0.95;
 
             var rightPanelContent = new StackLayout
             {
@@ -233,7 +239,8 @@ namespace ScnDiscounts.Views
             var switchByName = new Switch
             {
                 HorizontalOptions = LayoutOptions.End,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                OnColor = MainStyles.SwitchColor.FromResources<Color>()
             };
             switchByName.SetBinding(Switch.IsToggledProperty, "IsSortByName");
 
@@ -312,11 +319,12 @@ namespace ScnDiscounts.Views
             var switchByDistance = new Switch
             {
                 HorizontalOptions = LayoutOptions.End,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                OnColor = MainStyles.SwitchColor.FromResources<Color>()
             };
             switchByDistance.SetBinding(Switch.IsToggledProperty, "IsSortByDistance");
 
-            var stackByDistance = new StackLayout
+            StackByDistance = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal,
                 Padding = new Thickness(App.IsMoreThan320Dpi ? 40 : 20, 2),
@@ -330,9 +338,9 @@ namespace ScnDiscounts.Views
 
             var tapGestureRecognizerByDistance = new TapGestureRecognizer();
             tapGestureRecognizerByDistance.Tapped += viewModel.SortByDistance_Tap;
-            stackByDistance.GestureRecognizers.Add(tapGestureRecognizerByDistance);
+            StackByDistance.GestureRecognizers.Add(tapGestureRecognizerByDistance);
 
-            rightPanelContent.Children.Add(stackByDistance);
+            rightPanelContent.Children.Add(StackByDistance);
 
             #endregion
 
@@ -344,12 +352,30 @@ namespace ScnDiscounts.Views
 
             App.RootPage.AddFilterPanelTo(rightPanelContent, viewModel);
 
+            PanelChanged += (sender, args) =>
+            {
+                if (args.Panel == PanelAlignEnum.paRight && args.IsShow)
+                    VerifyCurrentLocationAvailable();
+            };
+
             RightPanel.Content = rightPanelContent;
         }
 
         private void BtnFilter_Click(object sender, EventArgs e)
         {
             IsShowRightPanel = !IsShowRightPanel;
+        }
+
+        private void VerifyCurrentLocationAvailable()
+        {
+            StackByDistance.IsVisible = LocationHelper.IsCurrentLocationAvailable;
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            VerifyCurrentLocationAvailable();
         }
     }
 }

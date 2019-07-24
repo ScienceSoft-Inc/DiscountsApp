@@ -9,7 +9,7 @@ import {CategoryService} from '../../core/services/category.service';
 @Component({
   selector: 'app-filter-by-category',
   templateUrl: './filter-by-category.component.html',
-  styleUrls: ['./filter-by-category.component.css']
+  styleUrls: ['./filter-by-category.component.less']
 })
 export class FilterByCategoryComponent implements OnInit, OnDestroy {
 

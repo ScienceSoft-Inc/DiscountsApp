@@ -3,7 +3,6 @@ using ScnDiscounts.Helpers;
 using ScnDiscounts.Models;
 using ScnDiscounts.Models.Data;
 using ScnPage.Plugin.Forms;
-using ScnViewGestures.Plugin.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +64,21 @@ namespace ScnDiscounts.ViewModels
         public List<DiscountDetailBranchData> BranchItems => DiscountDetailData.BranchList
             .OrderBy(i => i.Distance).ThenBy(i => i.DocumentId).ToList();
 
+        public List<string> GalleryImages
+        {
+            get
+            {
+                var result = DiscountDetailData.GalleryImages.Select(i => i.FileName).ToList();
+
+                if (!string.IsNullOrEmpty(ImageFileName))
+                    result.Insert(0, ImageFileName);
+
+                return result;
+            }
+        }
+
+        public bool HasGalleryImages => GalleryImages.Count > 1;
+
         public void ShowOnMap_Click(object sender, EventArgs e)
         {
             var view = (View) sender;
@@ -82,11 +96,15 @@ namespace ScnDiscounts.ViewModels
 
         public void TxtUrlAddress_Click(object sender, EventArgs e)
         {
-            var tag = ViewGestures.GetTagByChild(sender);
-
-            var link = tag.NormalizeLink();
-            if (!string.IsNullOrEmpty(link))
-                Functions.SafeCall(() => Device.OpenUri(new Uri(link)));
+            var view = (View)sender;
+            view.ClickAnimation(() =>
+            {
+                var args = e as TappedEventArgs;
+                var tag = args?.Parameter?.ToString();
+                var link = tag.NormalizeLink();
+                if (!string.IsNullOrEmpty(link))
+                    Functions.SafeCall(() => Device.OpenUri(new Uri(link)));
+            });
         }
 
         public void BtnCall_Click(object sender, EventArgs e)

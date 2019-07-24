@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using ScnDiscounts.Helpers;
+using Xamarin.Forms;
 
 namespace ScnDiscounts.Views.Styles
 {
@@ -11,6 +12,8 @@ namespace ScnDiscounts.Views.Styles
         public static string ListSelectColor = "ListSelectColor";
         public static string LightTextColor = "LightTextColor";
         public static string StatusBarColor = "StatusBarColor";
+        public static string SwitchColor = "SwitchColor";
+        public static string LoadingColor = "LoadingColor";
 
         public override void Load()
         {
@@ -21,6 +24,8 @@ namespace ScnDiscounts.Views.Styles
             var listSelectColor = Color.FromRgb(100, 194, 255);
             var lightTextColor = Color.FromRgb(255, 255, 255);
             var statusBarColor = Color.FromRgb(40, 120, 192);
+            var switchColor = Functions.OnPlatform(Color.FromHex("4B8DCC"), Color.White);
+            var loadingColor = Color.White;
 
             Resources.Add(MainBackgroundColor, mainBackgroundColor);
             Resources.Add(MainLightBackgroundColor, mainLightBackgroundColor);
@@ -29,6 +34,8 @@ namespace ScnDiscounts.Views.Styles
             Resources.Add(ListSelectColor, listSelectColor);
             Resources.Add(LightTextColor, lightTextColor);
             Resources.Add(StatusBarColor, statusBarColor);
+            Resources.Add(SwitchColor, switchColor);
+            Resources.Add(LoadingColor, loadingColor);
         }
     }
 }

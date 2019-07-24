@@ -1,0 +1,52 @@
+@import "../../../shared/shared-styles";
+
+@color-grey: #888888;
+@color-black: black;
+
+.gallery-image {
+  position: relative;
+  z-index: 5;
+  color: black;
+  font-weight: bold;
+  .x-item-image {
+    position: absolute;
+    background-size: cover;
+    height: 180px;
+    width: 340px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    background: url('../../../../assets/images/camera-128x128.png') center no-repeat;
+  }
+  .x-image-number {
+    position: absolute;
+    color: @color-black;
+    top: 10px;
+    left: 10px;
+    display: none;
+  }
+  .x-form-delete {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    display: none;
+    background: url('./../../../../assets/images/minus-small-over.png') center no-repeat;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  &:hover {
+    .x-item-image {
+      opacity: 0.5;
+      //outline: 5px solid #0082dd;
+    }
+    .x-image-number {
+      display: block;
+    }
+    .x-form-delete {
+      display: block;
+    }
+  }
+}

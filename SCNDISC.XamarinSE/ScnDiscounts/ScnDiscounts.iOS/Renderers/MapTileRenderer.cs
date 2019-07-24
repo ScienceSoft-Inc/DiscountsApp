@@ -2,11 +2,14 @@ using CoreGraphics;
 using CoreLocation;
 using Foundation;
 using Google.Maps;
+using Google.Maps.Utils;
 using ScnDiscounts.Control;
 using ScnDiscounts.Helpers;
+using ScnDiscounts.iOS.Models;
 using ScnDiscounts.iOS.Renderers;
 using ScnDiscounts.Models;
 using System;
+using System.Linq;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -18,6 +21,7 @@ namespace ScnDiscounts.iOS.Renderers
     public class MapTileRenderer : ViewRenderer<MapTile, MapView>
     {
         protected Marker LocationMarker;
+        protected GMUClusterManager ClusterManager;
 
         public MapTileRenderer()
         {
@@ -54,6 +58,7 @@ namespace ScnDiscounts.iOS.Renderers
         {
             var mapView = new MapView
             {
+                Camera = CameraPosition.FromCamera(MapTile.MinskLat, MapTile.MinskLong, 11.9f),
                 TappedMarker = TappedMarker,
                 Settings =
                 {
@@ -65,6 +70,13 @@ namespace ScnDiscounts.iOS.Renderers
             mapView.CoordinateTapped += Map_CoordinateTapped;
             mapView.PoiWithPlaceIdTapped += Map_PoiWithPlaceIdTapped;
             mapView.WillMove += Map_WillMove;
+
+            var buckets = new[] {NSNumber.FromInt32(int.MaxValue)};
+            var images = new[] {UIImage.FromBundle("ic_cluster.png")};
+            var iconGenerator = new GMUDefaultClusterIconGenerator(buckets, images);
+            var algorithm = new GMUNonHierarchicalDistanceBasedAlgorithm();
+            var renderer = new ClusterRenderer(mapView, iconGenerator);
+            ClusterManager = new GMUClusterManager(mapView, algorithm, renderer);
 
             SetNativeControl(mapView);
         }
@@ -105,23 +117,15 @@ namespace ScnDiscounts.iOS.Renderers
         {
             var mapTile = Element;
             var map = Control;
+            var pinItems = mapTile.PinList;
 
+            ClusterManager.ClearItems();
             map.Clear();
 
-            var pinItems = mapTile.PinList;
-            foreach (var pinItem in pinItems)
-            {
-                var imageBytes = pinItem.PrimaryCategory.GetIconThemeBytes();
-                var icon = UIImage.LoadFromData(NSData.FromArray(imageBytes), UIScreen.MainScreen.Scale);
+            var clusterItems = pinItems.Select(i => new ClusterItem(i)).Cast<IGMUClusterItem>().ToArray();
+            ClusterManager.AddItems(clusterItems);
 
-                var marker = new Marker
-                {
-                    Position = new CLLocationCoordinate2D(pinItem.Latitude, pinItem.Longitude),
-                    UserData = FromObject(pinItem.Id),
-                    Icon = icon
-                };
-                marker.Map = map;
-            }
+            ClusterManager.Cluster();
 
             LocationMarker.Map = map;
 
@@ -147,8 +151,8 @@ namespace ScnDiscounts.iOS.Renderers
             if (LocationHelper.IsGeoServiceAvailable)
             {
                 var oldRotation = LocationMarker.Rotation;
-                var newRotation = AppMobileService.Locaion.CurrentHeading - 45 -
-                                  (Control.Camera?.Bearing).GetValueOrDefault();
+                var newRotation = (AppMobileService.Locaion.CurrentHeading - 45 -
+                                   (Control.Camera?.Bearing).GetValueOrDefault()) % 360;
 
                 if (Math.Abs(newRotation - oldRotation) > MapTile.MinCompassRotation)
                     LocationMarker.Rotation = newRotation;
@@ -158,22 +162,26 @@ namespace ScnDiscounts.iOS.Renderers
         private bool TappedMarker(MapView mapView, Marker marker)
         {
             var mapTile = Element;
-            mapTile.SelectedPinId = marker.UserData?.ToString();
 
-            if (!string.IsNullOrEmpty(mapTile.SelectedPinId))
+            if (marker.UserData is ClusterItem clusterItem)
             {
-                var map = Control;
+                mapTile.SelectedPinId = clusterItem.Snippet;
 
-                if (Math.Abs(map.Camera.Target.Latitude - marker.Position.Latitude) < 0.0001 &&
-                    Math.Abs(map.Camera.Target.Longitude - marker.Position.Longitude) < 0.0001)
+                if (!string.IsNullOrEmpty(mapTile.SelectedPinId))
                 {
-                    Map_CoordinateTapped(this, new GMSCoordEventArgs(marker.Position));
-                    Map_CameraPositionIdle(this, new GMSCameraEventArgs(map.Camera));
-                }
-                else
-                {
-                    var camera = CameraPosition.FromCamera(marker.Position, map.Camera.Zoom);
-                    map.Animate(camera);
+                    var map = Control;
+
+                    if (Math.Abs(map.Camera.Target.Latitude - marker.Position.Latitude) < 0.0001 &&
+                        Math.Abs(map.Camera.Target.Longitude - marker.Position.Longitude) < 0.0001)
+                    {
+                        Map_CoordinateTapped(this, new GMSCoordEventArgs(marker.Position));
+                        Map_CameraPositionIdle(this, new GMSCameraEventArgs(map.Camera));
+                    }
+                    else
+                    {
+                        var camera = CameraPosition.FromCamera(marker.Position, map.Camera.Zoom);
+                        map.Animate(camera);
+                    }
                 }
             }
 

@@ -9,7 +9,8 @@
     <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     <item name="windowActionBar">false</item>
     <item name="windowActionModeOverlay">true</item>
-    <item name="colorPrimary">#2878C0</item>
+    <item name="colorAccent">@color/colorAccent</item>
+    <item name="colorPrimary">@color/colorPrimary</item>
     <item name="android:textColorLink">@android:color/white</item>
     <item name="android:textAllCaps">false</item>
   </style>

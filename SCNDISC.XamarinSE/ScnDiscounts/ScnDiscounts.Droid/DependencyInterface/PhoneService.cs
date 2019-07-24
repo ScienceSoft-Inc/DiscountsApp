@@ -1,6 +1,7 @@
 using Android.Content;
 using Android.OS;
 using Android.Provider;
+using Android.Support.V4.App;
 using Plugin.CurrentActivity;
 using ScnDiscounts.DependencyInterface;
 using ScnDiscounts.Droid.DependencyInterface;
@@ -93,6 +94,34 @@ namespace ScnDiscounts.Droid.DependencyInterface
         {
             var intent = new Intent(Settings.ActionLocationSourceSettings);
             CrossCurrentActivity.Current.Activity.StartActivity(intent);
+        }
+
+        public void LaunchApp(string appId, string appUrl, string marketUrl, string webUrl)
+        {
+            Intent intent;
+
+            try
+            {
+                var packageManager = CrossCurrentActivity.Current.AppContext.PackageManager;
+                intent = packageManager.GetLaunchIntentForPackage(appId) ??
+                         new Intent(Intent.ActionView, Uri.Parse(marketUrl));
+
+                intent.AddFlags(ActivityFlags.NewTask);
+                CrossCurrentActivity.Current.Activity.StartActivity(intent);
+            }
+            catch (Exception)
+            {
+                intent = new Intent(Intent.ActionView, Uri.Parse(webUrl));
+
+                intent.AddFlags(ActivityFlags.NewTask);
+                CrossCurrentActivity.Current.Activity.StartActivity(intent);
+            }
+        }
+
+        public bool CheckNotificationPermission()
+        {
+            var notificationManager = NotificationManagerCompat.From(CrossCurrentActivity.Current.Activity);
+            return notificationManager.AreNotificationsEnabled();
         }
     }
 }

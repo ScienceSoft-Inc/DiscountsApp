@@ -1,0 +1,27 @@
+<div class="x-content x-body">
+  <div class="x-form-title">{{"Notification.Notifications" | translate}}</div>
+  <div class="paging">
+    <span class="x-showing">{{"Notification.Showing" | translate}} {{minNumber}} {{"Notification.To" | translate}} {{maxNumber}}</span>
+    <div class="x-page">
+      <span [ngClass]="getClassForPrevious()" (click)="onClickedPage(-1, 'previous')">{{'Notification.Previous'|translate}}</span>
+      <span class="x-item" *ngFor="let i of pages" [ngStyle]="getStyleForNumberOfPage(i)" (click)="onClickedPage(i)"> {{i+1}} </span>
+      <span [ngClass]="getClassForNext()" (click)="onClickedPage(-1, 'next')">{{'Feedback.Next'|translate}}</span>
+    </div>
+  </div>
+  <div class="height">
+    <table class="table">
+      <tr>
+        <th class="x-title">{{'Notification.Title'|translate}}</th>
+        <th class="x-text">{{'Notification.Text'|translate}}</th>
+        <th class="x-discount-partner">{{'Notification.DiscountPartner'|translate}}</th>
+        <th>{{'Notification.Date'|translate}}</th>
+      </tr>
+      <tr *ngFor="let notification of notifications">
+        <td class="x-title">{{notification.title}}</td>
+        <td class="x-text">{{notification.text}}</td>
+        <td class="x-discount-partner">{{getNameById(notification.documentId)}}</td>
+        <td class="x-date">{{notification.created | date: 'yyyy-MM-dd H:mm'}}</td>
+      </tr>
+    </table>
+  </div>
+</div>

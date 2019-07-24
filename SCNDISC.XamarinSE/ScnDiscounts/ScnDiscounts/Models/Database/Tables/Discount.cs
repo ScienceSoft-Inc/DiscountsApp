@@ -1,5 +1,5 @@
-﻿using System;
-using SQLite.Net.Attributes;
+﻿using SQLite;
+using System;
 
 namespace ScnDiscounts.Models.Database.Tables
 {

@@ -1,0 +1,235 @@
+input.ng-touched.ng-invalid {border:solid red 1px;}
+textarea.ng-touched.ng-invalid {border:solid red 1px;}
+@import "../../shared/shared-styles";
+
+@grey-border-color : #c9c9c9;
+
+.counting-message
+{
+  color: dodgerblue;
+  font-weight: bold;
+  font-size: 12px;
+  text-transform: none;
+}
+.x-discount-partner
+{
+  width: 650px;
+  padding: 5px;
+  border-radius: 2px;
+  border: 1px solid @grey-border-color;
+}
+.x-send-all-checkbox
+{
+  background-color: #f2f2f2 !important;
+  border-width: 0;
+  height: 32px;
+}
+.x-body {
+  font: normal 13px/15px Arial, helvetica, sans-serif;
+}
+.x-modal-body{
+  position: relative;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  width: 760px;
+}
+.modal-content-x{
+  width: 800px;
+  padding: 20px;
+}
+
+.x-delete-btn{
+  float: right;
+  .x-item;
+  .x-item-button;
+  background-color: #dd361e;
+  &:hover {
+    background-color: #ff858f;
+  }
+}
+
+.x-primary-btn {
+  margin-left: 110px !important;
+}
+
+.x-primary-btn {
+  .x-item;
+  .x-item-button;
+  background-color: #0082dd;
+  &:hover{
+    background-color: #73cdff;
+  }
+  &:disabled {
+    background-color: lightgrey;
+    cursor: not-allowed;
+  }
+}
+
+.x-cancel-btn{
+  color: #111111 !important;
+  .x-item;
+  .x-item-button;
+  background-color: @color-white;
+  &:hover{
+    background-color: #a9a9a9;
+  }
+}
+.x-primary-btn, .x-cancel-btn, .x-delete-btn {
+  -ms-border-radius: 2px;
+  border-radius: 2px;
+  border-width: 0;
+  color: #fff;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 30px;
+  padding: 0 15px;
+  text-transform: uppercase;
+}
+
+.modal-footer-x {
+  margin-bottom: 20px;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+
+// additional styles
+.x-form-category-item { margin-bottom: 9px; }
+
+.x-discount-type {
+  width: 42px;
+  margin-left: 6px;
+  border-radius: 2px;
+  line-height: 36px;
+}
+
+.x-block-category-item{
+  width: 480px;
+  float: right;
+}
+
+.x-form-item {
+  margin-bottom: 14px;
+}
+
+.x-form-service-field {
+  width: 650px;
+}
+
+.x-form-side-label {
+  float: left;
+  margin-top: 8px;
+  width: 110px;
+}
+
+textarea {
+  width: 540px;
+  -moz-resize: none;
+  -ms-resize: none;
+  -o-resize: none;
+  font: @global-font;
+  height: 63px;
+  padding: 5px;
+  resize: none;
+}
+
+.x-form-discount-field {
+  -moz-box-sizing: border-box;
+  -ms-border-radius: 3px;
+  -webkit-box-sizing: border-box;
+  border: 2px solid @color-red !important;
+  border-radius: 3px;
+  box-sizing: border-box;
+  color: @color-red;
+  font-size: 19px;
+  width: 150px !important;
+  line-height: 26px;
+}
+.x-content {
+  width: 760px;
+}
+.alert-success {
+  background-color: white;
+}
+
+// checkbox styles
+input[type=checkbox] {
+  -moz-appearance: none;
+  -ms-border-radius: 2px;
+  -ms-opacity: 1;
+  -o-appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid @grey-border-color;
+  border-radius: 2px;
+  height: 20px;
+  float: left;
+  margin: 0;
+  opacity: 1;
+  padding: 0;
+  vertical-align: top;
+  width: 20px;
+}
+
+input:checked {
+  font-family: FontAwesome, cursive;
+  -ms-opacity: 1;
+  background: url("../../../assets/images/accept-black.png") no-repeat center center;
+  opacity: 1;
+}
+.shadow {
+  margin-top: -40px;
+  position: absolute;
+  width: 700px;
+  height: 240px;
+  background-color: #f2f2f2;
+  color: black;
+  font-weight: bold;
+  font-size: 16px;
+  z-index: 3;
+  opacity: 0.75;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 240px;
+}
+.check-box-container
+{
+  margin-left: 110px;
+  height: 32px;
+}
+.checkbox-title
+{
+  margin-top: 3px;
+  padding-left: 5px;
+}
+
+.shadow-container {
+  margin-top: -40px;
+  position: absolute;
+  width: 760px;
+  height: 240px;
+  background-color: #f2f2f2;
+  z-index: 3;
+  opacity: 0.75;
+}
+
+.shadow-content-wrap {
+  width: 100%;
+  height: 100%;
+  display: table;
+  text-align: center;
+  opacity: 1;
+}
+.shadow-content-wrap > .shadow-content {
+  display: table-cell;
+  vertical-align: middle;
+  color: black;
+  font-weight: bold;
+  font-size: 14px;
+}
+alert-success
+{
+  background-color: white;
+}

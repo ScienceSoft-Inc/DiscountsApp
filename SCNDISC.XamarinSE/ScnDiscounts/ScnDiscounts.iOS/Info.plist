@@ -11,11 +11,11 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.sciencesoft.discounts</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.6.11</string>
+	<string>1.7.0</string>
 	<key>CFBundleVersion</key>
-	<string>1.6.11</string>
+	<string>1.7.0</string>
 	<key>MinimumOSVersion</key>
-	<string>8.0</string>
+	<string>9.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
@@ -51,5 +51,35 @@
 	<string>LaunchScreen</string>
 	<key>XSAppIconAssets</key>
 	<string>Resources/Images.xcassets/AppIcons.appiconset</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>sciencesofthealth</string>
+		<string>itms-apps</string>
+		<string>fb</string>
+		<string>gplus</string>
+		<string>instagram</string>
+		<string>gplus</string>
+		<string>odnoklassniki</string>
+		<string>twitter</string>
+		<string>vk</string>
+		<string>youtube</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.google.fcm</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

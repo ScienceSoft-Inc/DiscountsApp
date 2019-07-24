@@ -1,8 +1,8 @@
 
 <div class="x-form-item ">
   <label class="x-form-side-label">{{'partner.PhoneNumber' | translate}}</label>
-  <span class="x-form-number">1</span><input type="text" [(ngModel)]="contact.phoneNumber1" maxlength="25" class="x-form-phone">
-  <span class="x-form-number">2</span><input type="text" [(ngModel)]="contact.phoneNumber2" maxlength="25" class="x-form-phone">
+  <input type="text" [(ngModel)]="contact.phoneNumber1" maxlength="25" class="x-form-phone"><span class="x-form-number-1">1</span>
+  <span class="x-form-number-2">2</span><input type="text" [(ngModel)]="contact.phoneNumber2" maxlength="25" class="x-form-phone">
   <div class="div-clear"></div>
 </div>
 <div class="x-form-item ">
@@ -11,7 +11,7 @@
   <input *ngIf="!language_en" type="text" [(ngModel)]="contact.address_Ru" maxlength="50" class="x-form-address">
   <input type="button" title="{{'partner.GetCoordinates' | translate}}" (click)="onClickedGetCoordinates()" class="x-form-action-btn x-gps-btn" value="&nbsp;">
   <input type="text" [(ngModel)]="contact.coordinates" class="x-form-coordinates" placeholder="00.000000, 00.000000">
-  <input type="button" title="{{'partner.Coordinates' | translate}}" (click)="onClickedOpenMap()" class="x-form-open-map-btn">
+  <input type="button" title="{{'partner.Coordinates' | translate}}" (click)="onClickedOpenMap()" value="&nbsp;" class="x-form-action-btn x-form-open-map-btn">
 
   <div class="div-clear"></div>
   <div class="x-form-error-ct">

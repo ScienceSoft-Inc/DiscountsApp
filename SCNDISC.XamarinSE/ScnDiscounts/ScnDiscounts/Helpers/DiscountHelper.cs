@@ -183,6 +183,18 @@ namespace ScnDiscounts.Helpers
                     result = $"{prefix} ({code}) {part1}-{part2}-{part3}{postfix}";
                     phoneOperator = prefix == "+375" ? code.GetPhoneOperatorType(part1[0]) : PhoneOperatorEnum.Unknown;
                 }
+                //check for length 375297000000
+                else if (number.Length == 12 && number.StartsWith("375"))
+                {
+                    var prefix = number.Substring(0, 3);
+                    var code = number.Substring(3, 2);
+                    var part1 = number.Substring(5, 3);
+                    var part2 = number.Substring(8, 2);
+                    var part3 = number.Substring(10, 2);
+
+                    result = $"+{prefix} ({code}) {part1}-{part2}-{part3}{postfix}";
+                    phoneOperator = prefix == "375" ? code.GetPhoneOperatorType(part1[0]) : PhoneOperatorEnum.Unknown;
+                }
                 //check for length 80297000000
                 else if (number.Length == 11 && number.StartsWith("8"))
                 {

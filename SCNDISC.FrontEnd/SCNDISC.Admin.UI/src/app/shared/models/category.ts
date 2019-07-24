@@ -5,6 +5,6 @@ export class Category {
   public id: string;
 
   constructor() {
-    this.color = "#111111"
+    this.color = '#111111';
   }
 }

@@ -5,7 +5,7 @@
     "Discount": "Discount*",
     "category": "Category",
     "Comment": "Comment",
-    "Files": "Files",
+    "MainPictures": "Main pictures",
     "ChooseAvatar": "Choose Avatar",
     "ChooseTheme": "Choose Theme",
     "Contacts": "Contacts",
@@ -23,7 +23,10 @@
     "DeleteQuestion": "Are you sure you want to delete this partner?",
     "WebAddress": "Add URL",
     "Coordinates": "Check coordinates",
-    "GetCoordinates": "Click to get coordinates"
+    "GetCoordinates": "Click to get coordinates",
+    "ChooseGalleryImage": "Add image to the gallery",
+    "Gallery": "Additional pictures",
+    "GalleryImage": "Image"
   },
   "Home": {
     "Login": "Login",
@@ -36,6 +39,7 @@
     "More": "More...",
     "categories": "Categories",
     "Feedback": "Feedback",
+    "SendNotification": "Notifications",
     "AddPartner": "Add partner",
     "ErrorServer": "Can not receive response from server",
     "ClickToEdit": "Click to edit",
@@ -57,10 +61,10 @@
   },
   "Button": {
     "Save": "Save",
+    "Send": "Send",
     "Delete": "Delete",
     "Cancel": "Cancel",
     "Close": "[C]lose"
-
   },
   "Title": {
     "categories": "Categories",
@@ -74,5 +78,21 @@
     "Next": "Next",
     "Showing": "Showing from",
     "To": "to"
+  },
+  "Notification": {
+    "Title": "Title",
+    "Text": "Text",
+    "SendNotification": "New notification",
+    "Notifications": "Notifications",
+    "DiscountPartner": "Partner",
+    "SendQuestion": "Are you sure you want send notification?",
+    "Date": "Created",
+    "Previous": "Previous",
+    "Next": "Next",
+    "Showing": "Showing from",
+    "To": "to",
+    "CountDownMessage": "Sending a new notification will be available in",
+    "NotificationSentMessage": "Notification was sent successfully at ",
+    "SendToAll": "Send without localization (regardless of the language chosen)"
   }
 }

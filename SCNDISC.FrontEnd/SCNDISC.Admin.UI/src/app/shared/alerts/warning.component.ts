@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {LanguageService} from "../../core/services/language.service";
+import {LanguageService} from '../../core/services/language.service';
 
 @Component({
   selector: 'app-error-server-modal',

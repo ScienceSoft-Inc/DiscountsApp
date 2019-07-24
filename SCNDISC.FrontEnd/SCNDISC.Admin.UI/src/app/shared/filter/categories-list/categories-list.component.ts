@@ -8,7 +8,7 @@ import {Subject} from 'rxjs/internal/Subject';
 @Component({
   selector: 'app-category-filter',
   templateUrl: './categories-list.component.html',
-  styleUrls: ['./categories-list.component.css']
+  styleUrls: ['./categories-list.component.less']
 })
 export class CategoriesListComponent implements OnInit, OnDestroy {
 

@@ -17,6 +17,7 @@ using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using SCNDISC.Server.Core.Models;
+using SCNDISC.Server.Application.Services.Gallery;
 
 namespace SCNDISC.Server.Core.Controllers.Partners
 {
@@ -25,14 +26,17 @@ namespace SCNDISC.Server.Core.Controllers.Partners
         private readonly IPartnerApplicationService _partnerApplicationService;
         private readonly IAdminQueryApplicationService _adminQueryApplicationService;
         private readonly ICategoryApplicationService _categoryApplicationService;
-        
+        private readonly IGalleryApplicationService _galleryService;
+
         public PartnersController(IPartnerApplicationService partnerApplicationService,
             IAdminQueryApplicationService adminQueryApplicationService,
-            ICategoryApplicationService сategoryApplicationService)
+            ICategoryApplicationService сategoryApplicationService,
+            IGalleryApplicationService galleryService)
         {
             _partnerApplicationService = partnerApplicationService;
             _adminQueryApplicationService = adminQueryApplicationService;
             _categoryApplicationService = сategoryApplicationService;
+            _galleryService = galleryService;
         }
 
         [HttpGet]
@@ -59,7 +63,8 @@ namespace SCNDISC.Server.Core.Controllers.Partners
             var categories = await _categoryApplicationService.GetCategoryListAsync();
             var categoriesModels = Mapper.CategoryMapper.MapToCategoryModels(categories);
             var partnerBranches = await _partnerApplicationService.GetPartnerDetailsAsync(partnerId);
-            var partner = Mapper.PartnerMapper.Map(partnerBranches?.ToList(), categoriesModels?.ToArray());
+            var partnerGalleryImages = await _galleryService.GetGalleryImageIdsForPartner(partnerId);
+            var partner = Mapper.PartnerMapper.Map(partnerBranches?.ToList(), categoriesModels?.ToArray(), partnerGalleryImages?.ToList());
             return partner;
         }
 
@@ -105,31 +110,55 @@ namespace SCNDISC.Server.Core.Controllers.Partners
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
+        [HttpPost]
+        [Authorize(Roles = Roles.AdminRole)]
+        [Route("galleryimage")]
+        public async Task<ActionResult> PostAsync([FromBody]GalleryImageModel model)
+        {
+            var result = string.Empty;
 
-        //[HttpPost]
-        //[Authorize(Roles = adminRole)]
-        //[Route("branches/")]
-        //public async Task<Branch> SaveBranchAsync(Branch branch)
-        //{
-        //    return await _partnerApplicationService.UpsertBranchAsync(branch);
-        //}
+            if (ModelState.IsValid)
+            {
+                var galleyImage = PartnerMapper.MapToGalleryImage(model);
+                result = await _galleryService.AddGalleryImageToPartnerAsync(galleyImage);
+            }
+            else return BadRequest();
 
-        //[HttpDelete]
-        //[Authorize(Roles = adminRole)]
-        //[Route("branches/{branchId}")]
-        //public async Task<HttpResponseMessage> DeleteBranchAsync(string branchId)
-        //{
-        //    await _partnerApplicationService.DeleteBranchAsync(branchId);
-        //    return new HttpResponseMessage(HttpStatusCode.OK);
-        //}
+            return new JsonResult(new { id = result }); 
+        }
 
-        //[HttpDelete]
-        //[Authorize(Roles = adminRole)]
-        //[Route("partners/{partnerId}")]
-        //public async Task<HttpResponseMessage> DeletePartnerAsync(string partnerId)
-        //{
-        //    await _partnerApplicationService.DeletePartnerAsync(partnerId);
-        //    return new HttpResponseMessage(HttpStatusCode.OK);
-        //}
+        [Route("galleryimagebase64/{id}")]
+        [HttpGet]
+        public async Task<string> GetGalleryImageBase64Async(string id)
+        {
+            return await _galleryService.GetGalleryImageById(id);
+        }
+
+        [Route("galleryimage/{id}")]
+        [HttpGet]
+        public async Task<ActionResult> GetGalleryImageAsync(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest();
+            }
+
+            return File(await _galleryService.GetGalleryImage(id), "application/octet-stream");
+        }
+
+        [HttpDelete]
+        [Authorize(Roles = Roles.AdminRole)]
+        [Route("galleryimage/{id}")]
+        public async Task<bool> DeleteGalleryImageAsync(string id)
+        {
+            return await _galleryService.RemoveGalleryImage(id);
+        }
+
+        [Route("partners/{id}/galleryimages")]
+        [HttpGet]
+        public async Task<IEnumerable<string>> GetGalleryImageIdsAsync(string id)
+        {
+            return await _galleryService.GetGalleryImageIdsForPartner(id);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ScnDiscounts.Models.Data;
+﻿using ScnDiscounts.Helpers;
+using ScnDiscounts.Models.Data;
 using ScnDiscounts.Views.ContentUI;
 using System;
 using System.Collections.Generic;
@@ -11,15 +12,22 @@ namespace ScnDiscounts.Control
     public class MapTile : Map
     {
         public const int MinCompassRotation = 5;
+        public const double MinskLat = 53.904841;
+        public const double MinskLong = 27.55327;
 
-        public MapTile()
+        public readonly RootContentUI ContentUI;
+
+        public MapTile(RootContentUI contentUI)
+            : base(MapSpan.FromCenterAndRadius(new Position(MinskLat, MinskLong), Distance.FromKilometers(5)))
         {
+            ContentUI = contentUI;
+
             MapLayout = new AbsoluteLayout();
 
             AbsoluteLayout.SetLayoutFlags(this, AbsoluteLayoutFlags.All);
             AbsoluteLayout.SetLayoutBounds(this, new Rectangle(0f, 0f, 1f, 1f));
 
-            MapPinDetail = new MapPinDetail
+            MapPinDetail = new MapPinDetail(contentUI)
             {
                 IsVisible = false
             };
@@ -27,7 +35,7 @@ namespace ScnDiscounts.Control
             AbsoluteLayout.SetLayoutFlags(MapPinDetail, AbsoluteLayoutFlags.PositionProportional);
             AbsoluteLayout.SetLayoutBounds(MapPinDetail,
                 new Rectangle(0.5, 0.5, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
-            
+
             MapLayout.Children.Add(this);
             MapLayout.Children.Add(MapPinDetail);
         }
@@ -91,8 +99,6 @@ namespace ScnDiscounts.Control
 
         public AbsoluteLayout MapLayout { get; }
 
-        public MainContentUI Context { get; set; }
-
         #region DetailInfo
         public MapPinDetail MapPinDetail { get; }
 
@@ -111,14 +117,13 @@ namespace ScnDiscounts.Control
 
             IsShowDetailInfo = true;
 
-            MapPinDetail.DiscountCaption = Context?.TxtDiscount;
-            MapPinDetail.DistanceIcon = Context?.ImgDistance;
-            MapPinDetail.DistanceCaption = Context?.TxtDistanceScaleValue;
-            MapPinDetail.DetailIcon = Context?.ImgDetail;
+            MapPinDetail.DiscountCaption = ContentUI.TxtDiscount;
+            MapPinDetail.DistanceCaption = ContentUI.TxtDistanceScaleValue;
             MapPinDetail.DiscountValue = mapPinData.Discount + mapPinData.DiscountType;
-            MapPinDetail.PrimaryCategory =  mapPinData.PrimaryCategory;
+            MapPinDetail.PrimaryCategory = mapPinData.PrimaryCategory;
             MapPinDetail.Title = mapPinData.Name;
-            MapPinDetail.DistanceValue = mapPinData.Distance;
+            MapPinDetail.DistanceValue = mapPinData.DistanceString;
+            MapPinDetail.IsDistanceAvailable = LocationHelper.IsCurrentLocationAvailable;
 
             await MapPinDetail.Show();
             
@@ -169,7 +174,7 @@ namespace ScnDiscounts.Control
                 SelectedPinId = mapPinData.Id;
 
                 var position = new Position(mapPinData.Latitude, mapPinData.Longitude);
-                var mapSpan = MapSpan.FromCenterAndRadius(position, Distance.FromMeters(500));
+                var mapSpan = MapSpan.FromCenterAndRadius(position, Distance.FromMeters(250));
                 MoveToRegion(mapSpan);
             }
         }
@@ -182,7 +187,7 @@ namespace ScnDiscounts.Control
         public MapPinDataEventArgs(MapPinData pinData)
         {
             PinData = pinData;
-        } 
+        }
     }
 
     public class MapRegionMoveEventArgs : EventArgs

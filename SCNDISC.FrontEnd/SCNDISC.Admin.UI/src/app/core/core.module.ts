@@ -5,7 +5,7 @@ import {PartnerService} from './services/partner.service';
 import {ResolverService} from './services/resolver.service';
 import {AuthService} from './auth/auth.service';
 import {MenuService} from './services/menu.service';
-import {SharedModule} from "../shared/shared.module";
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   imports: [

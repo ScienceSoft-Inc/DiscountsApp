@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace ScnDiscounts.Views
 {
-    public class MenuViewTemplate : ViewCell
+    public class MenuViewTemplate : ContentView
     {
         public MenuViewTemplate(MainViewModel parentViewModel)
         {
@@ -40,7 +40,7 @@ namespace ScnDiscounts.Views
             tapGestureRecognizer.Tapped += parentViewModel.MenuItem_Tap;
             stackLayout.GestureRecognizers.Add(tapGestureRecognizer);
 
-            View = stackLayout;
+            Content = stackLayout;
         }
     }
 }

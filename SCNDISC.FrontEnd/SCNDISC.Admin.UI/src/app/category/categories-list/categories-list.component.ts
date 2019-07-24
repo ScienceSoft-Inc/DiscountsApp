@@ -10,7 +10,7 @@ import {Subscription} from 'rxjs';
 @Component({
   selector: 'app-manager-of-categories',
   templateUrl: './categories-list.component.html',
-  styleUrls: ['./categories-list.component.css'],
+  styleUrls: ['./categories-list.component.less'],
 
 })
 export class CategoriesListComponent implements OnInit, OnDestroy {

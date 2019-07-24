@@ -29,6 +29,10 @@ namespace ScnDiscounts.Views
         {
             BackgroundColor = MainStyles.ListBackgroundColor.FromResources<Color>();
 
+            var loadingColor = MainStyles.LoadingColor.FromResources<Color>();
+            LoadingActivityIndicator.Color = loadingColor;
+            LoadingActivityText.TextColor = loadingColor;
+
             appBar = new TitleBar(this, TitleBar.BarBtnEnum.bbLeftRight, TitleBar.BarAlignEnum.baBottom)
             {
                 BarColor = Color.Transparent,
@@ -40,11 +44,10 @@ namespace ScnDiscounts.Views
 
             appBar.BtnRight.Click += viewModel.AppBar_BtnRightClick;
 
-            MapLocation = new MapTile
+            MapLocation = new MapTile(contentUI)
             {
                 HasScrollEnabled = true,
-                HasZoomEnabled = true,
-                Context = contentUI
+                HasZoomEnabled = true
             };
 
             MapLocation.ClickPinDetail += viewModel.MapLocation_ClickPinDetail;
@@ -94,7 +97,7 @@ namespace ScnDiscounts.Views
             SpeedAnimatePanel = 200;
 
             RightPanel.BackgroundColor = MainStyles.MainBackgroundColor.FromResources<Color>();
-            RightPanel.Opacity = 0.9;
+            RightPanel.Opacity = 0.95;
 
             viewModel.PropertyChanged += (sender, args) =>
             {
@@ -148,7 +151,7 @@ namespace ScnDiscounts.Views
 
             var imgLogo = new Image
             {
-                Source = ImageSource.FromFile(contentUI.ImgLogo)
+                Source = contentUI.ImgLogo
             };
             rightPanelContent.Children.Add(imgLogo);
 
@@ -160,8 +163,10 @@ namespace ScnDiscounts.Views
 
             foreach (var menuItem in viewModel.MenuItemList)
             {
-                var menuView = new MenuViewTemplate(viewModel).View;
-                menuView.BindingContext = menuItem;
+                var menuView = new MenuViewTemplate(viewModel)
+                {
+                    BindingContext = menuItem
+                };
 
                 rightPanelContent.Children.Add(menuView);
             }
@@ -191,7 +196,7 @@ namespace ScnDiscounts.Views
 
             var imgLogo = new Image
             {
-                Source = ImageSource.FromFile(contentUI.ImgLogo)
+                Source = contentUI.ImgLogo
             };
             rightPanelContent.Children.Add(imgLogo);
 
@@ -203,8 +208,10 @@ namespace ScnDiscounts.Views
 
             foreach (var menuItem in viewModel.MenuItemList)
             {
-                var menuView = new MenuViewTemplate(viewModel).View;
-                menuView.BindingContext = menuItem;
+                var menuView = new MenuViewTemplate(viewModel)
+                {
+                    BindingContext = menuItem
+                };
 
                 rightPanelContent.Children.Add(menuView);
             }
@@ -230,7 +237,7 @@ namespace ScnDiscounts.Views
             TransparentSize = new Thickness(50, 0, 50, 110);
 
             LeftPanel.BackgroundColor = MainStyles.MainBackgroundColor.FromResources<Color>();
-            LeftPanel.Opacity = 0.9;
+            LeftPanel.Opacity = 0.95;
 
             btnLocation = new ImageButton
             {
@@ -291,7 +298,6 @@ namespace ScnDiscounts.Views
                 VerticalOptions = LayoutOptions.Center,
                 Style = LabelStyles.MenuStyle.FromResources<Style>()
             };
-
             filterGroup.SetBinding(Label.TextProperty, "CategoriesTitle");
 
             var switchFilter = new Switch
@@ -299,9 +305,8 @@ namespace ScnDiscounts.Views
                 BindingContext = viewModel,
                 HorizontalOptions = LayoutOptions.End,
                 VerticalOptions = LayoutOptions.Center,
-                OnColor = Color.White
+                OnColor = MainStyles.SwitchColor.FromResources<Color>()
             };
-
             switchFilter.SetBinding(Switch.IsToggledProperty, "IsAllFiltersSelected");
 
             var filterGroupContainer = new StackLayout
@@ -329,8 +334,10 @@ namespace ScnDiscounts.Views
 
             foreach (var filterCategoryItem in viewModel.FilterCategoryList)
             {
-                var filterView = new FilterViewTemplate(viewModel, localViewModel).View;
-                filterView.BindingContext = filterCategoryItem;
+                var filterView = new FilterViewTemplate(viewModel, localViewModel)
+                {
+                    BindingContext = filterCategoryItem
+                };
 
                 panelContent.Children.Add(filterView);
             }

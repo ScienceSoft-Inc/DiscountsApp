@@ -18,8 +18,6 @@ namespace ScnDiscounts.Views.ContentUI
                 "Locating disabled. Turn on the GPS in app settings.",
                 "Определение местоположения отключено. Включите функцию GPS в настройках приложения.");
 
-            _txtAppSettings = new LanguageStrings("App settings", "Настройки приложения");
-
             _txtPhoneSettings = new LanguageStrings("Phone settings", "Настройки телефона");
 
             _txtCategories = new LanguageStrings("Discount categories", "Категории скидок");
@@ -44,9 +42,6 @@ namespace ScnDiscounts.Views.ContentUI
 
         private readonly LanguageStrings _txtCategories;
         public string TxtCategories => _txtCategories.Current;
-
-        private readonly LanguageStrings _txtAppSettings;
-        public string TxtAppSettings => _txtAppSettings.Current;
 
         private readonly LanguageStrings _txtPhoneSettings;
         public string TxtPhoneSettings => _txtPhoneSettings.Current;

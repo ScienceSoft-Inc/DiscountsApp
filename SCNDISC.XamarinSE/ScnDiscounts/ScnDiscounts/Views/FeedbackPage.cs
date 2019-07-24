@@ -15,11 +15,21 @@ namespace ScnDiscounts.Views
 
         private FeedbackContentUI contentUI => (FeedbackContentUI) ContentUI;
 
+        private readonly Entry _txtName;
+
+        private readonly Editor _txtComment;
+
+        private readonly KeyboardView _layoutFeedback;
+
         public FeedbackPage()
             : base(typeof(FeedbackViewModel), typeof(FeedbackContentUI))
         {
             BackgroundColor = MainStyles.StatusBarColor.FromResources<Color>();
             Content.BackgroundColor = MainStyles.MainBackgroundColor.FromResources<Color>();
+
+            var loadingColor = MainStyles.LoadingColor.FromResources<Color>();
+            LoadingActivityIndicator.Color = loadingColor;
+            LoadingActivityText.TextColor = loadingColor;
 
             var appBar = new TitleBar(this, TitleBar.BarBtnEnum.bbBack)
             {
@@ -38,13 +48,13 @@ namespace ScnDiscounts.Views
                 Text = contentUI.TxtName
             };
 
-            var txtName = new Entry
+            _txtName = new Entry
             {
                 Style = LabelStyles.FeedbackEntryStyle.FromResources<Style>(),
                 MaxLength = 30
             };
-            txtName.SetBinding(Entry.TextProperty, "Name");
-            txtName.SetBinding(IsEnabledProperty, "IsNotLoading");
+            _txtName.SetBinding(Entry.TextProperty, "Name");
+            _txtName.SetBinding(IsEnabledProperty, "IsNotLoading");
 
             var txtCommentTitle = new Label
             {
@@ -52,14 +62,14 @@ namespace ScnDiscounts.Views
                 Text = contentUI.TxtComment
             };
 
-            var txtComment = new Editor
+            _txtComment = new Editor
             {
                 Style = LabelStyles.FeedbackEditorStyle.FromResources<Style>(),
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 MaxLength = 1000
             };
-            txtComment.SetBinding(Editor.TextProperty, "Comment");
-            txtComment.SetBinding(IsEnabledProperty, "IsNotLoading");
+            _txtComment.SetBinding(Editor.TextProperty, "Comment");
+            _txtComment.SetBinding(IsEnabledProperty, "IsNotLoading");
 
             var btnSubmit = new ButtonExtended
             {
@@ -77,10 +87,10 @@ namespace ScnDiscounts.Views
                 Color = Color.White,
                 HorizontalOptions = LayoutOptions.Center
             };
-            activityIndicator.SetBinding(IsVisibleProperty, "IsLoading");
-            activityIndicator.SetBinding(ActivityIndicator.IsRunningProperty, "IsLoading");
+            activityIndicator.SetBinding(IsVisibleProperty, "IsSubmitting");
+            activityIndicator.SetBinding(ActivityIndicator.IsRunningProperty, "IsSubmitting");
 
-            var layoutFeedback = new KeyboardView
+            _layoutFeedback = new KeyboardView
             {
                 RowDefinitions = new RowDefinitionCollection
                 {
@@ -93,17 +103,17 @@ namespace ScnDiscounts.Views
                 }
             };
 
-            layoutFeedback.Children.Add(txtNameTitle, 0, 0);
-            layoutFeedback.Children.Add(txtName, 0, 1);
-            layoutFeedback.Children.Add(txtCommentTitle, 0, 2);
-            layoutFeedback.Children.Add(txtComment, 0, 3);
-            layoutFeedback.Children.Add(btnSubmit, 0, 4);
-            layoutFeedback.Children.Add(activityIndicator, 0, 5);
+            _layoutFeedback.Children.Add(txtNameTitle, 0, 0);
+            _layoutFeedback.Children.Add(_txtName, 0, 1);
+            _layoutFeedback.Children.Add(txtCommentTitle, 0, 2);
+            _layoutFeedback.Children.Add(_txtComment, 0, 3);
+            _layoutFeedback.Children.Add(btnSubmit, 0, 4);
+            _layoutFeedback.Children.Add(activityIndicator, 0, 5);
 
             var layoutContainer = new ContentView
             {
                 Padding = 24,
-                Content = layoutFeedback,
+                Content = _layoutFeedback,
                 VerticalOptions = LayoutOptions.FillAndExpand
             };
 
@@ -114,6 +124,13 @@ namespace ScnDiscounts.Views
 
             ContentLayout.Children.Add(appBar);
             ContentLayout.Children.Add(layoutContainer);
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            _layoutFeedback.MinimumHeightRequest = _layoutFeedback.Height - _txtComment.Height + _txtName.Height;
         }
     }
 }

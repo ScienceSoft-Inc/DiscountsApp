@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace SCNDISC.Server.Core.Models.Partner
@@ -10,6 +11,9 @@ namespace SCNDISC.Server.Core.Models.Partner
 
         [JsonProperty(PropertyName = "contacts")]
         public IEnumerable<ContactModel> Contacts { get; set; }
+
+        [JsonProperty(PropertyName = "gallery")]
+        public IEnumerable<string> Gallery { get; set; }
 
         [JsonProperty(PropertyName = "categories")]
         public IEnumerable<CategoryModel> Categories { get; set; }
@@ -121,5 +125,14 @@ namespace SCNDISC.Server.Core.Models.Partner
     {
         public const string Ru = "RU";
         public const string En = "EN";
+    }
+
+    public class GalleryImageModel
+    {
+        [JsonProperty(PropertyName = "partnerId")]
+        public string PartnerId { get; set; }
+
+        [JsonProperty(PropertyName = "image")]
+        public string Image { get; set; }
     }
 }

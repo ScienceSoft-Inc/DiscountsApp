@@ -1,0 +1,68 @@
+<div class="modal-content-x">
+  <div class="x-modal-body">
+    <div class="x-body">
+      <div class="div-right">
+        <app-language></app-language>
+      </div>
+      <app-notifications [namePartners]="namePartners"></app-notifications>
+      <div class="x-content">
+        <div class="x-form-title">{{"Notification.SendNotification" | translate}}
+        </div>
+        <div class="shadow-container" *ngIf="(responseSuccess||responseError)&&isNotifyCounting&&!isCountingDown">
+          <div class="shadow-content-wrap">
+            <div class="shadow-content">
+              <span *ngIf="responseSuccess">{{"Notification.NotificationSentMessage" | translate}}{{serverResponse.created | date: 'yyyy-MM-dd H:mm'}}</span>
+              <br *ngIf="notifyMessage">
+              <span *ngIf="notifyMessage" [innerHTML]="notifyMessage"></span>
+            </div>
+          </div>
+        </div>
+        <div class="shadow-container" *ngIf="isCountingDown">
+          <div class="shadow-content-wrap">
+            <div class="shadow-content">
+              <span *ngIf="responseSuccess&&isNotifyCounting">{{"Notification.NotificationSentMessage" | translate}}{{serverResponse.created | date: 'yyyy-MM-dd H:mm'}}</span>
+              <br *ngIf="responseSuccess&&isNotifyCounting">
+              <span *ngIf="isNotifyCounting&&notifyMessage" [innerHTML]="notifyMessage"></span>
+              <br *ngIf="isNotifyCounting&&notifyMessage">
+              <span>{{"Notification.CountDownMessage" | translate}} {{count1 | secondsToTime:language_en}}</span>
+            </div>
+          </div>
+        </div>
+        <form #notificationForm="ngForm" novalidate>
+        <div class="x-form-item">
+          <label class="x-form-side-label">{{"Notification.Title" | translate}}</label>
+          <input [disabled]="isCountingDown" maxlength="50" type="text" class="x-form-service-field" name="title" #notifyTitle="ngModel" [(ngModel)]="notification.title" required>
+          <div class="div-clear"></div>
+        </div>
+        <div class="x-form-item">
+          <label class="x-form-side-label">{{"Notification.Text" | translate}}</label>
+          <textarea [disabled]="isCountingDown" maxlength="500" class="x-form-service-field" name="text" #notifyText="ngModel" [(ngModel)]="notification.text" required></textarea>
+          <div class="div-clear"></div>
+        </div>
+        </form>
+        <div class="x-form-item">
+          <label class="x-form-side-label">{{"Notification.DiscountPartner" | translate}}</label>
+          <select *ngIf="!language_en" [(ngModel)]="notification.documentId" name="partnerId" class="x-discount-partner" [disabled]="isCountingDown">
+            <option *ngFor="let item of toolTipPartners" value={{item.id}}>{{item.name_Ru}}</option>
+          </select>
+          <select *ngIf="language_en" [(ngModel)]="notification.documentId" class="x-discount-partner" [disabled]="isCountingDown">
+            <option *ngFor="let item of toolTipPartners" value={{item.id}}>{{item.name_En}}</option>
+          </select>
+          <div class="div-clear"></div>
+        </div>
+        <div class="x-form-item" style="margin-bottom: 2px">
+          <div class="check-box-container">
+            <input [disabled]="isCountingDown" style="background-color: rgb(242, 242, 242)" id="isSendToAllDevices" name="isSendToAllDevices" [(ngModel)]="notification.isSendToAllDevices" type="checkbox">
+            <label for="isSendToAllDevices" class="checkbox-title">{{"Notification.SendToAll" | translate}}</label>
+          </div>
+          <div class="div-clear"></div>
+        </div>
+        <div>
+          <button [disabled]="notifyTitle.invalid || notifyText.invalid || isCountingDown" type="button" class="x-primary-btn" (click)="onClickedSend(notificationForm)">{{'Button.Send' | translate}}</button>
+          <button type="button" class="x-cancel-btn" (click)="onClickedCancel()">{{'Button.Cancel' | translate}}</button>
+          <div class="div-clear"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -11,7 +11,7 @@ import {FilterService} from '../../filter/filter.service';
 @Component({
   selector: 'app-partner',
   templateUrl: './partner-details.component.html',
-  styleUrls: ['./partner-details.component.css']
+  styleUrls: ['./partner-details.component.less']
 })
 
 export class PartnerDetailsComponent implements OnInit, OnDestroy {
@@ -70,7 +70,7 @@ export class PartnerDetailsComponent implements OnInit, OnDestroy {
   checkContacts(): void {
     if (this.partner.contacts) {
       for (const contact of this.partner.contacts) {
-        const regularForPhone = /^[\d\(\)\+\ -]{7,22}\d$/;
+        const regularForPhone = /^[\d\(\)\+\ -]{3,22}\d$/;
         const regularForCoordinates = /^-?\d+(\.\d+)?, ?-?\d+(\.\d+)?$/;
         const validNumber1 = regularForPhone.test(contact.phoneNumber1);
         const validNumber2 = regularForPhone.test(contact.phoneNumber2);
@@ -93,15 +93,12 @@ export class PartnerDetailsComponent implements OnInit, OnDestroy {
   }
 
   checkNameAndDescription(): void {
-    if ((this.partner.name_Ru || this.partner.name_En)) {
-      this.errorName = false;
-    } else {
-      this.errorName = true;
-    }
-    if (this.partner.description_Ru || this.partner.description_En) {
-      this.errorDescription = false;
-    } else {
-      this.errorDescription = true;
+    if (this.currentLang === this.languageService.eng) {
+      this.errorName = this.partner.name_En ? false : true;
+      this.errorDescription = this.partner.description_En ? false : true;
+    } else if (this.currentLang === this.languageService.rus) {
+      this.errorName = this.partner.name_Ru ? false : true;
+      this.errorDescription = this.partner.description_Ru ? false : true;
     }
     if (this.partner.discount) {
       this.errorDiscountValue = false;
@@ -112,7 +109,7 @@ export class PartnerDetailsComponent implements OnInit, OnDestroy {
 
   checkDiscountValue(): void {
     let test: boolean;
-    if(this.partner.discount) {
+    if (this.partner.discount) {
       const regularForDiscount = /^[\d]{0,4}$/;
       test = regularForDiscount.test(this.partner.discount.toString());
     }

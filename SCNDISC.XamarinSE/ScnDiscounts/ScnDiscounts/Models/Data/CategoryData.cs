@@ -6,6 +6,7 @@ namespace ScnDiscounts.Models.Data
     public class CategoryData
     {
         public int Id { get; set; }
+
         public string DocumentId { get; set; }
 
         public string Color { get; set; }
@@ -17,7 +18,7 @@ namespace ScnDiscounts.Models.Data
 
         public void SetName(string langCode, string value)
         {
-            var lang = LanguageHelper.LangCodeToEnum(langCode);
+            var lang = langCode.LangCodeToEnum();
             _name[lang] = value;
         }
 

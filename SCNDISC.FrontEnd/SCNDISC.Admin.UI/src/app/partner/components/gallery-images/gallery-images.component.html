@@ -1,0 +1,19 @@
+<div class="div-clear"></div>
+<div class="x-content">
+    <input type="file" name="buttonUpload" id="buttonUpload" accept="image/*" (change)="onClickedAddGalleryImage($event)">
+    <label class="x-form-side-label">{{'partner.Gallery' | translate}}</label>
+    <div *ngIf="partner.gallery.length == 0">
+      <label class="x-form-add" for="buttonUpload" ngbTooltip="{{'partner.ChooseGalleryImage' | translate}}"></label>
+    </div>
+    <div *ngIf="partner.gallery.length != 0" class="gallery-box">
+      <div class="horizontal-scroll-wrapper rectangles">
+        <div *ngFor="let imageId of partner.gallery; let i = index">
+          <app-gallery-image [id]="i" [galleryImageId]="imageId" (removeGalleryImage)="onClickedRemove($event)"></app-gallery-image>
+        </div>
+        <div title="{{'partner.ChooseGalleryImage'| translate}}" class="x-item-plus">
+          <label class="label-on-all-container" for="buttonUpload"></label>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="div-clear"></div>

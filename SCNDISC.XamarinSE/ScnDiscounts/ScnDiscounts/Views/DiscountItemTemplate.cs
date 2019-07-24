@@ -55,10 +55,10 @@ namespace ScnDiscounts.Views
             #region Percent label
 
             var spanDiscountPercent = new Span();
-            spanDiscountPercent.SetBinding(Span.TextProperty, "DiscountPercent", BindingMode.OneWay);
+            spanDiscountPercent.SetBinding(Span.TextProperty, "DiscountPercent");
 
             var spanDiscountType = new Span();
-            spanDiscountType.SetBinding(Span.TextProperty, "DiscountType", BindingMode.OneWay);
+            spanDiscountType.SetBinding(Span.TextProperty, "DiscountType");
 
             var txtPercent = new Label
             {

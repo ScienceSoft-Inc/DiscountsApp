@@ -1,0 +1,5 @@
+<div class="gallery-image">
+    <div class="x-item-image" [ngStyle]=getImageStyle()></div>
+    <label class="x-image-number">{{'partner.GalleryImage' | translate}}# {{id + 1}}</label>
+    <a title="{{'Button.Delete' | translate}}" (click)="onClickedRemove()" class="x-form-delete"></a>
+</div>

@@ -9,5 +9,6 @@ namespace SCNDISC.Server.Application.Services.Discounts
     {
         Task<IEnumerable<Branch>> GetPartnersDiscountListAsync(DateTime? last = null);
         Task<byte[]> GetImageByIdAsync(string id);
+        Task<byte[]> GetLogoByIdAsync(string id);
     }
 }

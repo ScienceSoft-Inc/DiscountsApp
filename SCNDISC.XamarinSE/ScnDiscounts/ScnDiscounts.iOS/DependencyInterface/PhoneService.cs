@@ -3,7 +3,9 @@ using MessageUI;
 using ScnDiscounts.DependencyInterface;
 using ScnDiscounts.iOS.DependencyInterface;
 using System;
+using System.Threading.Tasks;
 using UIKit;
+using UserNotifications;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(PhoneService))]
@@ -82,6 +84,47 @@ namespace ScnDiscounts.iOS.DependencyInterface
         {
             var url = new NSUrl(UIApplication.OpenSettingsUrlString);
             UIApplication.SharedApplication.OpenUrl(url);
+        }
+
+        public void LaunchApp(string appId, string appUrl, string marketUrl, string webUrl)
+        {
+            var uri = new NSUrl(appUrl);
+            var isOpened = UIApplication.SharedApplication.CanOpenUrl(uri) &&
+                           UIApplication.SharedApplication.OpenUrl(uri);
+
+            if (!isOpened)
+            {
+                uri = new NSUrl(marketUrl);
+                isOpened = UIApplication.SharedApplication.CanOpenUrl(uri) &&
+                           UIApplication.SharedApplication.OpenUrl(uri);
+
+                if (!isOpened)
+                    UIApplication.SharedApplication.OpenUrl(new NSUrl(webUrl));
+            }
+        }
+
+        public bool CheckNotificationPermission()
+        {
+            var taskCompletionSource = new TaskCompletionSource<bool>();
+
+            if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
+            {
+                UNUserNotificationCenter.Current.GetNotificationSettings(settings =>
+                {
+                    var result = settings.AuthorizationStatus == UNAuthorizationStatus.Authorized;
+                    taskCompletionSource.SetResult(result);
+                });
+            }
+            else
+            {
+                var types = UIApplication.SharedApplication.CurrentUserNotificationSettings.Types;
+                var result = types != UIUserNotificationType.None;
+                taskCompletionSource.SetResult(result);
+            }
+
+            taskCompletionSource.Task.Wait(5000);
+
+            return taskCompletionSource.Task.Result;
         }
     }
 }

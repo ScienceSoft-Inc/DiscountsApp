@@ -14,6 +14,9 @@ namespace ScnDiscounts.Models
             private const string SystemLangParamName = "SystemLang";
             public LanguageHelper.LangTypeEnum SystemLang { get; set; } = LanguageHelper.LangTypeEnum.ltEn;
 
+            private const string IsPushEnabledParamName = "IsPushEnabled";
+            public bool IsPushEnabled { get; set; } = true;
+
             private const string CategoryFilterPrefix = "CategotyFilter_";
             public List<FilterCategoryItem> FilterCategoryList { get; set; }
 
@@ -26,6 +29,7 @@ namespace ScnDiscounts.Models
             public async void SaveValues()
             {
                 Application.Current.Properties[SystemLangParamName] = (int) SystemLang;
+                Application.Current.Properties[IsPushEnabledParamName] = IsPushEnabled;
                 Application.Current.Properties[SortingParamName] = (int) Sorting;
                 Application.Current.Properties[FeedbackNameParamName] = FeedbackName;
 
@@ -36,15 +40,15 @@ namespace ScnDiscounts.Models
             {
                 Functions.SafeCall(() =>
                 {
-                    if (Application.Current.Properties.ContainsKey(SystemLangParamName))
-                    {
-                        SystemLang = (LanguageHelper.LangTypeEnum)Application.Current.Properties[SystemLangParamName];
-                    }
-                    else
-                    {
-                        var langName = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-                        SystemLang = LanguageHelper.LangCodeToEnum(langName);
-                    }
+                    SystemLang = Application.Current.Properties.ContainsKey(SystemLangParamName)
+                        ? (LanguageHelper.LangTypeEnum) Application.Current.Properties[SystemLangParamName]
+                        : CultureInfo.CurrentCulture.TwoLetterISOLanguageName.LangCodeToEnum();
+                });
+
+                Functions.SafeCall(() =>
+                {
+                    if (Application.Current.Properties.ContainsKey(IsPushEnabledParamName))
+                        IsPushEnabled = (bool) Application.Current.Properties[IsPushEnabledParamName];
                 });
 
                 Functions.SafeCall(() =>

@@ -34,7 +34,7 @@ namespace SCNDISC.Server.Core.Controllers.Categories
         }
 
         [HttpPost]
-        public async Task<bool> SaveCategories(CategoryModel[] categoryModels, [FromQuery]DateTime? syncdate = null)
+        public async Task<bool> SaveCategories([FromBody] CategoryModel[] categoryModels, [FromQuery]DateTime? syncdate = null)
         {
             var oldCategories = await _сategoryApplicationService.GetCategoryListAsync(syncdate);
             var categories = Mapper.CategoryMapper.MapToCategory(categoryModels);

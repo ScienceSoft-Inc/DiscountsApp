@@ -33,16 +33,16 @@ namespace ScnDiscounts.ViewModels
             InitFilterList();
         }
 
-        private void ViewPage_InitAfterAppearing(object sender, EventArgs e)
+        private async void ViewPage_InitAfterAppearing(object sender, EventArgs e)
         {
             ViewPage.Appearing -= ViewPage_InitAfterAppearing;
 
-            DelayInit();
+            await DelayInit();
         }
 
-        private async void DelayInit()
+        private async Task DelayInit()
         {
-            await Task.Delay(1000); //wait full appearing
+            await Task.Yield(); //wait full appearing
 
             RefreshMap();
 
@@ -51,18 +51,15 @@ namespace ScnDiscounts.ViewModels
 
             ViewPage.Appearing += ViewPage_Appearing;
 
-            const double minskLat = 53.904841;
-            const double minskLong = 27.55327;
-
-            var minskPosition = new Position(minskLat, minskLong);
-            var mapSpan = MapSpan.FromCenterAndRadius(minskPosition, Distance.FromKilometers(5));
-            MainPage.MapLocation.MoveToRegion(mapSpan);
-
-            MainPage.IsShowRightPanel = true;
+            MainPage.IsShowRightPanel = App.PushNotificationData == null;
 
             AppMobileService.Locaion.PositionUpdated += MapLocation_Position;
             AppMobileService.Locaion.HeadingUpdated += MapLocation_Heading;
             AppMobileService.Locaion.StartListening();
+
+            PushNotificationHelper.EnablePushNotifications(PushNotificationHelper.IsEnabled);
+
+            await App.ProcessPushNotification();
         }
 
         private void Filter_DataRefreshing(object sender, EventArgs e)
@@ -116,6 +113,7 @@ namespace ScnDiscounts.ViewModels
         private void InitMenuList()
         {
             var discountContent = new DiscountContentUI();
+            //var healthContent = new HealthContentUI();
             var settingsContent = new SettingsContentUI();
             var feedbackContent = new FeedbackContentUI();
             var aboutContent = new AboutContentUI();
@@ -134,6 +132,12 @@ namespace ScnDiscounts.ViewModels
                     Title = discountContent.Title,
                     TypePage = typeof(DiscountPage)
                 },
+                //new MenuItemData
+                //{
+                //    Icon = healthContent.Icon,
+                //    Title = healthContent.Title,
+                //    TypePage = typeof(HealthPage)
+                //},
                 new MenuItemData
                 {
                     Icon = settingsContent.Icon,
@@ -158,6 +162,7 @@ namespace ScnDiscounts.ViewModels
         private void UpdateMenuList()
         {
             var discountContent = new DiscountContentUI();
+            //var healthContent = new HealthContentUI();
             var settingsContent = new SettingsContentUI();
             var feedbackContent = new FeedbackContentUI();
             var aboutContent = new AboutContentUI();
@@ -167,6 +172,9 @@ namespace ScnDiscounts.ViewModels
 
             var discountItem = MenuItemList.First(i => i.TypePage == typeof(DiscountPage));
             discountItem.Title = discountContent.Title;
+
+            //var healthItem = MenuItemList.First(i => i.TypePage == typeof(HealthPage));
+            //healthItem.Title = healthContent.Title;
 
             var settingsItem = MenuItemList.First(i => i.TypePage == typeof(SettingsPage));
             settingsItem.Title = settingsContent.Title;
@@ -249,47 +257,36 @@ namespace ScnDiscounts.ViewModels
 
         private void OpenPage(Type typePage)
         {
-            if (typePage == typeof(MainPage))
+            switch (typePage.Name)
             {
-                MainPage.ClosePanel();
-                return;
-            }
+                case nameof(Views.MainPage):
+                    MainPage.ClosePanel();
+                    break;
+                case nameof(HealthPage):
+                    const string appUrl = "sciencesofthealth://";
+                    var appId = Functions.OnPlatform("id1434682692", "com.scnsoft.task_insurance");
 
-            ViewPage.OpenPage((BaseContentPage) Activator.CreateInstance(typePage));
+                    var marketUrl =
+                        Functions.OnPlatform(
+                            $"itms-apps://itunes.apple.com/app/sciencesoft-health/{appId}?mt=8",
+                            $"market://details?id={appId}");
+
+                    var webUrl =
+                        Functions.OnPlatform(
+                            $"https://itunes.apple.com/app/sciencesoft-health/{appId}?ls=1&mt=8",
+                            $"https://play.google.com/store/apps/details?id={appId}");
+
+                    DependencyService.Get<IPhoneService>().LaunchApp(appId, appUrl, marketUrl, webUrl);
+                    break;
+                default:
+                    ViewPage.OpenPage((BaseContentPage) Activator.CreateInstance(typePage));
+                    break;
+            }
         }
 
         public async void MapLocation_ClickPinDetail(object sender, MapPinDataEventArgs e)
         {
-            var pinData = e.PinData;
-
-            DiscountDetailData discountDetailData;
-
-            try
-            {
-                IsLoadActivity = true;
-                await Task.Delay(50);
-
-                discountDetailData = AppData.Discount.Db.LoadDiscountDetail(pinData.PartnerId);
-            }
-            catch (Exception ex)
-            {
-                LoggerHelper.WriteException(ex);
-
-                discountDetailData = null;
-            }
-            finally
-            {
-                IsLoadActivity = false;
-            }
-
-            if (discountDetailData == null)
-            {
-                var discountContentUI = new DiscountContentUI();
-                await ViewPage.DisplayAlert(discountContentUI.TitleErrLoading,
-                    discountContentUI.TxtErrServiceConnection, discountContentUI.TxtOk);
-            }
-            else
-                Functions.SafeCall(() => ViewPage.OpenPage(new DiscountDetailPage(discountDetailData)));
+            await ViewPage.OpenDetailPage(e.PinData.PartnerId);
         }
 
         private void MapLocation_Position(object sender, EventArgs e)
@@ -350,16 +347,25 @@ namespace ScnDiscounts.ViewModels
             BtnLocation_Click(sender, e);
         }
 
-        private static async Task<PermissionStatus> AskForLocationPermission()
+        private static async Task<PermissionStatus?> AskForLocationPermission()
         {
-            var result = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+            PermissionStatus? result;
 
-            if (result != PermissionStatus.Granted)
+            try
             {
-                var permissions = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
-                if (permissions.ContainsKey(Permission.Location))
-                    result = permissions[Permission.Location];
+                result = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+
+                if (result != PermissionStatus.Granted)
+                {
+                    var permissions = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
+                    if (permissions.ContainsKey(Permission.Location))
+                        result = permissions[Permission.Location];
+                }
             }
+            catch
+            {
+                result = null;
+            }    
 
             return result;
         }
@@ -370,36 +376,39 @@ namespace ScnDiscounts.ViewModels
 
             var result = await AskForLocationPermission();
 
-            if (result == PermissionStatus.Granted && LocationHelper.IsGeoServiceEnabled)
+            if (result.HasValue)
             {
-                if (LocationHelper.IsGeoServiceAvailable)
+                if (result == PermissionStatus.Granted && LocationHelper.IsGeoServiceEnabled)
                 {
-                    await AppMobileService.Locaion.UpdateCurrentLocation();
-
-                    var position = AppMobileService.Locaion.CurrentLocation;
-                    if (position != null)
+                    if (LocationHelper.IsGeoServiceAvailable)
                     {
-                        var mapPosition = new Position(position.Latitude, position.Longitude);
-                        var mapSpan = MapSpan.FromCenterAndRadius(mapPosition, Distance.FromMeters(250));
-                        MainPage.MapLocation.MoveToRegion(mapSpan);
+                        await AppMobileService.Locaion.UpdateCurrentLocation();
+
+                        var position = AppMobileService.Locaion.CurrentLocation;
+                        if (position != null)
+                        {
+                            var mapPosition = new Position(position.Latitude, position.Longitude);
+                            var mapSpan = MapSpan.FromCenterAndRadius(mapPosition, Distance.FromMeters(250));
+                            MainPage.MapLocation.MoveToRegion(mapSpan);
+                        }
                     }
                 }
-            }
-            else
-            {
-                var isLocationDenied = result == PermissionStatus.Denied;
-                var message = isLocationDenied ? contentUI.MsgTxtDeniedGps : contentUI.MsgTxtNoGps;
-                var successText = isLocationDenied ? contentUI.TxtAppSettings : contentUI.TxtPhoneSettings;
-
-                var isSuccess = await ViewPage.DisplayAlert(contentUI.MsgTitleNoGps, message, successText.ToUpper(),
-                    contentUI.TxtCancel.ToUpper());
-
-                if (isSuccess)
+                else
                 {
-                    if (isLocationDenied)
-                        CrossPermissions.Current.OpenAppSettings();
-                    else
-                        DependencyService.Get<IPhoneService>().OpenGpsSettings();
+                    var isLocationDenied = result == PermissionStatus.Denied;
+                    var message = isLocationDenied ? contentUI.MsgTxtDeniedGps : contentUI.MsgTxtNoGps;
+                    var successText = isLocationDenied ? contentUI.TxtAppSettings : contentUI.TxtPhoneSettings;
+
+                    var isSuccess = await ViewPage.DisplayAlert(contentUI.MsgTitleNoGps, message, successText.ToUpper(),
+                        contentUI.TxtCancel.ToUpper());
+
+                    if (isSuccess)
+                    {
+                        if (isLocationDenied)
+                            CrossPermissions.Current.OpenAppSettings();
+                        else
+                            DependencyService.Get<IPhoneService>().OpenGpsSettings();
+                    }
                 }
             }
         }

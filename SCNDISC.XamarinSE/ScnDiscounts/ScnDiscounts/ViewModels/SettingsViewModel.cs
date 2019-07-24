@@ -1,4 +1,6 @@
 ﻿using Plugin.Connectivity;
+using Plugin.Permissions;
+using ScnDiscounts.DependencyInterface;
 using ScnDiscounts.Helpers;
 using ScnDiscounts.Models;
 using ScnDiscounts.Views.ContentUI;
@@ -17,18 +19,15 @@ namespace ScnDiscounts.ViewModels
 
         public MainViewModel MainViewModel => (MainViewModel) App.RootPage.ViewModel;
 
-        protected override void InitProperty()
-        {
-            _currLanguageName = LanguageHelper.LanguageList[AppParameters.Config.SystemLang];
-        }
-
         public new string Title => contentUI.Title;
 
         public string CurrentLanguageTitle => contentUI.TxtLanguage;
 
+        public string PushNotificationsTitle => contentUI.TxtPushNotifications;
+
         public string UpdateDbTitle => contentUI.TxtUpdateDb.ToUpper();
 
-        private string _currLanguageName;
+        private string _currLanguageName = LanguageHelper.LanguageList[AppParameters.Config.SystemLang];
 
         public string CurrLanguageName
         {
@@ -42,6 +41,7 @@ namespace ScnDiscounts.ViewModels
 
                     OnPropertyChanged(nameof(Title));
                     OnPropertyChanged(nameof(CurrentLanguageTitle));
+                    OnPropertyChanged(nameof(PushNotificationsTitle));
                     OnPropertyChanged(nameof(UpdateDbTitle));
                     ProcessMessage = null;
                 }
@@ -63,6 +63,59 @@ namespace ScnDiscounts.ViewModels
             }
         }
 
+        private bool _isPushEnabled = PushNotificationHelper.IsEnabled;
+
+        public bool IsPushEnabled
+        {
+            get => _isPushEnabled;
+            set
+            {
+                if (_isPushEnabled != value)
+                {
+                    _isPushEnabled = value;
+                    OnPropertyChanged();
+
+                    PushNotificationHelper.EnablePushNotifications(value);
+
+                    AppParameters.Config.IsPushEnabled = value;
+                    AppParameters.Config.SaveValues();
+
+                    if (value)
+                        VerifyNotificationPermission();
+                }
+            }
+        }
+
+        private bool _isUpdating;
+
+        public bool IsUpdating
+        {
+            get => _isUpdating;
+            set
+            {
+                if (_isUpdating != value)
+                {
+                    _isUpdating = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private async void VerifyNotificationPermission()
+        {
+            var result = DependencyService.Get<IPhoneService>().CheckNotificationPermission();
+
+            if (!result)
+            {
+                var isSuccess = await ViewPage.DisplayAlert(contentUI.MsgTitleNoNotifications,
+                    contentUI.MsgTxtDeniedNotifications, contentUI.TxtAppSettings.ToUpper(),
+                    contentUI.TxtCancel.ToUpper());
+
+                if (isSuccess)
+                    CrossPermissions.Current.OpenAppSettings();
+            }
+        }
+
         public void LangSetting_Click(object sender, EventArgs e)
         {
             var view = (View) sender;
@@ -73,17 +126,24 @@ namespace ScnDiscounts.ViewModels
 
                 if (!string.IsNullOrEmpty(lang))
                 {
-                    AppParameters.Config.SystemLang = LanguageHelper.LangNameToEnum(lang);
+                    AppParameters.Config.SystemLang = lang.LangNameToEnum();
                     AppParameters.Config.SaveValues();
 
                     CurrLanguageName = lang;
+
+                    PushNotificationHelper.SubscribeToLang();
                 }
             });
         }
 
+        public void SwitchPushNotifications_Toggled(object sender, EventArgs e)
+        {
+            IsPushEnabled = !IsPushEnabled;
+        }
+
         public async void BtnUpdateDb_Clicked(object sender, EventArgs e)
         {
-            IsLoading = true;
+            IsUpdating = true;
 
             var splashContentUI = new SplashContentUI();
 
@@ -96,7 +156,7 @@ namespace ScnDiscounts.ViewModels
                 if (isSuccess)
                 {
                     ProcessMessage = splashContentUI.TxtProcessLoadingData;
-                    await Task.Delay(50);
+                    await Task.Yield();
 
                     AppData.Discount.Db.LoadData();
 
@@ -124,7 +184,7 @@ namespace ScnDiscounts.ViewModels
                 ProcessMessage = splashContentUI.TxtRetryCheckInternet;
             }
 
-            IsLoading = false;
+            IsUpdating = false;
         }
 
         private void OnProcessMessage(string message)

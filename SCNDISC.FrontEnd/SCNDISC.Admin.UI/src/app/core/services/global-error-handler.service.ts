@@ -13,7 +13,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     const router = this.injector.get(Router);
     const ngZone = this.injector.get(NgZone);
     ngZone.run(() => {
-      if (error.status == 401) {
+      if (error.status === 401) {
         router.navigate(['login'], {skipLocationChange: true});
       } else {
         router.navigate(['error'], {skipLocationChange: true});

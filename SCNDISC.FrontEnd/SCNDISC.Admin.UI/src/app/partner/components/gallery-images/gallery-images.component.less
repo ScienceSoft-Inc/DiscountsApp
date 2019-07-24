@@ -1,0 +1,91 @@
+@import "../../../shared/shared-styles";
+
+.x-form-add{
+  float: left;
+  margin-top: 4px;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.x-form-item{
+  margin-bottom: 14px;
+}
+
+label {
+  margin-bottom: 0;
+}
+
+.x-form-side-label {
+  float: left;
+  margin-top: 8px;
+  width: 100px;
+}
+
+div{
+  box-sizing:border-box;
+}
+
+.x-content {
+  margin-top: 4px;
+}
+
+.gallery-box {
+  position: relative;
+  margin-top: 8px;
+  float: left;
+  width: 480px;
+  height:200px;
+}
+// The idea of horizontal scrolling with use of scroll
+// computer mouse was borrowed on https://css-tricks.com/pure-css-horizontal-scrolling/
+::-webkit-scrollbar{width:2px;height:2px;}
+::-webkit-scrollbar-button{width:2px;height:2px;}
+
+.horizontal-scroll-wrapper{
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 220px;
+  max-height: 480px;
+  background-color: #f2f2f2;;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transform: rotate(-90deg) translateY(-220px);
+  transform-origin: right top;
+}
+.rectangles{
+  padding:180px 0 0 0;
+  .x-item-plus {
+    &:hover {
+      opacity: 0.75;
+      cursor: pointer;
+    }
+    margin: 0 20px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    opacity: 0.25;
+    background: url('../../../../assets/images/plus.png') no-repeat center center;
+    border: 5px dashed #0082dd;
+    box-sizing: border-box;
+  }
+}
+.rectangles > div{
+  width: 340px;
+  height: 180px;
+  margin: 170px 20px;
+  transform: rotate(90deg) translateY(160px);
+  transform-origin: right top;
+}
+
+.label-on-all-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  &:hover {
+    cursor: pointer;
+  }
+}
+

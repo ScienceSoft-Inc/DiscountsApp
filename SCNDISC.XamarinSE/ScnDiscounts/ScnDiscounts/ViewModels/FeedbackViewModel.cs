@@ -48,9 +48,24 @@ namespace ScnDiscounts.ViewModels
 
         public bool IsValidFeedback => !string.IsNullOrWhiteSpace(Name) && !string.IsNullOrWhiteSpace(Comment);
 
+        private bool _isSubmitting;
+
+        public bool IsSubmitting
+        {
+            get => _isSubmitting;
+            set
+            {
+                if (_isSubmitting != value)
+                {
+                    _isSubmitting = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public async void BtnSubmit_Clicked(object sender, EventArgs eventArgs)
         {
-            IsLoading = true;
+            IsSubmitting = true;
 
             var name = Name.SafeTrim();
             var comment = Comment.SafeTrim();
@@ -68,7 +83,7 @@ namespace ScnDiscounts.ViewModels
             AppParameters.Config.FeedbackName = name;
             AppParameters.Config.SaveValues();
 
-            IsLoading = false;
+            IsSubmitting = false;
         }
     }
 }

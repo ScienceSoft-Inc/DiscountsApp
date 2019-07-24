@@ -14,7 +14,13 @@ namespace ScnDiscounts.Droid
         {
             base.OnCreate(bundle);
 
-            StartActivity(new Intent(Application.Context, typeof(MainActivity)));
+            var intent = new Intent(this, typeof(MainActivity));
+            intent.SetFlags(ActivityFlags.SingleTop);
+
+            if (Intent.Extras != null)
+                intent.PutExtras(Intent.Extras);
+
+            StartActivity(intent);
 
             Finish();
         }

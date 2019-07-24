@@ -1,7 +1,6 @@
 using ScnDiscounts.DependencyInterface;
 using ScnDiscounts.iOS.DependencyInterface;
-using SQLite.Net;
-using SQLite.Net.Platform.XamarinIOS;
+using SQLite;
 using System;
 using System.IO;
 using Xamarin.Forms;
@@ -22,7 +21,7 @@ namespace ScnDiscounts.iOS.DependencyInterface
                 Directory.CreateDirectory(dbPath);
 
             var path = Path.Combine(dbPath, fileName);
-            return new SQLiteConnection(new SQLitePlatformIOS(), path);
+            return new SQLiteConnection(path);
         }
     }
 }

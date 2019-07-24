@@ -1,5 +1,5 @@
+/// <reference types="@types/googlemaps" />
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {} from '@types/googlemaps';
 import {Contact} from '../../../shared/models/contact';
 import {LanguageService} from '../../../core/services/language.service';
 import {Subscription} from 'rxjs';
@@ -7,7 +7,7 @@ import {Subscription} from 'rxjs';
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.css'],
+  styleUrls: ['./contact.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContactComponent implements OnInit, OnDestroy {

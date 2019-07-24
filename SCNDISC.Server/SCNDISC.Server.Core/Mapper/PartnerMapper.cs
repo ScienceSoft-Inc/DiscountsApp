@@ -12,7 +12,7 @@ namespace SCNDISC.Server.Core.Mapper
     {
         private const char CoordSeparator = ',';
 
-        public static PartnerModel Map(List<Branch> branches, CategoryModel[] categories)
+        public static PartnerModel Map(List<Branch> branches, CategoryModel[] categories, List<string> galleryImagesIds)
         {
 	        var partner = new PartnerModel{Contacts = new List<ContactModel>()};
 	        if (branches == null || branches.Count == 0)
@@ -38,6 +38,8 @@ namespace SCNDISC.Server.Core.Mapper
 			}
 
             partner.Contacts = contacts;
+            partner.Gallery = galleryImagesIds;
+
             return partner;
         }
 
@@ -172,5 +174,21 @@ namespace SCNDISC.Server.Core.Mapper
             return branches;
         }
 
+        public static GalleryImage MapToGalleryImage(GalleryImageModel galleryImageModel)
+        {
+            if (galleryImageModel == null)
+            {
+                return new GalleryImage();
+            }
+
+            var galleryImage = new GalleryImage()
+            {
+                Image = galleryImageModel.Image,
+                PartnerId = galleryImageModel.PartnerId,
+                Created = DateTime.UtcNow
+            };
+
+            return galleryImage;
+        }
     }
 }

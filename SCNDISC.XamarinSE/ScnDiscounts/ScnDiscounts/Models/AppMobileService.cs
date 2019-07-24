@@ -2,6 +2,7 @@
 using Plugin.Compass.Abstractions;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
+using ScnDiscounts.Helpers;
 using System;
 using System.Threading.Tasks;
 
@@ -20,7 +21,7 @@ namespace ScnDiscounts.Models
                 if (!CrossGeolocator.Current.IsListening)
                 {
                     CrossGeolocator.Current.PositionChanged += GeoLocation_PositionChanged;
-                    CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(5), 10);
+                    Functions.SafeCall(() => CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(5), 10));
 
                     if (CrossCompass.IsSupported)
                     {
@@ -38,7 +39,7 @@ namespace ScnDiscounts.Models
                     CrossCompass.Current.CompassChanged -= Compass_CompassChanged;
                 }
 
-                CrossGeolocator.Current.StopListeningAsync();
+                Functions.SafeCall(() => CrossGeolocator.Current.StopListeningAsync());
                 CrossGeolocator.Current.PositionChanged -= GeoLocation_PositionChanged;
             }
 

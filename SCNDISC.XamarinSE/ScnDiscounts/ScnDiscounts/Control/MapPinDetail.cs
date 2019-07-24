@@ -1,5 +1,7 @@
 ﻿using ScnDiscounts.Helpers;
 using ScnDiscounts.Models.Data;
+using ScnDiscounts.Views;
+using ScnDiscounts.Views.ContentUI;
 using ScnDiscounts.Views.Styles;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,24 +11,117 @@ namespace ScnDiscounts.Control
 {
     public class MapPinDetail : BorderBox
     {
-        private readonly Label _txtTitle;
-        private readonly Label _txtCategory;
-        private readonly ContentView _stackCategory;
-        private readonly Label _txtDiscountCaption;
-        private readonly Label _txtPercentValue;
-        private readonly Image _imgDistanceIcon;
-        private readonly Label _txtDistanceValue;
-        private readonly Label _txtDistanceCaption;
-        private readonly Image _imgShowDetail;
+        private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
-        public MapPinDetail()
+        private bool _isDistanceAvailable;
+
+        public bool IsDistanceAvailable
+        {
+            get => _isDistanceAvailable;
+            set
+            {
+                if (_isDistanceAvailable != value)
+                {
+                    _isDistanceAvailable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private string _title;
+
+        public string Title
+        {
+            get => _title;
+            set
+            {
+                if (_title != value)
+                {
+                    _title = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public CategoryData PrimaryCategory
+        {
+            set
+            {
+                CategoryLayout.BindingContext = null;
+                CategoryLayout.BindingContext = value;
+            }
+        }
+
+        private string _discountCaption;
+
+        public string DiscountCaption
+        {
+            get => _discountCaption;
+            set
+            {
+                if (_discountCaption != value)
+                {
+                    _discountCaption = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private string _discountValue;
+
+        public string DiscountValue
+        {
+            get => _discountValue;
+            set
+            {
+                if (_discountValue != value)
+                {
+                    _discountValue = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private string _distanceValue;
+
+        public string DistanceValue
+        {
+            get => _distanceValue;
+            set
+            {
+                if (_distanceValue != value)
+                {
+                    _distanceValue = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private string _distanceCaption;
+
+        public string DistanceCaption
+        {
+            get => _distanceCaption;
+            set
+            {
+                if (_discountCaption != value)
+                {
+                    _distanceCaption = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        protected CategoryItemTemplate CategoryLayout;
+
+        public MapPinDetail(RootContentUI contentUI)
             : base(BorderTypeEnum.btLabel)
         {
             var gridDetail = new Grid
             {
                 Padding = 6,
                 BackgroundColor = Color.White,
-                Opacity = 0.9,
+                Opacity = 0.95,
                 RowDefinitions =
                 {
                     new RowDefinition {Height = GridLength.Auto}
@@ -40,23 +135,14 @@ namespace ScnDiscounts.Control
 
             #region Header
 
-            _txtTitle = new Label
+            var txtTitle = new Label
             {
-                Text = Title,
                 Style = LabelStyles.TitleStyle.FromResources<Style>()
             };
+            txtTitle.SetBinding(Label.TextProperty, new Binding(nameof(Title), source: this));
 
-            _txtCategory = new Label
+            CategoryLayout = new CategoryItemTemplate
             {
-                Style = LabelStyles.CategoryStyle.FromResources<Style>(),
-                Text = CategoryName
-            };
-
-            _stackCategory = new ContentView
-            {
-                Padding = 4,
-                BackgroundColor = CategoryColor,
-                Content = _txtCategory,
                 HorizontalOptions = LayoutOptions.Start
             };
 
@@ -64,39 +150,62 @@ namespace ScnDiscounts.Control
 
             #region Info
 
-            _txtDiscountCaption = new Label
+            var txtDiscountCaption = new Span();
+            txtDiscountCaption.SetBinding(Span.TextProperty, new Binding(nameof(DiscountCaption), source: this));
+
+            var txtPercentValue = new Span();
+            txtPercentValue.SetBinding(Span.TextProperty, new Binding(nameof(DiscountValue), source: this));
+
+            var txtDiscount = new Label
             {
-                Text = DiscountCaption,
                 Style = LabelStyles.DescriptionStyle.FromResources<Style>(),
-                HorizontalOptions = LayoutOptions.Start
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                FormattedText = new FormattedString
+                {
+                    Spans =
+                    {
+                        txtDiscountCaption,
+                        new Span
+                        {
+                            Text = " "
+                        },
+                        txtPercentValue
+                    }
+                }
             };
 
-            _txtPercentValue = new Label
+            var imgDistanceIcon = new Image
             {
-                Text = DiscountValue,
-                Style = LabelStyles.DescriptionStyle.FromResources<Style>(),
-                HorizontalOptions = LayoutOptions.FillAndExpand
-            };
-
-            _imgDistanceIcon = new Image
-            {
-                Source = DistanceIcon,
+                Source = contentUI.ImgDistance,
                 HorizontalOptions = LayoutOptions.End
             };
+            imgDistanceIcon.SetBinding(IsVisibleProperty, new Binding(nameof(IsDistanceAvailable), source: this));
 
-            _txtDistanceValue = new Label
+            var txtDistanceValue = new Span();
+            txtDistanceValue.SetBinding(Span.TextProperty, new Binding(nameof(DistanceValue), source: this));
+
+            var txtDistanceCaption = new Span();
+            txtDistanceCaption.SetBinding(Span.TextProperty, new Binding(nameof(DistanceCaption), source: this));
+
+            var txtDistance = new Label
             {
                 Text = DistanceValue,
                 Style = LabelStyles.DescriptionStyle.FromResources<Style>(),
-                HorizontalOptions = LayoutOptions.End
+                HorizontalOptions = LayoutOptions.End,
+                FormattedText = new FormattedString
+                {
+                    Spans =
+                    {
+                        txtDistanceValue,
+                        new Span
+                        {
+                            Text = " "
+                        },
+                        txtDistanceCaption
+                    }
+                }
             };
-
-            _txtDistanceCaption = new Label
-            {
-                Text = DistanceCaption,
-                Style = LabelStyles.DescriptionStyle.FromResources<Style>(),
-                HorizontalOptions = LayoutOptions.End
-            };
+            txtDistance.SetBinding(IsVisibleProperty, new Binding(nameof(IsDistanceAvailable), source: this));
 
             var stackInfo = new StackLayout
             {
@@ -104,11 +213,9 @@ namespace ScnDiscounts.Control
                 Orientation = StackOrientation.Horizontal,
                 Children =
                 {
-                    _txtDiscountCaption,
-                    _txtPercentValue,
-                    _imgDistanceIcon,
-                    _txtDistanceValue,
-                    _txtDistanceCaption
+                    txtDiscount,
+                    imgDistanceIcon,
+                    txtDistance
                 }
             };
 
@@ -120,20 +227,20 @@ namespace ScnDiscounts.Control
             {
                 Children =
                 {
-                    _txtTitle,
-                    _stackCategory,
+                    txtTitle,
+                    CategoryLayout,
                     stackInfo
                 }
             };
             gridDetail.Children.Add(stackDetail, 0, 0);
 
-            _imgShowDetail = new Image
+            var imgShowDetail = new Image
             {
-                Source = DetailIcon,
+                Source = contentUI.ImgDetail,
                 HorizontalOptions = LayoutOptions.End
             };
 
-            gridDetail.Children.Add(_imgShowDetail, 1, 0);
+            gridDetail.Children.Add(imgShowDetail, 1, 0);
 
             #endregion
 
@@ -149,120 +256,6 @@ namespace ScnDiscounts.Control
 
             Content = gridDetail;
         }
-
-        private string _title;
-        public string Title
-        {
-            get => _title;
-            set 
-            { 
-                _title = value;
-                _txtTitle.Text = _title;
-            }
-        }
-
-        private CategoryData _primaryCategory;
-        public CategoryData PrimaryCategory
-        {
-            get => _primaryCategory;
-            set
-            {
-                _primaryCategory = value;
-
-                CategoryName = value?.Name?.ToUpper();
-                CategoryColor = value?.GetColorTheme() ?? Color.Transparent;
-            }
-        }
-
-        private string _categoryName;
-        public string CategoryName
-        {
-            get => _categoryName;
-            private set 
-            {
-                _categoryName = value;
-                _txtCategory.Text = value;
-            }
-        }
-
-        private Color _categoryColor;
-        public Color CategoryColor
-        {
-            get => _categoryColor;
-            private set
-            {
-                _categoryColor = value;
-                _stackCategory.BackgroundColor = _categoryColor;
-            }
-        }
-
-        private string _discountCaption;
-        public string DiscountCaption
-        {
-            get => _discountCaption;
-            set 
-            { 
-                _discountCaption = value;
-                _txtDiscountCaption.Text = _discountCaption;
-            }
-        }
-
-        private string _discountValue;
-        public string DiscountValue
-        {
-            get => _discountValue;
-            set 
-            {
-                _discountValue = value;
-                _txtPercentValue.Text = _discountValue;
-            }
-        }
-
-        private string _distanceIcon;
-        public string DistanceIcon
-        {
-            get => _distanceIcon;
-            set
-            {
-                _distanceIcon = value;
-                _imgDistanceIcon.Source = _distanceIcon;
-            }
-        }
-
-        private string _distanceValue = "0";
-        public string DistanceValue
-        {
-            get => _distanceValue;
-            set 
-            { 
-                _distanceValue = value;
-                _txtDistanceValue.Text = _distanceValue;
-            }
-        }
-
-        private string _distanceCaption = "km";
-        public string DistanceCaption
-        {
-            get => _distanceCaption;
-            set 
-            { 
-                _distanceCaption = value;
-                _txtDistanceCaption.Text = _distanceCaption;
-            }
-        }
-
-        private string _detailIcon;
-        public string DetailIcon
-        {
-            get => _detailIcon;
-            set
-            {
-                _detailIcon = value;
-                _imgShowDetail.Source = _detailIcon;
-            }
-        }
-
-        private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
         public async Task Show()
         {

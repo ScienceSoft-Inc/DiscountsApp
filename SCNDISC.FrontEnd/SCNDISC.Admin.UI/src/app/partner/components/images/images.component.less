@@ -1,26 +1,95 @@
 @import "../../../shared/shared-styles";
 
+@color-grey: #888888;
+@color-black: black;
+
 .x-form-side-label {
   width: 100px;
+  float: left;
 }
 
 .x-form-file-upload {
   margin-right: 4px;
 }
 
-.x-item-image {
-  background: url('../../../../assets/images/camera-128x128.png') center no-repeat;
-  margin-left: 100px;
+.theme-box {
+  position: relative;
+  z-index: 1;
   float: left;
+  height: 180px;
+  width: 340px;
+  color: @color-black;
+  font-weight: bold;
+  display: table;
+  text-align: center;
+  .choose-theme {
+    vertical-align: middle;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    cursor: pointer;
+    display: none;
+  }
+  .x-item-image {
+    position: absolute;
+    background-size: cover;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    background: url('../../../../assets/images/camera-128x128.png') center no-repeat;
+  }
+  &:hover {
+    .x-item-image {
+      opacity: 0.3;
+      cursor: pointer;
+    }
+    .choose-theme {
+      display: table-cell;
+    }
+  }
 }
 
-.x-item-logo {
-  background-image: url('../../../../assets/images/camera-128x128.png');
-  background-size: cover;
-  overflow: hidden;
-  margin-left: 470px;
+.avatar-box {
+  position: relative;
+  z-index: 1;
+  float: left;
+  height: 65px;
+  width: 65px;
+  color: @color-black;
+  font-weight: bold;
+  margin-left: 30px;
+  display: table;
+  text-align: center;
+  .choose-avatar {
+    vertical-align: middle;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    cursor: pointer;
+    display: none;
+  }
+  .x-item-logo {
+    position: absolute;
+    background-size: cover;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    background-image: url('../../../../assets/images/camera-128x128.png');
+  }
+  &:hover {
+    .x-item-logo {
+      opacity: 0.5;
+      cursor: pointer;
+    }
+    .choose-avatar {
+      display: table-cell;
+    }
+  }
 }
-
 input[type="file"] {
   display: none;
 }

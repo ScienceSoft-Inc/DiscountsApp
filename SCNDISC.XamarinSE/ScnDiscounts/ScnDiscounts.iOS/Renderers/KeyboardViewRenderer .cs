@@ -10,10 +10,11 @@ namespace ScnDiscounts.iOS.Renderers
 {
     public class KeyboardViewRenderer : ViewRenderer
     {
+        private Thickness? _oldMargin;
+
         private NSObject _keyboardShowObserver;
         private NSObject _keyboardHideObserver;
-
-        private Thickness _oldMargin;
+        private NSObject _keyboardChangeObserver;
 
         protected override void OnElementChanged(ElementChangedEventArgs<View> e)
         {
@@ -33,6 +34,9 @@ namespace ScnDiscounts.iOS.Renderers
 
             if (_keyboardHideObserver == null)
                 _keyboardHideObserver = UIKeyboard.Notifications.ObserveWillHide(OnKeyboardHide);
+
+            if (_keyboardChangeObserver == null)
+                _keyboardChangeObserver = UIKeyboard.Notifications.ObserveWillChangeFrame(OnKeyboardChanged);
         }
 
         private void UnregisterForKeyboardNotifications()
@@ -48,6 +52,12 @@ namespace ScnDiscounts.iOS.Renderers
                 _keyboardHideObserver.Dispose();
                 _keyboardHideObserver = null;
             }
+
+            if (_keyboardChangeObserver != null)
+            {
+                _keyboardChangeObserver.Dispose();
+                _keyboardChangeObserver = null;
+            }
         }
 
         private void OnKeyboardShow(object sender, UIKeyboardEventArgs args)
@@ -58,16 +68,30 @@ namespace ScnDiscounts.iOS.Renderers
                 var result = (NSValue) args.Notification.UserInfo.ObjectForKey(key);
                 var keyboardSize = result.RectangleFValue.Size;
 
-                _oldMargin = Element.Margin;
-                Element.Margin = new Thickness(_oldMargin.Left, _oldMargin.Top, _oldMargin.Right,
-                    _oldMargin.Bottom + keyboardSize.Height);
+                var oldMargin = Element.Margin;
+                _oldMargin = oldMargin;
+
+                Element.Margin = new Thickness(oldMargin.Left, oldMargin.Top, oldMargin.Right,
+                    oldMargin.Bottom + keyboardSize.Height);
             }
         }
 
         private void OnKeyboardHide(object sender, UIKeyboardEventArgs args)
         {
-            if (Element != null)
-                Element.Margin = _oldMargin;
+            if (Element != null && _oldMargin.HasValue)
+            {
+                Element.Margin = _oldMargin.Value;
+                _oldMargin = null;
+            }
+        }
+
+        private void OnKeyboardChanged(object sender, UIKeyboardEventArgs args)
+        {
+            if (Element != null && _oldMargin.HasValue)
+            {
+                Element.Margin = _oldMargin.Value;
+                _oldMargin = null;
+            }
         }
     }
 }

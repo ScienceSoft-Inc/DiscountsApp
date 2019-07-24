@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScnDiscounts.iOS", "ScnDiscounts\ScnDiscounts.iOS\ScnDiscounts.iOS.csproj", "{16CC9346-4E31-498D-9F62-28E05F05EEFB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScnDiscounts.Droid", "ScnDiscounts\ScnDiscounts.Droid\ScnDiscounts.Droid.csproj", "{4A47468A-6962-4F56-82A5-071100D9E99B}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ScnDiscounts", "ScnDiscounts\ScnDiscounts\ScnDiscounts.shproj", "{8AECEF42-5A7B-42C1-921B-EC910BE5876F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScnDiscounts.iOS.NotificationService", "ScnDiscounts\ScnDiscounts.iOS.NotificationService\ScnDiscounts.iOS.NotificationService.csproj", "{CA283451-459F-40B4-A225-ABABDBD469F4}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -118,6 +120,42 @@ Global
 		{4A47468A-6962-4F56-82A5-071100D9E99B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4A47468A-6962-4F56-82A5-071100D9E99B}.Release|Mixed Platforms.Deploy.0 = Release|Any CPU
 		{4A47468A-6962-4F56-82A5-071100D9E99B}.Release|x86.ActiveCfg = Release|Any CPU
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Ad-Hoc|Any CPU.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Ad-Hoc|ARM.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Ad-Hoc|iPhone.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Ad-Hoc|iPhone.Build.0 = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Ad-Hoc|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Ad-Hoc|Mixed Platforms.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Ad-Hoc|Mixed Platforms.Build.0 = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Ad-Hoc|x86.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.AppStore|Any CPU.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.AppStore|ARM.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.AppStore|iPhone.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.AppStore|iPhone.Build.0 = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.AppStore|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.AppStore|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.AppStore|Mixed Platforms.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.AppStore|Mixed Platforms.Build.0 = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.AppStore|x86.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Debug|ARM.ActiveCfg = Debug|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Debug|iPhone.Build.0 = Debug|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Debug|Mixed Platforms.ActiveCfg = Debug|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Debug|Mixed Platforms.Build.0 = Debug|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Debug|x86.ActiveCfg = Debug|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Release|Any CPU.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Release|ARM.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Release|iPhone.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Release|iPhone.Build.0 = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Release|Mixed Platforms.ActiveCfg = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Release|Mixed Platforms.Build.0 = Release|iPhone
+		{CA283451-459F-40B4-A225-ABABDBD469F4}.Release|x86.ActiveCfg = Release|iPhone
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

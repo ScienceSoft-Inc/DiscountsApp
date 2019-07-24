@@ -1,7 +1,7 @@
 <a title="{{'Home.ClickToEdit'| translate}}" class="x-item"
    [routerLink]="[ 'partner', toolTipPartner.id ]">
   <app-image-loading [id]="toolTipPartner.id"></app-image-loading>
-  <div class="x-item-logo" [ngStyle]=getLogoStyle()></div>
+  <app-avatar-loading [id]="toolTipPartner.id"></app-avatar-loading>
   <div *ngIf="!lang_en" class="x-item-title"> {{toolTipPartner.name_Ru}}</div>
   <div *ngIf="lang_en" class="x-item-title"> {{toolTipPartner.name_En}}</div>
   <div class="x-types-container-y" *ngIf="toolTipPartner.categories && toolTipPartner.categories.length > 0">

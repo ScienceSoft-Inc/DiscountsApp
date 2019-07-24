@@ -1,16 +1,16 @@
-﻿using SCNDISC.Server.Application.Services.Feedback;
-using SCNDISC.Server.Core.Models.Feedback;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using SCNDISC.Server.Application.Services.Feedback;
 using SCNDISC.Server.Core.Models;
+using SCNDISC.Server.Core.Models.Feedback;
+using SCNDISC.Server.Domain.Aggregates;
+using SCNDISC.Server.Domain.Queries.Feedbacks;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.Extensions.Configuration;
-using SCNDISC.Server.Domain.Aggregates;
-using SCNDISC.Server.Domain.Queries.Feedbacks;
 
 namespace SCNDISC.Server.Core.Controllers
 {
@@ -100,7 +100,6 @@ namespace SCNDISC.Server.Core.Controllers
 
         private static async Task SendNotificationAsync(Feedback feedback, IConfiguration configuration)
         {
-            //TODO: use IConfiguration insted of ConfigurationManager
             var from = configuration.GetValue<string>("MailFrom");
             var to = configuration.GetValue<string>("MailTo");
 

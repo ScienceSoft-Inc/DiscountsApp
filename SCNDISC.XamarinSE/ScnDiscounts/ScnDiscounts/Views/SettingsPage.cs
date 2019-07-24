@@ -21,6 +21,10 @@ namespace ScnDiscounts.Views
             BackgroundColor = MainStyles.StatusBarColor.FromResources<Color>();
             Content.BackgroundColor = MainStyles.MainBackgroundColor.FromResources<Color>();
 
+            var loadingColor = MainStyles.LoadingColor.FromResources<Color>();
+            LoadingActivityIndicator.Color = loadingColor;
+            LoadingActivityText.TextColor = loadingColor;
+
             var appBar = new TitleBar(this, TitleBar.BarBtnEnum.bbBack)
             {
                 BarColor = MainStyles.StatusBarColor.FromResources<Color>(),
@@ -55,10 +59,45 @@ namespace ScnDiscounts.Views
                 }
             };
 
-            var tapGestureRecognizer = new TapGestureRecognizer();
-            tapGestureRecognizer.SetBinding(TapGestureRecognizer.CommandParameterProperty, "TypeName");
-            tapGestureRecognizer.Tapped += viewModel.LangSetting_Click;
-            stackLang.GestureRecognizers.Add(tapGestureRecognizer);
+            var tapLang = new TapGestureRecognizer();
+            tapLang.Tapped += viewModel.LangSetting_Click;
+            stackLang.GestureRecognizers.Add(tapLang);
+
+            #endregion
+
+            #region Push notifications setting
+
+            var txtPushNotifications = new Label
+            {
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                VerticalOptions = LayoutOptions.Center,
+                Style = LabelStyles.SettingStyle.FromResources<Style>()
+            };
+            txtPushNotifications.SetBinding(Label.TextProperty, "PushNotificationsTitle");
+
+            var switchPushNotifications = new Switch
+            {
+                HorizontalOptions = LayoutOptions.End,
+                VerticalOptions = LayoutOptions.Center,
+                OnColor = MainStyles.SwitchColor.FromResources<Color>()
+            };
+            switchPushNotifications.SetBinding(Switch.IsToggledProperty, "IsPushEnabled");
+
+            var stackPushNotifications = new StackLayout
+            {
+                Orientation = StackOrientation.Horizontal,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                Spacing = 0,
+                Children =
+                {
+                    txtPushNotifications,
+                    switchPushNotifications
+                }
+            };
+
+            var tapPushNotifications = new TapGestureRecognizer();
+            tapPushNotifications.Tapped += viewModel.SwitchPushNotifications_Toggled;
+            stackPushNotifications.GestureRecognizers.Add(tapPushNotifications);
 
             #endregion
 
@@ -75,15 +114,13 @@ namespace ScnDiscounts.Views
                 Color = Color.White,
                 HorizontalOptions = LayoutOptions.Center
             };
-            activityIndicator.SetBinding(IsVisibleProperty, "IsLoading");
-            activityIndicator.SetBinding(ActivityIndicator.IsRunningProperty, "IsLoading");
+            activityIndicator.SetBinding(IsVisibleProperty, "IsUpdating");
+            activityIndicator.SetBinding(ActivityIndicator.IsRunningProperty, "IsUpdating");
 
             var txtProgress = new Label
             {
-                Style = LabelStyles.DescriptionStyle.FromResources<Style>(),
-                LineBreakMode = LineBreakMode.WordWrap,
-                HorizontalTextAlignment = TextAlignment.Center,
-                TextColor = Color.White
+                Style = LabelStyles.DescriptionLightStyle.FromResources<Style>(),
+                HorizontalTextAlignment = TextAlignment.Center
             };
             txtProgress.SetBinding(Label.TextProperty, "ProcessMessage");
 
@@ -94,6 +131,7 @@ namespace ScnDiscounts.Views
                 Children =
                 {
                     stackLang,
+                    stackPushNotifications,
                     btnUpdateDb,
                     activityIndicator,
                     txtProgress

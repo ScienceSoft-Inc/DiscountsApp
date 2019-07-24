@@ -1,13 +1,13 @@
-﻿using ScnDiscounts.Helpers;
+﻿using CarouselView.FormsPlugin.Abstractions;
+using ScnDiscounts.Helpers;
 using ScnDiscounts.Models.Data;
-using ScnDiscounts.ValueConverters;
 using ScnDiscounts.ViewModels;
 using ScnDiscounts.Views.ContentUI;
 using ScnDiscounts.Views.Styles;
 using ScnPage.Plugin.Forms;
 using ScnTitleBar.Forms;
-using ScnViewGestures.Plugin.Forms;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace ScnDiscounts.Views
 {
@@ -22,6 +22,10 @@ namespace ScnDiscounts.Views
         {
             BackgroundColor = MainStyles.StatusBarColor.FromResources<Color>();
             Content.BackgroundColor = MainStyles.MainLightBackgroundColor.FromResources<Color>();
+
+            var loadingColor = MainStyles.LoadingColor.FromResources<Color>();
+            LoadingActivityIndicator.Color = loadingColor;
+            LoadingActivityText.TextColor = loadingColor;
 
             viewModel.SetDiscount(discountDetailData);
 
@@ -44,29 +48,6 @@ namespace ScnDiscounts.Views
                 }
             };
 
-            #region Photo
-
-            var imageLayout = new RelativeLayout
-            {
-                HeightRequest = Device.Idiom == TargetIdiom.Phone ? 200 : 400
-            };
-
-            var fileNameConverter = new FileNameToImageConverter();
-            var imgPhoto = new Image
-            {
-                Aspect = Aspect.AspectFill
-            };
-            imgPhoto.SetBinding(Image.SourceProperty,
-                new Binding("ImageFileName", BindingMode.Default, fileNameConverter, true));
-
-            imageLayout.Children.Add(imgPhoto,
-                Constraint.Constant(0),
-                Constraint.Constant(0),
-                Constraint.RelativeToParent(parent => parent.Width),
-                Constraint.RelativeToParent(parent => parent.Height));
-
-            #endregion
-
             #region Label percent
 
             const int sizeImgLabel = 60;
@@ -78,27 +59,25 @@ namespace ScnDiscounts.Views
                 Source = contentUI.ImgPercentLabel
             };
 
-            var labelLayout = new AbsoluteLayout();
+            var labelLayout = new AbsoluteLayout
+            {
+                InputTransparent = true
+            };
             AbsoluteLayout.SetLayoutFlags(imgLabel, AbsoluteLayoutFlags.All);
             AbsoluteLayout.SetLayoutBounds(imgLabel, new Rectangle(0f, 0f, 1f, 1f));
             labelLayout.Children.Add(imgLabel);
-
-            imageLayout.Children.Add(labelLayout,
-                Constraint.RelativeToParent(parent => parent.Width - sizeImgLabel - 5),
-                Constraint.RelativeToView(imgPhoto,
-                    (parent, sibling) => sibling.Y + sibling.Height - sizeImgLabel - 5));
 
             var spanDiscountPercent = new Span
             {
                 Style = LabelStyles.LabelPercentStyle.FromResources<Style>()
             };
-            spanDiscountPercent.SetBinding(Span.TextProperty, "DiscountPercent", BindingMode.OneWay);
+            spanDiscountPercent.SetBinding(Span.TextProperty, nameof(DiscountDetailViewModel.DiscountPercent));
 
             var spanDiscountType = new Span
             {
                 Style = LabelStyles.LabelPercentSymbolStyle.FromResources<Style>()
             };
-            spanDiscountType.SetBinding(Span.TextProperty, "DiscountType", BindingMode.OneWay);
+            spanDiscountType.SetBinding(Span.TextProperty, nameof(DiscountDetailViewModel.DiscountType));
 
             var txtPercent = new Label
             {
@@ -133,24 +112,27 @@ namespace ScnDiscounts.Views
                 Margin = new Thickness(20, 15, 15, 0)
             };
 
+            const int sizeWebAddress = 40;
+
             foreach (var webAddress in viewModel.WebAddresses)
             {
                 var imgWebAddress = new Image
                 {
-                    Source = webAddress.Type.GetWebAddressIcon()
+                    Source = webAddress.Type.GetWebAddressIcon(),
+                    Margin = new Thickness(0, 0, 5, 5),
+                    WidthRequest = sizeWebAddress,
+                    HeightRequest = sizeWebAddress
                 };
 
-                var viewGesturesWebAddress = new ViewGestures
+                var tapWebAddress = new TapGestureRecognizer
                 {
-                    Content = imgWebAddress,
-                    AnimationEffect = ViewGestures.AnimationType.atScaling,
-                    AnimationScale = -5,
-                    Tag = webAddress.Url,
-                    Margin = new Thickness(0, 0, 5, 5)
+                    CommandParameter = webAddress.Url
                 };
-                viewGesturesWebAddress.Tap += viewModel.TxtUrlAddress_Click;
+                tapWebAddress.Tapped += viewModel.TxtUrlAddress_Click;
 
-                flexCategories.Children.Add(viewGesturesWebAddress);
+                imgWebAddress.GestureRecognizers.Add(tapWebAddress);
+
+                flexCategories.Children.Add(imgWebAddress);
             }
 
             var flexSeparator = new ContentView();
@@ -176,7 +158,7 @@ namespace ScnDiscounts.Views
             {
                 Style = LabelStyles.DetailTitleStyle.FromResources<Style>()
             };
-            txtPartnerName.SetBinding(Label.TextProperty, "NameCompany");
+            txtPartnerName.SetBinding(Label.TextProperty, nameof(DiscountDetailViewModel.NameCompany));
 
             #endregion
 
@@ -187,9 +169,39 @@ namespace ScnDiscounts.Views
                 Style = LabelStyles.DescriptionStyle.FromResources<Style>(),
                 LineBreakMode = LineBreakMode.WordWrap
             };
-            txtDescription.SetBinding(Label.TextProperty, "Description");
+            txtDescription.SetBinding(Label.TextProperty, nameof(DiscountDetailViewModel.Description));
 
             #endregion
+
+            var carouselView = new CarouselViewControl
+            {
+                Orientation = CarouselViewOrientation.Horizontal,
+                ItemTemplate = new DataTemplate(typeof(GalleryImageItemTemplate)),
+                CurrentPageIndicatorTintColor = MainStyles.MainBackgroundColor.FromResources<Color>()
+            };
+            carouselView.SetBinding(CarouselViewControl.ItemsSourceProperty,
+                nameof(DiscountDetailViewModel.GalleryImages));
+            carouselView.SetBinding(CarouselViewControl.ShowIndicatorsProperty,
+                nameof(DiscountDetailViewModel.HasGalleryImages));
+            carouselView.SetBinding(CarouselViewControl.IsSwipeEnabledProperty,
+                nameof(DiscountDetailViewModel.HasGalleryImages));
+
+            var carouselLayout = new RelativeLayout
+            {
+                VerticalOptions = LayoutOptions.Start
+            };
+
+            carouselLayout.Children.Add(carouselView,
+                Constraint.Constant(0),
+                Constraint.Constant(0),
+                Constraint.RelativeToParent(parent => parent.Width),
+                Constraint.RelativeToParent(parent =>
+                    Device.Info.CurrentOrientation.IsPortrait() ? parent.Width * 0.5625 :
+                    Device.Idiom == TargetIdiom.Phone ? 200 : 400));
+
+            carouselLayout.Children.Add(labelLayout,
+                Constraint.RelativeToView(carouselView, (parent, view) => view.Width - sizeImgLabel - 5),
+                Constraint.RelativeToView(carouselView, (parent, view) => view.Height - sizeImgLabel - 5));
 
             var stackDetails = new StackLayout
             {
@@ -208,7 +220,7 @@ namespace ScnDiscounts.Views
                 Orientation = StackOrientation.Vertical,
                 Children =
                 {
-                    imageLayout,
+                    carouselLayout,
                     flexCategories,
                     stackDetails
                 }
@@ -216,8 +228,10 @@ namespace ScnDiscounts.Views
 
             foreach (var brachItem in viewModel.BranchItems)
             {
-                var view = new BranchInfoViewTemplate(contentUI, viewModel).View;
-                view.BindingContext = brachItem;
+                var view = new BranchInfoViewTemplate(contentUI, viewModel)
+                {
+                    BindingContext = brachItem
+                };
 
                 discountLayout.Children.Add(view);
             }

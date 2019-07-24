@@ -4,7 +4,7 @@ import {Partner} from '../../../shared/models/partner';
 @Component({
   selector: 'app-files',
   templateUrl: './images.component.html',
-  styleUrls: ['./images.component.css']
+  styleUrls: ['./images.component.less']
 })
 export class ImagesComponent implements OnInit {
 

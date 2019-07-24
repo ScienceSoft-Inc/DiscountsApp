@@ -4,7 +4,7 @@ import {WebAddress} from '../../../shared/models/webAddress';
 @Component({
   selector: 'app-web-address',
   templateUrl: './web-address.component.html',
-  styleUrls: ['./web-address.component.css']
+  styleUrls: ['./web-address.component.less']
 })
 export class WebAddressComponent implements OnInit {
 

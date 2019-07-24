@@ -1,12 +1,17 @@
 <div class="x-content">
-  <label class="x-form-side-label">{{'partner.Files' | translate}}</label>
-  <label for="uxFormAvatarUpload" class="x-form-action-btn x-form-file-upload">{{'partner.ChooseTheme' | translate}}</label>
-  <input type="file" name="uxFormAvatarUpload" accept="image/*" (change)="onClickedChangeImage($event)" id="uxFormAvatarUpload">
-  <label for="uxFormThemeUpload" class="x-form-action-btn x-form-file-upload">{{'partner.ChooseAvatar' | translate}}</label>
-  <input type="file" name="uxFormThemeUpload" accept="image/*" (change)="onClickedChangeLogo($event)" id="uxFormThemeUpload">
-  <div class="div-clear"></div>
-  <div class="x-item-image" [ngStyle]=getImageStyle()></div>
-  <div class="x-item-logo" [ngStyle]=getLogoStyle()></div>
+  <label class="x-form-side-label">{{'partner.MainPictures' | translate}}</label>
+  <input type="file" name="uxFormThemeUpload" accept="image/*" (change)="onClickedChangeImage($event)" id="uxFormThemeUpload">
+  <input type="file" name="uxFormAvatarUpload" accept="image/*" (change)="onClickedChangeLogo($event)" id="uxFormAvatarUpload">
+  <div class="theme-box">
+    <div class="x-item-image" [ngStyle]=getImageStyle()>
+    </div>
+    <label for="uxFormThemeUpload" class="choose-theme">{{'partner.ChooseTheme' | translate}}</label>
+  </div>
+  <div class="avatar-box">
+    <div class="x-item-logo" [ngStyle]=getLogoStyle()>
+    </div>
+    <label for="uxFormAvatarUpload" class="choose-avatar">{{'partner.ChooseAvatar' | translate}}</label>
+  </div>
   <div class="div-clear"></div>
   <div class="x-form-hint">
     {{'partner.Hint' | translate}}

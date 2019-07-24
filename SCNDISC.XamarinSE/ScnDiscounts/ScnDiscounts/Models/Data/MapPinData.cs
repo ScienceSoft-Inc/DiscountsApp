@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ScnDiscounts.Models.Data
 {
-    public class MapPinData : NotifyPropertyChanged
+    public class MapPinData
     {
         public string PartnerId { get; set; }
 
@@ -25,7 +25,7 @@ namespace ScnDiscounts.Models.Data
 
         public void SetName(string langCode, string value)
         {
-            var lang = LanguageHelper.LangCodeToEnum(langCode);
+            var lang = langCode.LangCodeToEnum();
             _name[lang] = value;
         }
 
@@ -47,16 +47,7 @@ namespace ScnDiscounts.Models.Data
 
         public double DistanceValue { get; set; }
 
-        private string _distance = "0.0";
-        public string Distance
-        {
-            get => _distance;
-            set
-            {
-                _distance = value;
-                OnPropertyChanged();
-            }
-        }
+        public string DistanceString => DistanceValue.ToDistanceString();
 
         #endregion
 
@@ -70,7 +61,6 @@ namespace ScnDiscounts.Models.Data
                     GeolocatorUtils.DistanceUnits.Kilometers);
 
                 DistanceValue = value;
-                Distance = value.ToDistanceString();
             }
         }
     }

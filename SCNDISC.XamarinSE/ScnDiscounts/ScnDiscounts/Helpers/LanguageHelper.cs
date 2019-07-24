@@ -17,12 +17,12 @@ namespace ScnDiscounts.Helpers
             {LangTypeEnum.ltRu, "Русский"}
         };
 
-        public static LangTypeEnum LangNameToEnum(string lang)
+        public static LangTypeEnum LangNameToEnum(this string lang)
         {
             return LanguageList.Where(i => i.Value == lang).Select(i => i.Key).FirstOrDefault();
         }
 
-        public static LangTypeEnum LangCodeToEnum(string lang)
+        public static LangTypeEnum LangCodeToEnum(this string lang)
         {
             LangTypeEnum result;
 
@@ -42,7 +42,7 @@ namespace ScnDiscounts.Helpers
             return result;
         }
 
-        public static string LangEnumToCode(LangTypeEnum langType)
+        public static string LangEnumToCode(this LangTypeEnum langType)
         {
             string result;
 

@@ -2,13 +2,11 @@
 using ScnDiscounts.Models;
 using ScnDiscounts.Models.Data;
 using ScnDiscounts.ValueConverter;
-using ScnDiscounts.Views;
 using ScnDiscounts.Views.ContentUI;
 using ScnPage.Plugin.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace ScnDiscounts.ViewModels
@@ -154,54 +152,20 @@ namespace ScnDiscounts.ViewModels
             if (IsSortByName)
                 items = items.OrderBy(i => i.Name, partnerNameComparer);
             else if (IsSortByDistance)
-                items = items.OrderBy(i =>
-                    AppData.Discount.MapPinCollection.Where(j => j.PartnerId == i.DocumentId)
-                        .Select(j => j.DistanceValue).DefaultIfEmpty().Min()).ThenBy(i => i.Name, partnerNameComparer);
+                items = LocationHelper.IsCurrentLocationAvailable
+                    ? items.OrderBy(i =>
+                            AppData.Discount.MapPinCollection.Where(j => j.PartnerId == i.DocumentId)
+                                .Select(j => j.DistanceValue).DefaultIfEmpty().Min())
+                        .ThenBy(i => i.Name, partnerNameComparer)
+                    : items.OrderBy(i => i.Name, partnerNameComparer);
 
             DiscountItems = new List<DiscountData>(items);
         }
 
-        public void OnDiscountItemTapped(object sender, ItemTappedEventArgs e)
+        public async void OnDiscountItemTapped(object sender, ItemTappedEventArgs e)
         {
-            if (ViewPage.IsOpenning)
-                return;
-
             if (e.Item is DiscountData discountData)
-                OpenPage(discountData);
-        }
-
-        private async void OpenPage(DiscountData discountData)
-        {
-            if (ViewPage.IsOpenning)
-                return;
-
-            DiscountDetailData discountDetailData;
-
-            try
-            {
-                IsLoadActivity = true;
-                await Task.Delay(50);
-
-                discountDetailData = AppData.Discount.Db.LoadDiscountDetail(discountData.DocumentId);
-            }
-            catch (Exception ex)
-            {
-                LoggerHelper.WriteException(ex);
-
-                discountDetailData = null;
-            }
-            finally
-            {
-                IsLoadActivity = false;
-            }
-
-            if (discountDetailData == null)
-            {
-                await ViewPage.DisplayAlert(contentUI.TitleErrLoading, contentUI.TxtErrServiceConnection,
-                    contentUI.TxtOk);
-            }
-            else
-                Functions.SafeCall(() => ViewPage.OpenPage(new DiscountDetailPage(discountDetailData)));
+                await ViewPage.OpenDetailPage(discountData.DocumentId);
         }
 
         public void SortByName_Tap(object sender, EventArgs e)

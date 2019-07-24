@@ -21,19 +21,15 @@ namespace ScnDiscounts.Views
 
             BackgroundColor = MainStyles.MainBackgroundColor.FromResources<Color>();
 
+            var loadingColor = MainStyles.LoadingColor.FromResources<Color>();
+            LoadingActivityIndicator.Color = loadingColor;
+            LoadingActivityText.TextColor = loadingColor;
+
             var layoutSplash = new AbsoluteLayout
             {
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 HorizontalOptions = LayoutOptions.FillAndExpand
             };
-
-            var boxBackOpacity = new BoxView
-            {
-                Color = MainStyles.MainBackgroundColor.FromResources<Color>()
-            };
-            AbsoluteLayout.SetLayoutFlags(boxBackOpacity, AbsoluteLayoutFlags.All);
-            AbsoluteLayout.SetLayoutBounds(boxBackOpacity, new Rectangle(0f, 0f, 1f, 1f));
-            layoutSplash.Children.Add(boxBackOpacity);
 
             var imgLogo = new Image
             {
@@ -81,10 +77,8 @@ namespace ScnDiscounts.Views
 
             var txtProgress = new Label
             {
-                Style = LabelStyles.DescriptionStyle.FromResources<Style>(),
-                LineBreakMode = LineBreakMode.WordWrap,
-                HorizontalTextAlignment = TextAlignment.Center,
-                TextColor = Color.White
+                Style = LabelStyles.DescriptionLightStyle.FromResources<Style>(),
+                HorizontalTextAlignment = TextAlignment.Center
             };
             txtProgress.SetBinding(Label.TextProperty, "ProcessMessage");
             AbsoluteLayout.SetLayoutFlags(txtProgress,

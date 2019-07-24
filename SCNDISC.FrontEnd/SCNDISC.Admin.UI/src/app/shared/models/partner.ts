@@ -12,6 +12,7 @@ export class Partner {
   public description_En: string;
   public image: string;
   public logo: string;
+  public gallery: string[];
   public comment: string;
   public discount: number;
   public selectDiscount: string;
@@ -25,5 +26,6 @@ export class Partner {
       this.contacts.push(contact);
       this.selectDiscount = '0';
       this.discount = 0;
+      this.gallery = [];
   }
 }

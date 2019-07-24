@@ -7,7 +7,7 @@ import {PartnerService} from '../../core/services/partner.service';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.css']
+  styleUrls: ['./menu.component.less']
 })
 export class MenuComponent implements OnInit, OnDestroy {
 
@@ -36,6 +36,11 @@ export class MenuComponent implements OnInit, OnDestroy {
   onClickedFeedback(): void {
     this.menuService.offShowMenu();
     this.router.navigate(['feedback']);
+  }
+
+  onClickedNotification(): void {
+    this.menuService.offShowMenu();
+    this.router.navigate(['notification']);
   }
 
   onClickedNewPartner(): void {

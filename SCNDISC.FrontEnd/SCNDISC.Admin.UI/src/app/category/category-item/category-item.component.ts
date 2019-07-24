@@ -6,7 +6,7 @@ import {Subscription} from 'rxjs';
 @Component({
   selector: 'app-category-for-manager',
   templateUrl: './category-item.component.html',
-  styleUrls: ['./category-item.component.css']
+  styleUrls: ['./category-item.component.less']
 })
 export class CategoryItemComponent implements OnInit, OnDestroy {
 

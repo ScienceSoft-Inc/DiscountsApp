@@ -9,6 +9,9 @@
         <app-files [partner]="partner"></app-files>
       </div>
       <div>
+        <app-gallery-images *ngIf="partner.id" [partner]="partner"></app-gallery-images>
+      </div>
+      <div>
         <app-contacts [partner]="partner"></app-contacts>
       </div>
       <div class="x-form-error-ct">

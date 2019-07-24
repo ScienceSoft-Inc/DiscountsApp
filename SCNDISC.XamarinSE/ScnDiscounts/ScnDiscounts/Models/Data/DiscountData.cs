@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ScnDiscounts.Models.Data
 {
-    public class DiscountData : NotifyPropertyChanged
+    public class DiscountData
     {
         public string DocumentId { get; set; }
 
@@ -20,7 +20,7 @@ namespace ScnDiscounts.Models.Data
 
         public void SetName(string langCode, string value)
         {
-            var lang = LanguageHelper.LangCodeToEnum(langCode);
+            var lang = langCode.LangCodeToEnum();
             _name[lang] = value;
         }
 
@@ -37,7 +37,7 @@ namespace ScnDiscounts.Models.Data
 
         public void SetDescription(string langCode, string value)
         {
-            var lang = LanguageHelper.LangCodeToEnum(langCode);
+            var lang = langCode.LangCodeToEnum();
             _description[lang] = value;
         }
 
@@ -47,11 +47,7 @@ namespace ScnDiscounts.Models.Data
 
         #endregion
 
-        #region Categories
-
         public List<CategoryData> CategoryList { get; set; } = new List<CategoryData>();
-
-        #endregion
     }
 }
 

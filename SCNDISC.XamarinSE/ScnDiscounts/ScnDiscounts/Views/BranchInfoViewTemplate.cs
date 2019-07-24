@@ -6,7 +6,7 @@ using Xamarin.Forms;
 
 namespace ScnDiscounts.Views
 {
-    public class BranchInfoViewTemplate : ViewCell
+    public class BranchInfoViewTemplate : ContentView
     {
         public BranchInfoViewTemplate(DiscountDetailContentUI parentContentUi, DiscountDetailViewModel parentViewModel)
         {
@@ -18,8 +18,11 @@ namespace ScnDiscounts.Views
 
             #region Location
 
+            var isCurrentLocationAvailable = LocationHelper.IsCurrentLocationAvailable;
+
             var gridLocation = new Grid
             {
+                ColumnSpacing = 0,
                 RowDefinitions =
                 {
                     new RowDefinition {Height = GridLength.Auto}
@@ -40,12 +43,13 @@ namespace ScnDiscounts.Views
             };
             txtDistanceValue.SetBinding(Label.TextProperty, "DistanceString");
 
-            gridLocation.Children.Add(txtDistanceValue, 0, 0);
+            if (isCurrentLocationAvailable)
+                gridLocation.Children.Add(txtDistanceValue, 0, 0);
 
             var distanceLabel = new StackLayout
             {
                 VerticalOptions = LayoutOptions.Center,
-                Margin = new Thickness(0, 0, 10, 0),
+                Margin = new Thickness(5, 0, 15, 0),
                 TranslationY = 2,
                 Spacing = 0,
                 Children =
@@ -62,7 +66,8 @@ namespace ScnDiscounts.Views
                 }
             };
 
-            gridLocation.Children.Add(distanceLabel, 1, 0);
+            if (isCurrentLocationAvailable)
+                gridLocation.Children.Add(distanceLabel, 1, 0);
 
             var txtPartnerAddress = new Label
             {
@@ -115,7 +120,7 @@ namespace ScnDiscounts.Views
             tapPhone1.Tapped += parentViewModel.BtnCall_Click;
 
             var phone1 = CreateCallButton("Phone1", "PhoneOperatorIcon1");
-            phone1.SetBinding(VisualElement.IsVisibleProperty, "IsPhone1Exists");
+            phone1.SetBinding(IsVisibleProperty, "IsPhone1Exists");
             phone1.GestureRecognizers.Add(tapPhone1);
 
             stackPhoneView.Children.Add(phone1);
@@ -129,7 +134,7 @@ namespace ScnDiscounts.Views
             tapPhone2.Tapped += parentViewModel.BtnCall_Click;
 
             var phone2 = CreateCallButton("Phone2", "PhoneOperatorIcon2");
-            phone2.SetBinding(VisualElement.IsVisibleProperty, "IsPhone2Exists");
+            phone2.SetBinding(IsVisibleProperty, "IsPhone2Exists");
             phone2.GestureRecognizers.Add(tapPhone2);
 
             stackPhoneView.Children.Add(phone2);
@@ -140,7 +145,7 @@ namespace ScnDiscounts.Views
 
             #endregion
 
-            View = stackBranch;
+            Content = stackBranch;
         }
 
         private static Frame CreateCallButton(string phoneBindingProperty, string operatorBindingProperty)

@@ -4,7 +4,7 @@ import {FilterService} from '../filter.service';
 @Component({
   selector: 'app-filter-by-name',
   templateUrl: './filter-by-name.component.html',
-  styleUrls: ['./filter-by-name.component.css']
+  styleUrls: ['./filter-by-name.component.less']
 })
 export class FilterByNameComponent implements OnInit {
 

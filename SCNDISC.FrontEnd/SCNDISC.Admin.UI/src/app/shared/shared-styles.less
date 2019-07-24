@@ -4,6 +4,7 @@
 @wight-tool: 340px;
 @height-img: 180px;
 @global-font: normal 13px Arial, helvetica, sans-serif;
+@color-grey-border: #c9c9c9;
 
 .div-right {
   float: right;
@@ -66,8 +67,9 @@
 textarea, input[type="text"] {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  border-radius: 2px;
   background-color: #f2f2f2;
-  border: 1px solid #f2f2f2;
+  border: 1px solid @color-grey-border;
   box-sizing: border-box;
   padding-left: 5px;
   padding-right: 5px;
@@ -96,4 +98,21 @@ textarea, input[type="text"] {
 
 .x-content {
   width: 580px;
+}
+
+.x-form-title {
+  border-bottom: 1px solid @color-grey-border;
+  color: #333;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  padding: 18px 0px 8px;
+  position: relative;
+  text-transform: uppercase;
+}
+select
+{
+  padding-left: 5px;
+  border-radius: 2px;
+  border: 1px solid @color-grey-border;
 }

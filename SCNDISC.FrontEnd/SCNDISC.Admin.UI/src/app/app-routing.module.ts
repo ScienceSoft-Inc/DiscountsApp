@@ -10,7 +10,8 @@ import {WarningComponent} from './shared/alerts/warning.component';
  const itemRoutes: Routes = [
    {path: 'partner/:id', component: PartnerDialogComponent, resolve: {data: ResolverService}},
    {path: 'categories', loadChildren: './category/category.module#CategoryModule'},
-   {path: 'feedback', loadChildren: './feedback/feedback.module#FeedbackModule'}
+   {path: 'feedback', loadChildren: './feedback/feedback.module#FeedbackModule'},
+   {path: 'notification', loadChildren: './notification/notification.module#NotificationModule'}
  ];
 
 export const routes: Routes = [

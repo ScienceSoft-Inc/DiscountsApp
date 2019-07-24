@@ -5,7 +5,7 @@ import {Partner} from '../../../shared/models/partner';
 @Component({
   selector: 'app-contacts',
   templateUrl: './contacts.component.html',
-  styleUrls: ['./contacts.component.css']
+  styleUrls: ['./contacts.component.less']
 })
 export class ContactsComponent implements OnInit {
 

@@ -62,7 +62,7 @@ namespace ScnDiscounts.Helpers
                 : Regex.Replace(value.Trim(), "[\"'`]", string.Empty);
         }
 
-        public static T OnPlatform<T>(T ios = default(T), T android = default(T), T uwp = default(T))
+        public static T OnPlatform<T>(T ios = default, T android = default, T uwp = default)
         {
             T result;
 
@@ -78,20 +78,11 @@ namespace ScnDiscounts.Helpers
                     result = uwp;
                     break;
                 default:
-                    result = default(T);
+                    result = default;
                     break;
             }
 
             return result;
-        }
-
-        public static async void ClickAnimation(this View view, Action action = null)
-        {
-            await view.ScaleTo(0.95, 100, Easing.CubicOut);
-
-            action?.Invoke();
-
-            await view.ScaleTo(1, 100, Easing.CubicOut);
         }
     }
 }

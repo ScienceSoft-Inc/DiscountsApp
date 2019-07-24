@@ -1,4 +1,4 @@
-﻿using SQLite.Net;
+﻿using SQLite;
 
 namespace ScnDiscounts.DependencyInterface
 {

@@ -16,6 +16,8 @@ namespace ScnDiscounts.Views.ContentUI
 
             _txtDistanceScaleCaption = new LanguageStrings("km", "км");
             _txtDiscount = new LanguageStrings("Discount", "Скидка");
+
+            _txtAppSettings = new LanguageStrings("App settings", "Настройки приложения");
         }
 
         private readonly LanguageStrings _txtCancel;
@@ -40,5 +42,8 @@ namespace ScnDiscounts.Views.ContentUI
 
         private readonly LanguageStrings _txtDiscount;
         public string TxtDiscount => _txtDiscount.Current;
+
+        private readonly LanguageStrings _txtAppSettings;
+        public string TxtAppSettings => _txtAppSettings.Current;
     }
 }

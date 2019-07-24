@@ -32,5 +32,16 @@ namespace SCNDISC.Server.Application.Services.Discounts
 
 		    return Convert.FromBase64String(imageBase64);
 	    }
+
+        public async Task<byte[]> GetLogoByIdAsync(string id)
+        {
+            var imageBase64 = await _discountImageQuery.GetLogoBase64Async(id);
+            if (string.IsNullOrEmpty(imageBase64))
+            {
+                return new byte[0];
+            }
+
+            return Convert.FromBase64String(imageBase64);
+        }
     }
 }

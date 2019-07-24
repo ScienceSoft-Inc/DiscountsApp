@@ -3,7 +3,7 @@ export class WebAddress {
   public url;
   public socialNetwork;
 
-  constructor(){
+  constructor() {
     this.socialNetwork = '0';
   }
 }

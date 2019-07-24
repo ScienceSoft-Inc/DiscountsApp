@@ -25,10 +25,9 @@ namespace ScnDiscounts.Droid
             var content = activity.FindViewById<FrameLayout>(Android.Resource.Id.Content);
             _childOfContent = content.GetChildAt(0);
 
-            var vto = _childOfContent.ViewTreeObserver;
-            vto.GlobalLayout += PossiblyResizeChildOfContent;
+            _childOfContent.ViewTreeObserver.GlobalLayout += PossiblyResizeChildOfContent;
 
-            _frameLayoutParams = (FrameLayout.LayoutParams)_childOfContent.LayoutParameters;
+            _frameLayoutParams = (FrameLayout.LayoutParams) _childOfContent.LayoutParameters;
         }
 
         private void PossiblyResizeChildOfContent(object sender, EventArgs e)
@@ -50,7 +49,7 @@ namespace ScnDiscounts.Droid
         {
             var r = new Rect();
             _childOfContent.GetWindowVisibleDisplayFrame(r);
-            return Build.VERSION.SdkInt < BuildVersionCodes.Lollipop ? r.Bottom - r.Top : r.Bottom;
+            return Build.VERSION.SdkInt < BuildVersionCodes.Kitkat ? r.Bottom - r.Top : r.Bottom;
         }
     }
 }

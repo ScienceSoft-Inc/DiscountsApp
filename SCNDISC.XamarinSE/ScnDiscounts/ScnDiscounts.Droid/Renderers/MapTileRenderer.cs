@@ -1,14 +1,17 @@
 using Android.Content;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
-using Android.Graphics;
+using Android.Gms.Maps.Utils.Clustering;
 using ScnDiscounts.Control;
 using ScnDiscounts.DependencyInterface;
+using ScnDiscounts.Droid.Models;
 using ScnDiscounts.Droid.Renderers;
 using ScnDiscounts.Helpers;
 using ScnDiscounts.Models;
 using System;
+using System.Linq;
 using Xamarin.Forms;
+using Xamarin.Forms.Maps;
 using Xamarin.Forms.Maps.Android;
 using Xamarin.Forms.Platform.Android;
 
@@ -20,6 +23,7 @@ namespace ScnDiscounts.Droid.Renderers
     {
         protected Marker LocationMarker;
         protected MarkerOptions LocationMarkerOptions = new MarkerOptions();
+        protected ClusterManager ClusterManager;
 
         public MapTileRenderer(Context context) 
             : base(context)
@@ -28,6 +32,11 @@ namespace ScnDiscounts.Droid.Renderers
 
         protected override void OnMapReady(GoogleMap googleMap)
         {
+            googleMap.UiSettings.ZoomControlsEnabled = false;
+
+            ClusterManager = new ClusterManager(Context, googleMap);
+            ClusterManager.Renderer = new ClusterRenderer(Context, googleMap, ClusterManager);
+
             var icon = BitmapDescriptorFactory.FromResource(Resource.Drawable.ic_pin_navigation);
             LocationMarkerOptions.SetIcon(icon);
             LocationMarkerOptions.Anchor(0.5f, 0.5f);
@@ -38,13 +47,16 @@ namespace ScnDiscounts.Droid.Renderers
             mapTile.LocationUpdating += (sender, args) => Functions.SafeCall(UpdateLocationPinPosition);
             mapTile.HeadingUpdating += (sender, args) => Functions.SafeCall(UpdateLocationPinHeading);
 
-            NativeMap.MapClick += Map_MapClick;
-            NativeMap.CameraMoveStarted += Map_CameraMoveStarted;
-            NativeMap.CameraIdle += Map_CameraPositionIdle;
-            NativeMap.MarkerClick += Map_MarkerClick;
-            NativeMap.UiSettings.ZoomControlsEnabled = false;
+            googleMap.MapClick += Map_MapClick;
+            googleMap.CameraMoveStarted += Map_CameraMoveStarted;
+            googleMap.CameraIdle += Map_CameraPositionIdle;
+            googleMap.MarkerClick += Map_MarkerClick;
 
             Element.SizeChanged += (sender, args) => SetSafeAreaPadding();
+
+            var minskPosition = new Position(MapTile.MinskLat, MapTile.MinskLong);
+            var minskRegion = MapSpan.FromCenterAndRadius(minskPosition, Distance.FromKilometers(5));
+            mapTile.MoveToRegion(minskRegion);
 
             SetSafeAreaPadding();
         }
@@ -77,6 +89,8 @@ namespace ScnDiscounts.Droid.Renderers
 
         private void Map_CameraPositionIdle(object sender, EventArgs e)
         {
+            ClusterManager.OnCameraIdle();
+
             var mapTile = (MapTile) Element;
 
             if (!string.IsNullOrEmpty(mapTile.SelectedPinId))
@@ -89,22 +103,15 @@ namespace ScnDiscounts.Droid.Renderers
         private void UpdatePins()
         {
             var mapTile = (MapTile) Element;
+            var pinItems = mapTile.PinList;
 
+            ClusterManager.ClearItems();
             NativeMap.Clear();
 
-            var pinItems = mapTile.PinList;
-            foreach (var pinItem in pinItems)
-            {
-                var imageBytes = pinItem.PrimaryCategory.GetIconThemeBytes();
-                var icon = BitmapFactory.DecodeByteArray(imageBytes, 0, imageBytes.Length);
+            var clusterItems = pinItems.Select(i => new ClusterItem(i)).ToList();
+            ClusterManager.AddItems(clusterItems);
 
-                var marker = new MarkerOptions();
-                marker.SetPosition(new LatLng(pinItem.Latitude, pinItem.Longitude));
-                marker.SetSnippet(pinItem.Id);
-                marker.SetIcon(BitmapDescriptorFactory.FromBitmap(icon));
-
-                NativeMap.AddMarker(marker);
-            }
+            ClusterManager.Cluster();
 
             if (LocationMarkerOptions.Position != null)
                 LocationMarker = NativeMap.AddMarker(LocationMarkerOptions);
@@ -136,8 +143,8 @@ namespace ScnDiscounts.Droid.Renderers
             if (LocationHelper.IsGeoServiceAvailable)
             {
                 var oldRotation = LocationMarkerOptions.Rotation;
-                var newRotation = (float) AppMobileService.Locaion.CurrentHeading - 45 -
-                                  (NativeMap.CameraPosition?.Bearing).GetValueOrDefault();
+                var newRotation = ((float) AppMobileService.Locaion.CurrentHeading - 45 -
+                                   (NativeMap.CameraPosition?.Bearing).GetValueOrDefault()) % 360;
 
                 if (Math.Abs(newRotation - oldRotation) > MapTile.MinCompassRotation)
                 {

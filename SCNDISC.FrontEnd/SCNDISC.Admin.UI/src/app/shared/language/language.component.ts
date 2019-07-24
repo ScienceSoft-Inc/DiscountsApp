@@ -5,7 +5,7 @@ import {LanguageService} from '../../core/services/language.service';
 @Component({
   selector: 'app-language',
   templateUrl: './language.component.html',
-  styleUrls: ['./language.component.css']
+  styleUrls: ['./language.component.less']
 })
 export class LanguageComponent implements OnInit, OnDestroy {
 

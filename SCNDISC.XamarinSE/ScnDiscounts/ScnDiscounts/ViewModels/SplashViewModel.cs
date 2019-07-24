@@ -56,7 +56,7 @@ namespace ScnDiscounts.ViewModels
             IsShowLoading = true;
 
             ProcessMessage = contentUI.TxtProcessLoadingData;
-            await Task.Delay(50);
+            await Task.Yield();
 
             AppData.Discount.Db.LoadData();
 

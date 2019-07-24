@@ -8,7 +8,7 @@ import {Subscription} from 'rxjs/internal/Subscription';
 @Component({
   selector: 'app-feedback',
   templateUrl: './feedbacks-list.component.html',
-  styleUrls: ['./feedbacks-list.component.css']
+  styleUrls: ['./feedbacks-list.component.less']
 })
 export class FeedbacksListComponent implements OnInit, OnDestroy {
 

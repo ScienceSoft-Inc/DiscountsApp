@@ -4,11 +4,12 @@ import {Category} from '../../../shared/models/category';
 import {LanguageService} from '../../../core/services/language.service';
 import {ToolTipPartner} from '../../../shared/models/tool-tip-partner';
 import {Subscription} from 'rxjs';
+import {ColorHelper} from '../../../Helpers/color-helper';
 
 @Component({
   selector: 'app-discount',
   templateUrl: './tool-tip-partner.component.html',
-  styleUrls: ['./tool-tip-partner.component.css']
+  styleUrls: ['./tool-tip-partner.component.less']
 })
 export class ToolTipPartnerComponent implements OnInit, OnDestroy {
 
@@ -25,18 +26,8 @@ export class ToolTipPartnerComponent implements OnInit, OnDestroy {
     });
   }
 
-  getLogoStyle(): object {
-    if(this.toolTipPartner.logo){
-      const imgUrl = 'data: image/png; base64,' + this.toolTipPartner.logo;
-      return {'background-image': `url('${imgUrl}')`};
-    } else {
-      return {'background-image': `url("assets/images/camera-128x128.png")`};
-    }
-
-  }
-
   getColorClass(category: Category): object {
-    return {'background-color': category.color};
+    return {'background-color': category.color, 'color': ColorHelper.GetColorByBackHex(category.color)};
   }
 
   ngOnDestroy(): void {

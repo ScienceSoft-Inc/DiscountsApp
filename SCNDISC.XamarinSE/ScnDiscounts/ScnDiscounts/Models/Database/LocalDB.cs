@@ -3,7 +3,7 @@ using ScnDiscounts.Helpers;
 using ScnDiscounts.Models.Data;
 using ScnDiscounts.Models.Database.Tables;
 using ScnDiscounts.Models.WebService.MongoDB;
-using SQLite.Net;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -37,6 +37,7 @@ namespace ScnDiscounts.Models.Database
                 _database.CreateTable<Category>();
                 _database.CreateTable<DiscountCategory>();
                 _database.CreateTable<WebAddress>();
+                _database.CreateTable<GalleryImage>();
             }
             catch (Exception ex)
             {
@@ -44,8 +45,9 @@ namespace ScnDiscounts.Models.Database
             }
         }
 
-        private const string PostfixLogoFileName = "_logo.png";
-        private const string PostfixImgFileName = "_img.png";
+        private const string ImgFileExtension = ".png";
+        private const string PostfixLogoFileName = "_logo" + ImgFileExtension;
+        private const string PostfixImgFileName = "_img" + ImgFileExtension;
 
         private static async Task SaveImage(string fileName, string base64Image)
         {
@@ -60,6 +62,14 @@ namespace ScnDiscounts.Models.Database
         private static void DeleteImage(string fileName)
         {
             IsolatedStorageHelper.DeleteFile(fileName);
+        }
+
+        private static void DeleteGallery(IEnumerable<string> images)
+        {
+            foreach (var image in images)
+            {
+                IsolatedStorageHelper.DeleteFile(image);
+            }
         }
 
         private void SaveCategory(DeserializeCategoryItem categoryItem, Category categoryDbData)
@@ -122,8 +132,6 @@ namespace ScnDiscounts.Models.Database
 
         private async Task SaveDiscount(DeserializeBranchItem branchItem, Discount discountDbData)
         {
-            _database.BeginTransaction();
-
             string logoFileName;
             if (!string.IsNullOrEmpty(branchItem.Icon))
             {
@@ -132,6 +140,8 @@ namespace ScnDiscounts.Models.Database
             }
             else
                 logoFileName = null;
+
+            _database.BeginTransaction();
 
             if (discountDbData != null)
             {
@@ -144,6 +154,11 @@ namespace ScnDiscounts.Models.Database
                 _database.Table<DiscountsStrings>().Delete(i =>
                     i.OwnerId == discountDbData.Id &&
                     (i.Appointment == StrAppointmentTitle || i.Appointment == StrAppointmentDescription));
+
+                var images = _database.Table<GalleryImage>().Where(i => i.DiscountId == discountDbData.Id)
+                    .Select(i => i.FileName);
+                DeleteGallery(images);
+                _database.Table<GalleryImage>().Delete(i => i.DiscountId == discountDbData.Id);
 
                 discountDbData.DocumentId = branchItem.Id;
                 discountDbData.LogoFileName = logoFileName;
@@ -327,8 +342,6 @@ namespace ScnDiscounts.Models.Database
             if (discountDbData == null)
                 return;
 
-            _database.BeginTransaction();
-
             string imgFileName;
             if (streamImage.Length > 0)
             {
@@ -340,9 +353,36 @@ namespace ScnDiscounts.Models.Database
 
             discountDbData.ImageFileName = imgFileName;
 
+            _database.BeginTransaction();
+
             _database.Update(discountDbData);
 
             _database.Commit();
+        }
+
+        public async Task UpdateDiscountGalleryImage(string documentId, string imageId, Stream streamImage)
+        {
+            var discountDbData = _database.Table<Discount>().FirstOrDefault(i => i.DocumentId == documentId);
+            if (discountDbData == null)
+                return;
+
+            if (streamImage.Length > 0)
+            {
+                var imgFileName = imageId + ImgFileExtension;
+                await SaveImage(imgFileName, streamImage);
+
+                var galleryImage = new GalleryImage
+                {
+                    DiscountId = discountDbData.Id,
+                    FileName = imgFileName
+                };
+
+                _database.BeginTransaction();
+
+                _database.Insert(galleryImage);
+
+                _database.Commit();
+            }
         }
 
         public DiscountDetailData LoadDiscountDetail(string documentId)
@@ -355,18 +395,17 @@ namespace ScnDiscounts.Models.Database
             var discountsStrings = _database.Table<DiscountsStrings>().ToList();
             var langStrings = _database.Table<LangString>().ToList();
             var webAddresses = _database.Table<WebAddress>().ToList();
+            var galleryImages = _database.Table<GalleryImage>().ToList();
 
             var nameRec = discountsStrings
                 .Where(i => i.OwnerId == discountRec.Id && i.Appointment == StrAppointmentTitle)
                 .Join(langStrings, i => i.LangStringId, i => i.Id, (ds, ls) => ls)
-                .FirstOrDefault(i =>
-                    i.LanguageCode == LanguageHelper.LangEnumToCode(AppParameters.Config.SystemLang));
+                .FirstOrDefault(i => i.LanguageCode == AppParameters.Config.SystemLang.LangEnumToCode());
 
             var descriptionRec = discountsStrings
                 .Where(i => i.OwnerId == discountRec.Id && i.Appointment == StrAppointmentDescription)
                 .Join(langStrings, i => i.LangStringId, i => i.Id, (ds, ls) => ls)
-                .FirstOrDefault(i =>
-                    i.LanguageCode == LanguageHelper.LangEnumToCode(AppParameters.Config.SystemLang));
+                .FirstOrDefault(i => i.LanguageCode == AppParameters.Config.SystemLang.LangEnumToCode());
 
             var categories = discountCategories.Where(i => i.DiscountId == discountRec.Id)
                 .Join(AppData.Discount.CategoryCollection, i => i.CategoryId, i => i.DocumentId, (dc, c) => c)
@@ -375,6 +414,9 @@ namespace ScnDiscounts.Models.Database
             var webAddressRecs = webAddresses.Where(i => i.DiscountId == discountRec.Id).OrderBy(i => i.Category)
                 .Select(i => new WebAddressData(i)).ToList();
 
+            var galleryImagesRecs = galleryImages.Where(i => i.DiscountId == discountRec.Id).OrderBy(i => i.Id)
+                .Select(i => new GalleryImageData(i)).ToList();
+
             var branches = new List<DiscountDetailBranchData>();
             var contactList = _database.Table<Contact>().Where(i => i.DiscountId == discountRec.Id).ToList();
             foreach (var contactRec in contactList)
@@ -382,8 +424,7 @@ namespace ScnDiscounts.Models.Database
                 var addressRec = discountsStrings
                     .Where(i => i.OwnerId == contactRec.Id && i.Appointment == StrAppointmentAddress)
                     .Join(langStrings, i => i.LangStringId, i => i.Id, (ds, ls) => ls)
-                    .FirstOrDefault(i =>
-                        i.LanguageCode == LanguageHelper.LangEnumToCode(AppParameters.Config.SystemLang));
+                    .FirstOrDefault(i => i.LanguageCode == AppParameters.Config.SystemLang.LangEnumToCode());
 
                 var discountDetailBranchData = new DiscountDetailBranchData
                 {
@@ -407,7 +448,8 @@ namespace ScnDiscounts.Models.Database
                 Description = descriptionRec?.Text,
                 CategoryList = categories,
                 WebAddresses = webAddressRecs,
-                BranchList = branches
+                BranchList = branches,
+                GalleryImages = galleryImagesRecs
             };
         }
 
@@ -416,19 +458,40 @@ namespace ScnDiscounts.Models.Database
             return _database.Table<Discount>().Where(i => i.ImageFileName == null).Select(i => i.DocumentId).ToList();
         }
 
+        public List<string> GetDiscountsWithoutGallery()
+        {
+            var discounts = _database.Table<GalleryImage>().Select(i => i.DiscountId).Distinct().ToList();
+            return _database.Table<Discount>().Where(i => !discounts.Contains(i.Id)).Select(i => i.DocumentId).ToList();
+        }
+
         public DateTime? GetCategoryLastSyncDate()
         {
-            return _database.Table<Category>().Select(i => i.Modified).DefaultIfEmpty().Max();
+            var result = _database.Table<Category>().Select(i => i.Modified).DefaultIfEmpty().Max();
+
+            if (result.HasValue)
+                result = DateTime.SpecifyKind(result.Value, DateTimeKind.Utc);
+
+            return result;
         }
 
         public DateTime? GetDiscountLastSyncDate()
         {
-            return _database.Table<Discount>().Select(i => i.Modified).DefaultIfEmpty().Max();
+            var result = _database.Table<Discount>().Select(i => i.Modified).DefaultIfEmpty().Max();
+
+            if (result.HasValue)
+                result = DateTime.SpecifyKind(result.Value, DateTimeKind.Utc);
+
+            return result;
         }
 
         public DateTime? GetContactLastSyncDate()
         {
-            return _database.Table<Contact>().Select(i => i.Modified).DefaultIfEmpty().Max();
+            var result = _database.Table<Contact>().Select(i => i.Modified).DefaultIfEmpty().Max();
+
+            if (result.HasValue)
+                result = DateTime.SpecifyKind(result.Value, DateTimeKind.Utc);
+
+            return result;
         }
 
         public async Task SyncCategory(DeserializeCategoryItem item)
@@ -484,6 +547,11 @@ namespace ScnDiscounts.Models.Database
 
                     var imgFileName = discount.DocumentId + PostfixImgFileName;
                     DeleteImage(imgFileName);
+
+                    var images = _database.Table<GalleryImage>().Where(i => i.DiscountId == discount.Id)
+                        .Select(i => i.FileName);
+                    DeleteGallery(images);
+                    _database.Table<GalleryImage>().Delete(i => i.DiscountId == discount.Id);
 
                     _database.Commit();
                 }

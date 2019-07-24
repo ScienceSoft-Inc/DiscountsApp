@@ -24,6 +24,7 @@ namespace SCNDISC.Server.Infrastructure.Persistence.Mappings
 					cm.AddKnownType(typeof(Category));
 					cm.AddKnownType(typeof(Parameter));
 					cm.AddKnownType(typeof(Feedback));
+                    cm.AddKnownType(typeof(GalleryImage));
 				});
 			}
 
@@ -97,7 +98,18 @@ namespace SCNDISC.Server.Infrastructure.Persistence.Mappings
 				});
 			}
 
-			if (!BsonClassMap.IsClassMapRegistered(typeof(Parameter)))
+            if (!BsonClassMap.IsClassMapRegistered(typeof(GalleryImage)))
+            {
+                BsonClassMap.RegisterClassMap<GalleryImage>(cm =>
+                {
+                    cm.MapProperty(gi => gi.Image);
+                    cm.MapProperty(gi => gi.FileName);
+                    cm.MapProperty(gi => gi.Created);
+                    cm.MapProperty(gi => gi.PartnerId).SetSerializer(new StringSerializer(BsonType.ObjectId));
+                });
+            }
+
+            if (!BsonClassMap.IsClassMapRegistered(typeof(Parameter)))
 			{
 				BsonClassMap.RegisterClassMap<Parameter>(cm =>
 				{

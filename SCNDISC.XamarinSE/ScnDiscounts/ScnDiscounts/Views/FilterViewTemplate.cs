@@ -7,7 +7,7 @@ using Xamarin.Forms;
 
 namespace ScnDiscounts.Views
 {
-    public class FilterViewTemplate : ViewCell
+    public class FilterViewTemplate : ContentView
     {
         public FilterViewTemplate(MainViewModel parentViewModel, BaseViewModel localViewModel)
         {
@@ -35,7 +35,7 @@ namespace ScnDiscounts.Views
                         {
                             new Setter
                             {
-                                Property = VisualElement.StyleProperty,
+                                Property = StyleProperty,
                                 Value = LabelStyles.MenuStyle.FromResources()
                             }
                         }
@@ -48,7 +48,7 @@ namespace ScnDiscounts.Views
                         {
                             new Setter
                             {
-                                Property = VisualElement.StyleProperty,
+                                Property = StyleProperty,
                                 Value = LabelStyles.MenuDisabledStyle.FromResources()
                             }
                         }
@@ -76,11 +76,10 @@ namespace ScnDiscounts.Views
             var switchFilter = new Switch
             {
                 HorizontalOptions = LayoutOptions.End,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                OnColor = MainStyles.SwitchColor.FromResources<Color>()
             };
-
             switchFilter.SetBinding(Switch.IsToggledProperty, "IsToggle");
-            switchFilter.SetBinding(Switch.OnColorProperty, "Color");
 
             switch (localViewModel)
             {
@@ -110,7 +109,7 @@ namespace ScnDiscounts.Views
             tapGestureRecognizer.Tapped += parentViewModel.FilterGestures_Tap;
             stackLayout.GestureRecognizers.Add(tapGestureRecognizer);
 
-            View = stackLayout;
+            Content = stackLayout;
         }
     }
 }

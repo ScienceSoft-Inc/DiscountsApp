@@ -20,6 +20,10 @@ namespace ScnDiscounts.Views
             BackgroundColor = MainStyles.StatusBarColor.FromResources<Color>();
             Content.BackgroundColor = MainStyles.MainBackgroundColor.FromResources<Color>();
 
+            var loadingColor = MainStyles.LoadingColor.FromResources<Color>();
+            LoadingActivityIndicator.Color = loadingColor;
+            LoadingActivityText.TextColor = loadingColor;
+
             var appBar = new TitleBar(this, TitleBar.BarBtnEnum.bbBack)
             {
                 BarColor = MainStyles.StatusBarColor.FromResources<Color>(),

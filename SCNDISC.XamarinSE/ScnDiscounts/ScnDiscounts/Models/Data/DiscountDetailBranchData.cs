@@ -6,29 +6,13 @@ namespace ScnDiscounts.Models.Data
 {
     public class DiscountDetailBranchData : NotifyPropertyChanged
     {
-        #region DocumentId
-
         public string DocumentId { get; set; }
-
-        #endregion
-
-        #region Address
 
         public string Address { get; set; }
 
-        #endregion
-
-        #region Latitude
-
         public double Latitude { get; set; }
 
-        #endregion
-
-        #region Longitude
-
         public double Longitude { get; set; }
-
-        #endregion
 
         #region Phone1
 
@@ -117,7 +101,6 @@ namespace ScnDiscounts.Models.Data
         public bool IsPhone2Exists => !string.IsNullOrWhiteSpace(Phone2);
 
         #endregion
-
 
         #region Distance
 

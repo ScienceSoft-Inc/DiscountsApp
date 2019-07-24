@@ -2,12 +2,12 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../core/auth/auth.service';
 import {Router} from '@angular/router';
 import {LanguageService} from '../core/services/language.service';
-import {Subscription} from "rxjs/internal/Subscription";
+import {Subscription} from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.less']
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
@@ -23,18 +23,18 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   public onClickedEnter(): void {
-    this.loginSubscription = this.authService.testLogin(this.login, this.password).subscribe((res)=> {
-      if(res){
+    this.loginSubscription = this.authService.testLogin(this.login, this.password).subscribe((res) => {
+      if (res) {
         this.errorLoginAndPassword = false;
         this.router.navigate(['']);
-      }else {
+      } else {
         this.errorLoginAndPassword = true;
       }
-    })
+    });
   }
 
   ngOnDestroy(): void {
-    if(this.loginSubscription){
+    if (this.loginSubscription) {
       this.loginSubscription.unsubscribe();
     }
   }

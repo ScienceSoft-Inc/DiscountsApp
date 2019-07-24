@@ -1,9 +1,8 @@
 <div class="x-body">
-  <form class="x-login-box">
+  <form (keyup.enter)="onClickedEnter()" class="x-login-box">
     <div class="x-company-logo"> {{'Home.Name' | translate}}</div>
-    <input name="login" [(ngModel)]="login" type="text" placeholder="{{'Home.Login' | translate}}" required>
-    <input name="password" [(ngModel)]="password" type="password" placeholder="{{'Home.Password' | translate}}"
-           required>
+    <input name="login" autofocus [(ngModel)]="login" ngModel type="text" placeholder="{{'Home.Login' | translate}}" required>
+    <input name="password" [(ngModel)]="password" ngModel type="password" placeholder="{{'Home.Password' | translate}}" required>
     <div class="x-form-error-ct">
       <div *ngIf="errorLoginAndPassword">{{'Home.ErrorLoginAndPassword' | translate}}</div>
     </div>

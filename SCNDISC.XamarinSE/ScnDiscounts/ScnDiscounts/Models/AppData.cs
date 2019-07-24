@@ -1,7 +1,7 @@
 ﻿using ScnDiscounts.Helpers;
 using ScnDiscounts.Models.Data;
 using ScnDiscounts.Models.Database;
-using ScnDiscounts.Models.WebService.MongoDB;
+using ScnDiscounts.Models.WebService;
 using ScnDiscounts.Views.ContentUI;
 using System;
 using System.Collections.Generic;
@@ -95,12 +95,18 @@ namespace ScnDiscounts.Models
 
                 try
                 {
-                    var discountIds = Db.GetDiscountsWithoutImages();
+                    var discountsWithoutImages = Db.GetDiscountsWithoutImages();
 
-                    foreach (var discountId in discountIds)
+                    foreach (var discountId in discountsWithoutImages)
                     {
-                        if (isSuccess)
-                            isSuccess = await ServiceProvider.GetDiscountImage(discountId);
+                        await ServiceProvider.GetDiscountImage(discountId);
+                    }
+
+                    var discountsWithoutGallery = Db.GetDiscountsWithoutGallery();
+
+                    foreach (var discountId in discountsWithoutGallery)
+                    {
+                        await ServiceProvider.GetDiscountGallery(discountId);
                     }
                 }
                 catch (Exception ex)

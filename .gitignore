@@ -196,3 +196,7 @@ FakesAssemblies/
 *.opt
 /.idea
 SCNDISC.FrontEnd/SCNDISC.Admin.UI/.idea
+
+# secure google settings
+google-services.json
+GoogleService-Info.plist

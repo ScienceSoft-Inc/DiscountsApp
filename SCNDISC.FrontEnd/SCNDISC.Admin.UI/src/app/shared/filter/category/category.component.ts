@@ -3,11 +3,12 @@ import {Category} from '../../models/category';
 import {CategoryService} from '../../../core/services/category.service';
 import {LanguageService} from '../../../core/services/language.service';
 import {Subscription} from 'rxjs';
+import {ColorHelper} from '../../../Helpers/color-helper';
 
 @Component({
   selector: 'app-category-for-filter',
   templateUrl: './category.component.html',
-  styleUrls: ['./category.component.css']
+  styleUrls: ['./category.component.less']
 })
 export class CategoryComponent implements OnInit, OnDestroy {
 
@@ -37,14 +38,25 @@ export class CategoryComponent implements OnInit, OnDestroy {
     }
 
     this.languageSubscription = this.translate.getCurrent().subscribe((language: string) => {
-      this.lang_en = (language == 'Eng');
+      this.lang_en = (language === 'Eng');
     });
   }
 
-  getColorClass(): object {
-    return {'background-color': this.category.color};
+  getColorClassForLabel(): object {
+    const textColor = ColorHelper.GetColorByBackHex(this.category.color);
+    return {'background-color': this.category.color, 'color': textColor};
   }
 
+  getColorClassForCheckBox(): object {
+    if (this.enterCategory) {
+      const background = (ColorHelper.IsBlackColorByBackHex(this.category.color))
+        ? `url('assets/images/accept-black.png') no-repeat center center ${this.category.color}`
+        : `url('assets/images/accept-white.png') no-repeat center center ${this.category.color}`;
+      return {'background': background};
+    } else {
+      return {'background-color': this.category.color};
+    }
+  }
 
   onClickedCategory(): void {
     setTimeout(() => {

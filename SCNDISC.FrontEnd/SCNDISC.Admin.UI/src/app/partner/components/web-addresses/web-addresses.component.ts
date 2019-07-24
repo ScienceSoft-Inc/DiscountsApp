@@ -6,7 +6,7 @@ import {Partner} from '../../../shared/models/partner';
 @Component({
   selector: 'app-web-addresses',
   templateUrl: './web-addresses.component.html',
-  styleUrls: ['./web-addresses.component.css']
+  styleUrls: ['./web-addresses.component.less']
 })
 export class WebAddressesComponent implements OnInit {
 

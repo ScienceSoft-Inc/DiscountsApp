@@ -11,8 +11,9 @@ import {WebAddressesComponent} from './components/web-addresses/web-addresses.co
 import {SharedModule} from '../shared/shared.module';
 import {PartnersListComponent} from './partners-list/partners-list.component';
 import {ToolTipPartnerComponent} from './partners-list/tool-tip-partner/tool-tip-partner.component';
-
-
+import {AvatarLoadingComponent} from './partners-list/tool-tip-partner/avatar-loading/avatar-loading.component';
+import {GalleryImageComponent} from './components/gallery-image/gallery-image.component';
+import {GalleryImagesComponent} from './components/gallery-images/gallery-images.component';
 
 @NgModule({
   imports: [
@@ -29,7 +30,10 @@ import {ToolTipPartnerComponent} from './partners-list/tool-tip-partner/tool-tip
     WebAddressComponent,
     WebAddressesComponent,
     PartnersListComponent,
-    ToolTipPartnerComponent
+    ToolTipPartnerComponent,
+    AvatarLoadingComponent,
+    GalleryImagesComponent,
+    GalleryImageComponent
   ],
   entryComponents: [PartnerDetailsComponent],
   exports: [ToolTipPartnerComponent, PartnersListComponent, PartnerDialogComponent]
