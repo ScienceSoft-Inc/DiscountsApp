@@ -54,7 +54,7 @@ namespace SCNDISC.Server.Core.Controllers
 					Name = x.UserName,
 					Message = x.Message,
 					Created = x.Created
-				}).Reverse().ToList();
+				}).ToList();
             
 			var count = await _feedbackService.GetCount();
 
