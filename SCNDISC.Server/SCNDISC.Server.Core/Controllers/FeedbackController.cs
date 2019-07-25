@@ -100,20 +100,23 @@ namespace SCNDISC.Server.Core.Controllers
 
         private static async Task SendNotificationAsync(Feedback feedback, IConfiguration configuration)
         {
-            var from = configuration.GetValue<string>("MailFrom");
-            var to = configuration.GetValue<string>("MailTo");
+            var from = configuration.GetValue<string>("Smtp:From");
+            var to = configuration.GetValue<string>("FeedbackMail:To");
 
             if (string.IsNullOrEmpty(from) || string.IsNullOrEmpty(to))
                 return;
 
             var message = new MailMessage(from, to)
             {
-                Subject = configuration.GetValue<string>("MailSubject"),
+                Subject = configuration.GetValue<string>("FeedbackMail:Subject"),
                 Body = $"From {feedback.UserName}.\r\n\r\n{feedback.Message}"
             };
 
+            var host = configuration.GetValue<string>("Smtp:Server");
+            var port = configuration.GetValue("Smtp:Port", 25);
+
             using (message)
-            using (var smtpClient = new SmtpClient())
+            using (var smtpClient = new SmtpClient(host, port))
             {
                 try
                 {
