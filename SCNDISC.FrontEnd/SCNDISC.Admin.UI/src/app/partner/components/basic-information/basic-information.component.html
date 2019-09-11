@@ -1,5 +1,13 @@
 <div class="x-content">
-  <div class="x-form-title">{{'Title.Service' | translate}}</div>
+    <div class="x-form-title">
+      <div class="x-form-title-name">
+        {{'Title.Service' | translate}}
+      </div>
+      <div class="x-form-rating">
+        <app-partner-rating *ngIf="partner.id" [rating]="partner.rating"></app-partner-rating>
+      </div>
+    </div>
+    <div class="div-clear"></div>
   <div>
     <app-language></app-language>
     <div>

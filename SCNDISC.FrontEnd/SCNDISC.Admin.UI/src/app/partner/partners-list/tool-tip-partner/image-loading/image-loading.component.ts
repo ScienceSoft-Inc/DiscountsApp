@@ -16,13 +16,12 @@ export class ImageLoadingComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     const url = this.getUrl();
     const img = new Image();
-    img.height = 180;
-    img.width = 340;
-    img.src = url;
+    img.src = `${url}?v=${new Date().getTime()}`;
+    img.classList.add('theme-image-settings');
 
     img.onload = () => {
       const element = document.getElementById(this.id);
-      if (element) {
+      if (element && element.childElementCount === 0) {
         element.appendChild(img);
       }
     };

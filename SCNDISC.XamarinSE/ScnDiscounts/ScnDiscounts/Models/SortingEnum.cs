@@ -3,6 +3,7 @@
     public enum SortingEnum
     {
         ByName,
-        ByDistance
+        ByDistance,
+        ByRecentDate
     }
 }

@@ -1,4 +1,5 @@
-﻿using ScnDiscounts.Helpers;
+﻿using System;
+using ScnDiscounts.Helpers;
 using System.Collections.Generic;
 
 namespace ScnDiscounts.Models.Data
@@ -12,6 +13,8 @@ namespace ScnDiscounts.Models.Data
         public string DiscountPercent { get; set; }
 
         public string DiscountType { get; set; }
+
+        public DateTime ModifiedDate { get; set; }
 
         #region Name
 

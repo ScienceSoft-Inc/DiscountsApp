@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using SCNDISC.Server.Core.Models.Rating;
 
 namespace SCNDISC.Server.Core.Models.Partner
 {
@@ -47,6 +48,8 @@ namespace SCNDISC.Server.Core.Models.Partner
 
         [JsonProperty(PropertyName = "selectDiscount")]
         public string SelectDiscount { get; set; }
+        [JsonProperty(PropertyName = "rating")]
+        public PartnerRatingStatisticsModel Rating { get; set; }
     }
 
     public class DiscountModel
@@ -68,9 +71,6 @@ namespace SCNDISC.Server.Core.Models.Partner
 
         [JsonProperty(PropertyName = "description_En")]
         public string Description_En { get; set; }
-
-        [JsonProperty(PropertyName = "logo")]
-        public string Logo { get; set; }
     }
     public class WebAddressModel
     {

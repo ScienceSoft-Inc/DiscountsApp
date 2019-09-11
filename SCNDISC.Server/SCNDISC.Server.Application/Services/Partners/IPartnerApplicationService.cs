@@ -8,6 +8,7 @@ namespace SCNDISC.Server.Application.Services.Partners
     {
         Task<IEnumerable<Branch>> GetPartnerDetailsAsync(string partnerId);
         Task<Branch> GetBranchToolTipAsync(string partnerId, string branchId);
+        Task<IList<string>> GetActivePartnerIdsAsync();
         Task<Branch> UpsertBranchAsync(Branch branch);
         Task<Branch> UpsertPartnerAsync(Branch branch);
         Task DeleteBranchAsync(string partnerId);

@@ -1,0 +1,13 @@
+<ng-template #template let-fill="fill">
+  <span class="star" [class.full]="fill === 100">
+    <span class="half" [style.width.%]="fill">&#9733;</span>&#9733;
+  </span>
+</ng-template>
+<div class="rating">
+  <div class="rating-values">
+    <span>{{ratingValue | number : '1.1-1'}} ({{countOfVotes}})</span>
+  </div>
+  <div class="star-rating">
+    <ngb-rating [(rate)]="ratingValue" [starTemplate]="template" [readonly]="true" [max]="5"></ngb-rating>
+  </div>
+</div>

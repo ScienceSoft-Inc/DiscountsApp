@@ -14,6 +14,7 @@ using Ninject.Infrastructure.Disposal;
 using SCNDISC.Server.Application;
 using SCNDISC.Server.Core.Infrastructure;
 using SCNDISC.Server.Core.Models.AuthOptions;
+using SCNDISC.Server.Infrastructure.Imaging;
 using SCNDISC.Server.Infrastructure.Settings;
 
 
@@ -105,6 +106,7 @@ namespace SCNDISC.Server.Core
             kernel.Load<ServerModule>();
 
             kernel.Rebind<ISettingsInfService>().To<SettingsService>().InTransientScope();
+            kernel.Rebind<IImageConverter>().To<ImageConverter>().InTransientScope();
             kernel.Bind<IConfiguration>().ToConstant(Configuration);
 
             kernel.BindToMethod(app.GetRequestService<IViewBufferScope>);

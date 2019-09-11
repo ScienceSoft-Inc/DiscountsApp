@@ -1,5 +1,6 @@
 ﻿using Refit;
 using ScnDiscounts.Helpers;
+using ScnDiscounts.Models.Data;
 using ScnDiscounts.Models.WebService.MongoDB;
 using System;
 using System.IO;
@@ -14,10 +15,8 @@ namespace ScnDiscounts.Models.WebService
 
         public Client()
         {
-            var httpClient = new HttpClient(new LoggingHandler(), false)
-            {
-                BaseAddress = new Uri(WebService.ApiService.ServerAddress)
-            };
+            var httpClient = Functions.IsDebug ? new HttpClient(new LoggingHandler(), false) : new HttpClient();
+            httpClient.BaseAddress = new Uri(WebService.ApiService.ServerAddress);
 
             if (!Functions.IsDebug)
                 httpClient.Timeout = new TimeSpan(0, 0, 10);
@@ -37,7 +36,7 @@ namespace ScnDiscounts.Models.WebService
             try
             {
                 var syncParams = new SyncParams(syncDateUtc);
-                var categories = await ApiService.GetCategories(syncParams);
+                var categories = await ApiService.GetCategories(syncParams).RequestAsync();
 
                 foreach (var category in categories)
                 {
@@ -67,7 +66,7 @@ namespace ScnDiscounts.Models.WebService
             try
             {
                 var syncParams = new SyncParams(syncDateUtc);
-                var discounts = await ApiService.GetDiscounts(syncParams);
+                var discounts = await ApiService.GetDiscounts(syncParams).RequestAsync();
 
                 foreach (var discount in discounts)
                 {
@@ -97,11 +96,40 @@ namespace ScnDiscounts.Models.WebService
             try
             {
                 var syncParams = new SyncParams(syncDateUtc);
-                var spatials = await ApiService.GetSpatials(syncParams);
+                var spatials = await ApiService.GetSpatials(syncParams).RequestAsync();
 
                 foreach (var spatial in spatials)
                 {
                     await AppData.Discount.Db.SyncContact(spatial);
+                }
+
+                isSuccess = true;
+            }
+            catch (TaskCanceledException)
+            {
+                isSuccess = false;
+            }
+            catch (Exception ex)
+            {
+                LoggerHelper.WriteException(ex);
+
+                isSuccess = false;
+            }
+
+            return isSuccess;
+        }
+
+        public async Task<bool> GetPersonalRatings(string deviceId)
+        {
+            bool isSuccess;
+
+            try
+            {
+                var personalRatings = await ApiService.GetPersonalRatings(deviceId).RequestAsync();
+
+                foreach (var personalRating in personalRatings)
+                {
+                    await AppData.Discount.Db.SyncPersonalRating(personalRating);
                 }
 
                 isSuccess = true;
@@ -126,9 +154,7 @@ namespace ScnDiscounts.Models.WebService
 
             try
             {
-                var response = await ApiService.GetDiscountImage(documentId);
-                var content = await response.ReadAsByteArrayAsync();
-
+                var content = await ApiService.GetDiscountImage(documentId).BytesAsync();
                 if (content != null)
                 {
                     using (var stream = new MemoryStream(content))
@@ -159,13 +185,11 @@ namespace ScnDiscounts.Models.WebService
 
             try
             {
-                var images = await ApiService.GetDiscountGalleryImages(documentId);
+                var images = await ApiService.GetDiscountGalleryImages(documentId).RequestAsync();
 
                 foreach (var imageId in images)
                 {
-                    var response = await ApiService.GetDiscountGalleryImage(imageId);
-                    var content = await response.ReadAsByteArrayAsync();
-
+                    var content = await ApiService.GetDiscountGalleryImage(imageId).BytesAsync();
                     if (content != null)
                     {
                         using (var stream = new MemoryStream(content))
@@ -174,6 +198,67 @@ namespace ScnDiscounts.Models.WebService
                         }
                     }
                 }
+
+                isSuccess = true;
+            }
+            catch (TaskCanceledException)
+            {
+                isSuccess = false;
+            }
+            catch (Exception ex)
+            {
+                LoggerHelper.WriteException(ex);
+
+                isSuccess = false;
+            }
+
+            return isSuccess;
+        }
+
+        public async Task<bool> GetDiscountRating(string documentId)
+        {
+            bool isSuccess;
+
+            try
+            {
+                var rating = await ApiService.GetDiscountRating(documentId).RequestAsync();
+                rating.Id = documentId;
+
+                await AppData.Discount.Db.SyncDiscountRating(rating);
+
+                isSuccess = true;
+            }
+            catch (TaskCanceledException)
+            {
+                isSuccess = false;
+            }
+            catch (Exception ex)
+            {
+                LoggerHelper.WriteException(ex);
+
+                isSuccess = false;
+            }
+
+            return isSuccess;
+        }
+
+        public async Task<bool> PostPersonalRating(PersonalRatingData personalRating)
+        {
+            bool isSuccess;
+
+            try
+            {
+                var rating = new DeserializePersonalRating
+                {
+                    Id = personalRating.DocumentId,
+                    DeviceId = personalRating.DeviceId,
+                    PartnerId = personalRating.PartnerId,
+                    Mark = personalRating.Mark
+                };
+
+                rating = await ApiService.PostPersonalRating(rating).RequestAsync();
+
+                await AppData.Discount.Db.SyncPersonalRating(rating);
 
                 isSuccess = true;
             }
@@ -203,7 +288,7 @@ namespace ScnDiscounts.Models.WebService
                     Message = comment
                 };
 
-                await ApiService.PostFeedback(feedback);
+                await ApiService.PostFeedback(feedback).RequestAsync();
 
                 isSuccess = true;
             }

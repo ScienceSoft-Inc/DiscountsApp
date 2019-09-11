@@ -4,8 +4,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-category-dialog',
-  templateUrl: './category-dialog.component.html',
-  styleUrls: ['./category-dialog.component.css']
+  templateUrl: './category-dialog.component.html'
 })
 export class CategoryDialogComponent implements OnInit {
 

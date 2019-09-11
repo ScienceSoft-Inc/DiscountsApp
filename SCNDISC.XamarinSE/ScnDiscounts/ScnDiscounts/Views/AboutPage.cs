@@ -148,20 +148,19 @@ namespace ScnDiscounts.Views
 
             var txtDescription3 = new Label
             {
+                Style = LabelStyles.DescriptionLightStyle.FromResources<Style>(),
                 FormattedText = new FormattedString
                 {
                     Spans =
                     {
                         new Span
                         {
-                            Text = contentUI.TxtDescription3,
-                            Style = LabelStyles.DescriptionLightStyle.FromResources<Style>()
+                            Text = contentUI.TxtDescription3
                         },
                         new Span
                         {
                             Text = contentUI.TxtEmailAlternateValue,
-                            Style = LabelStyles.LinkStyle.FromResources<Style>(),
-                            TextColor = MainStyles.LightTextColor.FromResources<Color>(),
+                            TextDecorations = TextDecorations.Underline,
                             GestureRecognizers =
                             {
                                 tapEmailAlternate

@@ -42,7 +42,7 @@ namespace ScnDiscounts.Views
                     {
                         new DataTrigger(typeof(ImageButton))
                         {
-                            Binding = new Binding("IsCustomFiltering"),
+                            Binding = new Binding(nameof(DiscountViewModel.IsCustomFiltering)),
                             Value = true,
                             Setters =
                             {
@@ -55,7 +55,7 @@ namespace ScnDiscounts.Views
                         },
                         new DataTrigger(typeof(ImageButton))
                         {
-                            Binding = new Binding("IsCustomFiltering"),
+                            Binding = new Binding(nameof(DiscountViewModel.IsCustomFiltering)),
                             Value = false,
                             Setters =
                             {
@@ -96,8 +96,8 @@ namespace ScnDiscounts.Views
                     Content = listViewFooter
                 }
             };
-            discountListView.SetBinding(ListView.ItemsSourceProperty, "DiscountItems");
-            discountListView.SetBinding(IsVisibleProperty, "HasDiscountItems");
+            discountListView.SetBinding(ListView.ItemsSourceProperty, nameof(DiscountViewModel.DiscountItems));
+            discountListView.SetBinding(IsVisibleProperty, nameof(DiscountViewModel.HasDiscountItems));
             discountListView.ItemSelected += (sender, args) => ((ListView) sender).SelectedItem = null;
             discountListView.ItemTapped += viewModel.OnDiscountItemTapped;
 
@@ -108,7 +108,7 @@ namespace ScnDiscounts.Views
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 Text = contentUI.TxtEmptyList
             };
-            emptyLabel.SetBinding(IsVisibleProperty, "HasNoDiscountItems");
+            emptyLabel.SetBinding(IsVisibleProperty, nameof(DiscountViewModel.HasNoDiscountItems));
 
             var safeAreaHelper = new SafeAreaHelper();
             safeAreaHelper.UseSafeArea(this, SafeAreaHelper.CustomSafeAreaFlags.Top);
@@ -133,7 +133,7 @@ namespace ScnDiscounts.Views
                 HeightRequest = Functions.OnPlatform(38, 30),
                 Placeholder = contentUI.TxtSearchByText
             };
-            seacrhBar.SetBinding(SearchBar.TextProperty, "SearchText");
+            seacrhBar.SetBinding(SearchBar.TextProperty, nameof(DiscountViewModel.SearchText));
 
             appBar.Content = seacrhBar;
         }
@@ -207,7 +207,7 @@ namespace ScnDiscounts.Views
                         {
                             new DataTrigger(typeof(Label))
                             {
-                                Binding = new Binding("IsSortByName"),
+                                Binding = new Binding(nameof(DiscountViewModel.IsSortByName)),
                                 Value = true,
                                 Setters =
                                 {
@@ -220,7 +220,7 @@ namespace ScnDiscounts.Views
                             },
                             new DataTrigger(typeof(Label))
                             {
-                                Binding = new Binding("IsSortByName"),
+                                Binding = new Binding(nameof(DiscountViewModel.IsSortByName)),
                                 Value = false,
                                 Setters =
                                 {
@@ -242,7 +242,8 @@ namespace ScnDiscounts.Views
                 VerticalOptions = LayoutOptions.Center,
                 OnColor = MainStyles.SwitchColor.FromResources<Color>()
             };
-            switchByName.SetBinding(Switch.IsToggledProperty, "IsSortByName");
+            switchByName.SetBinding(Switch.IsToggledProperty, nameof(DiscountViewModel.IsSortByName));
+            switchByName.SetBinding(InputTransparentProperty, nameof(DiscountViewModel.IsSortByName));
 
             var stackByName = new StackLayout
             {
@@ -287,7 +288,7 @@ namespace ScnDiscounts.Views
                         {
                             new DataTrigger(typeof(Label))
                             {
-                                Binding = new Binding("IsSortByDistance"),
+                                Binding = new Binding(nameof(DiscountViewModel.IsSortByDistance)),
                                 Value = true,
                                 Setters =
                                 {
@@ -300,7 +301,7 @@ namespace ScnDiscounts.Views
                             },
                             new DataTrigger(typeof(Label))
                             {
-                                Binding = new Binding("IsSortByDistance"),
+                                Binding = new Binding(nameof(DiscountViewModel.IsSortByDistance)),
                                 Value = false,
                                 Setters =
                                 {
@@ -322,7 +323,8 @@ namespace ScnDiscounts.Views
                 VerticalOptions = LayoutOptions.Center,
                 OnColor = MainStyles.SwitchColor.FromResources<Color>()
             };
-            switchByDistance.SetBinding(Switch.IsToggledProperty, "IsSortByDistance");
+            switchByDistance.SetBinding(Switch.IsToggledProperty, nameof(DiscountViewModel.IsSortByDistance));
+            switchByDistance.SetBinding(InputTransparentProperty, nameof(DiscountViewModel.IsSortByDistance));
 
             StackByDistance = new StackLayout
             {
@@ -341,6 +343,87 @@ namespace ScnDiscounts.Views
             StackByDistance.GestureRecognizers.Add(tapGestureRecognizerByDistance);
 
             rightPanelContent.Children.Add(StackByDistance);
+
+            #endregion
+
+            #region sort by recent date
+
+            var titleByRecentDate = new StackLayout
+            {
+                Orientation = StackOrientation.Horizontal,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                Spacing = 16,
+                Children =
+                {
+                    new Image
+                    {
+                        VerticalOptions = LayoutOptions.Center,
+                        Source = contentUI.IconSortByRecentDate
+                    },
+                    new Label
+                    {
+                        HorizontalOptions = LayoutOptions.FillAndExpand,
+                        VerticalOptions = LayoutOptions.Center,
+                        Text = contentUI.TxtSortByRecentDate,
+                        Triggers =
+                        {
+                            new DataTrigger(typeof(Label))
+                            {
+                                Binding = new Binding(nameof(DiscountViewModel.IsSortByRecentDate)),
+                                Value = true,
+                                Setters =
+                                {
+                                    new Setter
+                                    {
+                                        Property = StyleProperty,
+                                        Value = LabelStyles.MenuStyle.FromResources()
+                                    }
+                                }
+                            },
+                            new DataTrigger(typeof(Label))
+                            {
+                                Binding = new Binding(nameof(DiscountViewModel.IsSortByRecentDate)),
+                                Value = false,
+                                Setters =
+                                {
+                                    new Setter
+                                    {
+                                        Property = StyleProperty,
+                                        Value = LabelStyles.MenuDisabledStyle.FromResources()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var switchByRecentDate = new Switch
+            {
+                HorizontalOptions = LayoutOptions.End,
+                VerticalOptions = LayoutOptions.Center,
+                OnColor = MainStyles.SwitchColor.FromResources<Color>()
+            };
+            switchByRecentDate.SetBinding(Switch.IsToggledProperty, nameof(DiscountViewModel.IsSortByRecentDate));
+            switchByRecentDate.SetBinding(InputTransparentProperty, nameof(DiscountViewModel.IsSortByRecentDate));
+
+            var stackByRecentDate = new StackLayout
+            {
+                Orientation = StackOrientation.Horizontal,
+                Padding = new Thickness(App.IsMoreThan320Dpi ? 40 : 20, 2),
+                Spacing = 0,
+                Children =
+                {
+                    titleByRecentDate,
+                    switchByRecentDate
+                }
+            };
+
+            var tapGestureRecognizerByRecentDate = new TapGestureRecognizer();
+            tapGestureRecognizerByRecentDate.Tapped += viewModel.SortByRecentDate_Tap;
+            stackByRecentDate.GestureRecognizers.Add(tapGestureRecognizerByRecentDate);
+
+            rightPanelContent.Children.Add(stackByRecentDate);
 
             #endregion
 

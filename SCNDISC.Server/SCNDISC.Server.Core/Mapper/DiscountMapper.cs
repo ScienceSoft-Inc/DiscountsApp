@@ -26,7 +26,6 @@ namespace SCNDISC.Server.Core.Mapper
             discount.Name_En = branch.Name.First(x => x.Lan == "EN").LocText;
             discount.Description_Ru = branch.Description.First(x => x.Lan == "RU").LocText;
             discount.Description_En = branch.Description.First(x => x.Lan == "EN").LocText;
-            discount.Logo = branch.Icon;
             List<CategoryModel> categoriesList = new List<CategoryModel>();
             foreach (var id in branch.CategoryIds)
             {

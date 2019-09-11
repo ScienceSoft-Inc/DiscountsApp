@@ -44,49 +44,57 @@ namespace ScnDiscounts.ViewModels
             RefreshData();
         }
 
-        private bool _isSortByName = AppParameters.Config.Sorting == SortingEnum.ByName;
+        private SortingEnum _currentSorting = AppParameters.Config.Sorting;
 
-        public bool IsSortByName
+        public SortingEnum CurrentSorting
         {
-            get => _isSortByName;
+            get => _currentSorting;
             set
             {
-                if (_isSortByName != value)
+                if (_currentSorting != value)
                 {
-                    _isSortByName = value;
-                    _isSortByDistance = !value;
+                    _currentSorting = value;
 
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(IsSortByName));
                     OnPropertyChanged(nameof(IsSortByDistance));
+                    OnPropertyChanged(nameof(IsSortByRecentDate));
 
                     RefreshData();
 
-                    AppParameters.Config.Sorting = IsSortByName ? SortingEnum.ByName : SortingEnum.ByDistance;
+                    AppParameters.Config.Sorting = value;
                     AppParameters.Config.SaveValues();
                 }
             }
         }
 
-        private bool _isSortByDistance = AppParameters.Config.Sorting == SortingEnum.ByDistance;
+        public bool IsSortByName
+        {
+            get => CurrentSorting == SortingEnum.ByName;
+            set
+            {
+                if (value)
+                    CurrentSorting = SortingEnum.ByName;
+            }
+        }
 
         public bool IsSortByDistance
         {
-            get => _isSortByDistance;
+            get => CurrentSorting == SortingEnum.ByDistance;
             set
             {
-                if (_isSortByDistance != value)
-                {
-                    _isSortByDistance = value;
-                    _isSortByName = !value;
+                if (value)
+                    CurrentSorting = SortingEnum.ByDistance;
+            }
+        }
 
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(IsSortByName));
-
-                    RefreshData();
-
-                    AppParameters.Config.Sorting = IsSortByName ? SortingEnum.ByName : SortingEnum.ByDistance;
-                    AppParameters.Config.SaveValues();
-                }
+        public bool IsSortByRecentDate
+        {
+            get => CurrentSorting == SortingEnum.ByRecentDate;
+            set
+            {
+                if (value)
+                    CurrentSorting = SortingEnum.ByRecentDate;
             }
         }
 
@@ -158,6 +166,8 @@ namespace ScnDiscounts.ViewModels
                                 .Select(j => j.DistanceValue).DefaultIfEmpty().Min())
                         .ThenBy(i => i.Name, partnerNameComparer)
                     : items.OrderBy(i => i.Name, partnerNameComparer);
+            else if (IsSortByRecentDate)
+                items = items.OrderByDescending(i => i.ModifiedDate);
 
             DiscountItems = new List<DiscountData>(items);
         }
@@ -170,12 +180,17 @@ namespace ScnDiscounts.ViewModels
 
         public void SortByName_Tap(object sender, EventArgs e)
         {
-            IsSortByName = !IsSortByName;
+            CurrentSorting = SortingEnum.ByName;
         }
 
         public void SortByDistance_Tap(object sender, EventArgs e)
         {
-            IsSortByDistance = !IsSortByDistance;
+            CurrentSorting = SortingEnum.ByDistance;
+        }
+
+        public void SortByRecentDate_Tap(object sender, EventArgs e)
+        {
+            CurrentSorting = SortingEnum.ByRecentDate;
         }
 
         public event EventHandler<ToggledEventArgs> FilterCategorySwitched;

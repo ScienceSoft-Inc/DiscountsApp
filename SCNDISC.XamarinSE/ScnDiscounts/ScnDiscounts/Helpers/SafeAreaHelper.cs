@@ -22,7 +22,7 @@ namespace ScnDiscounts.Helpers
             All = -1
         }
 
-        private readonly CustomSafeAreaConverter _customSafeAreaConverter = new CustomSafeAreaConverter();
+        protected static readonly CustomSafeAreaConverter CustomSafeAreaConverter = new CustomSafeAreaConverter();
 
         private Thickness _pagePadding;
 
@@ -33,7 +33,7 @@ namespace ScnDiscounts.Helpers
             {
                 if (_pagePadding != value)
                 {
-                    _pagePadding = (Thickness) _customSafeAreaConverter.Convert(value, typeof(Thickness), PageSafeArea,
+                    _pagePadding = (Thickness) CustomSafeAreaConverter.Convert(value, typeof(Thickness), PageSafeArea,
                         CultureInfo.CurrentCulture);
 
                     OnPropertyChanged();
@@ -88,7 +88,7 @@ namespace ScnDiscounts.Helpers
 
         public void UseSafeArea(View view, CustomSafeAreaFlags viewSafeArea)
         {
-            var binding = new Binding(nameof(SafeArea), BindingMode.OneWay, _customSafeAreaConverter,
+            var binding = new Binding(nameof(SafeArea), BindingMode.OneWay, CustomSafeAreaConverter,
                 viewSafeArea, source: this);
 
             view.SetBinding(View.MarginProperty, binding);

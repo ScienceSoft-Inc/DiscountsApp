@@ -1,4 +1,4 @@
-<select #langSelect [ngClass]="langClass" [(ngModel)]="selectedLanguage"
+<select #langSelect ngbAutofocus [ngClass]="langClass" [(ngModel)]="selectedLanguage"
         (change)="languageService.use(langSelect.value)">
   <option *ngFor="let lang of languageService.getAll()" [value]="lang" [selected]="lang === selectedLanguage">
     {{ lang }}

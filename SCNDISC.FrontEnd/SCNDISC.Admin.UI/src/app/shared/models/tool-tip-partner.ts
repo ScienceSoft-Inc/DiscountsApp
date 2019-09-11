@@ -7,7 +7,6 @@ export class ToolTipPartner {
   public name_En: string;
   public description_Ru: string;
   public description_En: string;
-  public logo: string;
   constructor() {
   }
 }

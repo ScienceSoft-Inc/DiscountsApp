@@ -70,8 +70,8 @@ namespace SCNDISC.Server.Infrastructure.Persistence.Queries.Notifications
         public async Task<long> RunAsync(string language)
         {
             if (string.IsNullOrEmpty(language))
-                return await Collection.CountAsync(n => true);
-            return await Collection.CountAsync(n => n.Language == language); 
+                return await Collection.CountDocumentsAsync(n => true);
+            return await Collection.CountDocumentsAsync(n => n.Language == language); 
         }
     }
 }

@@ -8,7 +8,6 @@ using ScnPage.Plugin.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace ScnDiscounts.ViewModels
@@ -156,9 +155,8 @@ namespace ScnDiscounts.ViewModels
                 if (isSuccess)
                 {
                     ProcessMessage = splashContentUI.TxtProcessLoadingData;
-                    await Task.Yield();
 
-                    AppData.Discount.Db.LoadData();
+                    await AppData.Discount.Db.LoadData();
 
                     var mapPinCollection = AppData.Discount.MapPinCollection.ToList();
                     mapPinCollection.ForEach(i => i.CalculateDistance());

@@ -16,6 +16,9 @@ namespace ScnDiscounts.Droid.DependencyInterface
 {
     public class PhoneService : IPhoneService
     {
+        public string DeviceId => Settings.Secure.GetString(CrossCurrentActivity.Current.AppContext.ContentResolver,
+            Settings.Secure.AndroidId);
+
         public Thickness SafeAreaInsets
         {
             get

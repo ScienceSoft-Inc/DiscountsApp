@@ -12,7 +12,7 @@ namespace SCNDISC.Server.Core.Mapper
         {
             ContactModel contact = new ContactModel();
             contact.Id = Id;
-            if (address!=null && address.LongCount() > 0)
+            if (address!=null && address.Count() > 0)
             {
                 if (address.First(x => x.Lan == "EN").LocText != null)
                 {
@@ -25,14 +25,14 @@ namespace SCNDISC.Server.Core.Mapper
                 }
             }
 
-            if (phone!= null && phone.LongCount() > 0)
+            if (phone!= null && phone.Count() > 0)
             {
-                if (phone.LongCount() == 1)
+                if (phone.Count() == 1)
                 {
                     contact.PhoneNumber1 = phone.ElementAt(0).Number;
                 }
 
-                if (phone.LongCount() == 2)
+                if (phone.Count() == 2)
                 {
                     contact.PhoneNumber1 = phone.ElementAt(0).Number;
                     contact.PhoneNumber2 = phone.ElementAt(1).Number;
@@ -49,22 +49,13 @@ namespace SCNDISC.Server.Core.Mapper
             LocalizableText addressRu = new LocalizableText
             {
                 Lan = Languages.Ru,
-                LocText = contact.Address_Ru
+                LocText = contact.Address_Ru ?? string.Empty
             };
-            if (addressRu.LocText == null)
-            {
-                addressRu.LocText = String.Empty;
-            }
-
             LocalizableText addressEn = new LocalizableText
             {
                 Lan = Languages.En,
-                LocText = contact.Address_En
+                LocText = contact.Address_En ?? string.Empty
             };
-            if (addressEn.LocText == null)
-            {
-                addressEn.LocText = String.Empty;
-            }
             addresses.Add(addressEn);
             addresses.Add(addressRu);
             return addresses;

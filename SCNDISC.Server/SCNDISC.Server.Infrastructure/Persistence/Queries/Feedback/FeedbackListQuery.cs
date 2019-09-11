@@ -12,7 +12,6 @@ namespace SCNDISC.Server.Infrastructure.Persistence.Queries.Feedback
 		public FeedbackListQuery(IMongoCollectionProvider provider) 
 			: base(provider)
 		{
-
 		}
 
 		public async Task<IEnumerable<Domain.Aggregates.Feedback>> Run(FilterModel filterModel)
@@ -34,7 +33,7 @@ namespace SCNDISC.Server.Infrastructure.Persistence.Queries.Feedback
 
 		public async Task<long> Run()
 		{
-			return await Collection.CountAsync(x => true);
+			return await Collection.CountDocumentsAsync(x => true);
 		}
 	}
 }

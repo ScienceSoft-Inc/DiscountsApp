@@ -38,6 +38,8 @@ namespace ScnDiscounts.Models.Database
                 _database.CreateTable<DiscountCategory>();
                 _database.CreateTable<WebAddress>();
                 _database.CreateTable<GalleryImage>();
+                _database.CreateTable<DiscountRating>();
+                _database.CreateTable<PersonalRating>();
             }
             catch (Exception ex)
             {
@@ -336,6 +338,64 @@ namespace ScnDiscounts.Models.Database
             _database.Commit();
         }
 
+        private void SaveDiscountRating(DeserializeDiscountRating discountRatingItem, DiscountRating discountRatingDbData)
+        {
+            _database.BeginTransaction();
+
+            if (discountRatingDbData != null)
+            {
+                discountRatingDbData.PartnerId = discountRatingItem.Id;
+                discountRatingDbData.RatingCount = discountRatingItem.RatingCount;
+                discountRatingDbData.RatingSum = discountRatingItem.RatingSum;
+
+                _database.Update(discountRatingDbData);
+            }
+            else
+            {
+                discountRatingDbData = new DiscountRating
+                {
+                    PartnerId = discountRatingItem.Id,
+                    RatingCount = discountRatingItem.RatingCount,
+                    RatingSum = discountRatingItem.RatingSum
+                };
+
+                _database.Insert(discountRatingDbData);
+            }
+
+            _database.Commit();
+        }
+
+        private void SavePersonalRating(DeserializePersonalRating personalRatingItem, PersonalRating personalRatingDbData)
+        {
+            _database.BeginTransaction();
+
+            if (personalRatingDbData != null)
+            {
+                personalRatingDbData.DocumentId = personalRatingItem.Id;
+                personalRatingDbData.DeviceId = personalRatingItem.DeviceId;
+                personalRatingDbData.PartnerId = personalRatingItem.PartnerId;
+                personalRatingDbData.Mark = personalRatingItem.Mark;
+                personalRatingDbData.Modified = personalRatingItem.Modified ?? DateTime.UtcNow;
+
+                _database.Update(personalRatingDbData);
+            }
+            else
+            {
+                personalRatingDbData = new PersonalRating
+                {
+                    DocumentId = personalRatingItem.Id,
+                    DeviceId = personalRatingItem.DeviceId,
+                    PartnerId = personalRatingItem.PartnerId,
+                    Mark = personalRatingItem.Mark,
+                    Modified = personalRatingItem.Modified ?? DateTime.UtcNow
+                };
+
+                _database.Insert(personalRatingDbData);
+            }
+
+            _database.Commit();
+        }
+
         public async Task UpdateDiscountImage(string documentId, Stream streamImage)
         {
             var discountDbData = _database.Table<Discount>().FirstOrDefault(i => i.DocumentId == documentId);
@@ -385,83 +445,110 @@ namespace ScnDiscounts.Models.Database
             }
         }
 
-        public DiscountDetailData LoadDiscountDetail(string documentId)
+        public Task<DiscountDetailData> LoadDiscountDetail(string documentId)
         {
-            var discountRec = _database.Table<Discount>().FirstOrDefault(i => i.DocumentId == documentId);
-            if (discountRec == null)
-                return null;
-
-            var discountCategories = _database.Table<DiscountCategory>().ToList();
-            var discountsStrings = _database.Table<DiscountsStrings>().ToList();
-            var langStrings = _database.Table<LangString>().ToList();
-            var webAddresses = _database.Table<WebAddress>().ToList();
-            var galleryImages = _database.Table<GalleryImage>().ToList();
-
-            var nameRec = discountsStrings
-                .Where(i => i.OwnerId == discountRec.Id && i.Appointment == StrAppointmentTitle)
-                .Join(langStrings, i => i.LangStringId, i => i.Id, (ds, ls) => ls)
-                .FirstOrDefault(i => i.LanguageCode == AppParameters.Config.SystemLang.LangEnumToCode());
-
-            var descriptionRec = discountsStrings
-                .Where(i => i.OwnerId == discountRec.Id && i.Appointment == StrAppointmentDescription)
-                .Join(langStrings, i => i.LangStringId, i => i.Id, (ds, ls) => ls)
-                .FirstOrDefault(i => i.LanguageCode == AppParameters.Config.SystemLang.LangEnumToCode());
-
-            var categories = discountCategories.Where(i => i.DiscountId == discountRec.Id)
-                .Join(AppData.Discount.CategoryCollection, i => i.CategoryId, i => i.DocumentId, (dc, c) => c)
-                .ToList();
-
-            var webAddressRecs = webAddresses.Where(i => i.DiscountId == discountRec.Id).OrderBy(i => i.Category)
-                .Select(i => new WebAddressData(i)).ToList();
-
-            var galleryImagesRecs = galleryImages.Where(i => i.DiscountId == discountRec.Id).OrderBy(i => i.Id)
-                .Select(i => new GalleryImageData(i)).ToList();
-
-            var branches = new List<DiscountDetailBranchData>();
-            var contactList = _database.Table<Contact>().Where(i => i.DiscountId == discountRec.Id).ToList();
-            foreach (var contactRec in contactList)
+            return Task.Run(() =>
             {
-                var addressRec = discountsStrings
-                    .Where(i => i.OwnerId == contactRec.Id && i.Appointment == StrAppointmentAddress)
+                var discountRec = _database.Table<Discount>().FirstOrDefault(i => i.DocumentId == documentId);
+                if (discountRec == null)
+                    return null;
+
+                var discountCategories = _database.Table<DiscountCategory>();
+                var discountsStrings = _database.Table<DiscountsStrings>();
+                var langStrings = _database.Table<LangString>();
+                var webAddresses = _database.Table<WebAddress>();
+                var galleryImages = _database.Table<GalleryImage>();
+                var discountRatings = _database.Table<DiscountRating>();
+                var personalRatings = _database.Table<PersonalRating>();
+
+                var nameRec = discountsStrings
+                    .Where(i => i.OwnerId == discountRec.Id && i.Appointment == StrAppointmentTitle)
                     .Join(langStrings, i => i.LangStringId, i => i.Id, (ds, ls) => ls)
                     .FirstOrDefault(i => i.LanguageCode == AppParameters.Config.SystemLang.LangEnumToCode());
 
-                var discountDetailBranchData = new DiscountDetailBranchData
-                {
-                    DocumentId = contactRec.DocumentId,
-                    Latitude = contactRec.Latitude,
-                    Longitude = contactRec.Longitude,
-                    Address = addressRec?.Text,
-                    Phone1 = contactRec.Phone1,
-                    Phone2 = contactRec.Phone2
-                };
+                var descriptionRec = discountsStrings
+                    .Where(i => i.OwnerId == discountRec.Id && i.Appointment == StrAppointmentDescription)
+                    .Join(langStrings, i => i.LangStringId, i => i.Id, (ds, ls) => ls)
+                    .FirstOrDefault(i => i.LanguageCode == AppParameters.Config.SystemLang.LangEnumToCode());
 
-                branches.Add(discountDetailBranchData);
+                var categories = discountCategories.Where(i => i.DiscountId == discountRec.Id)
+                    .Join(AppData.Discount.CategoryCollection, i => i.CategoryId, i => i.DocumentId, (dc, c) => c)
+                    .ToList();
+
+                var webAddressRecs = webAddresses.Where(i => i.DiscountId == discountRec.Id).OrderBy(i => i.Category)
+                    .Select(i => new WebAddressData(i)).ToList();
+
+                var galleryImagesRecs = galleryImages.Where(i => i.DiscountId == discountRec.Id).OrderBy(i => i.Id)
+                    .Select(i => new GalleryImageData(i)).ToList();
+
+                var discontRatingRec = discountRatings.Where(i => i.PartnerId == discountRec.DocumentId)
+                    .Select(i => new DiscountRatingData(i)).FirstOrDefault();
+
+                var personalRatingRec = personalRatings.Where(i => i.PartnerId == discountRec.DocumentId)
+                    .Select(i => new PersonalRatingData(i)).FirstOrDefault();
+
+                var branches = new List<DiscountDetailBranchData>();
+                var contactList = _database.Table<Contact>().Where(i => i.DiscountId == discountRec.Id).ToList();
+                foreach (var contactRec in contactList)
+                {
+                    var addressRec = discountsStrings
+                        .Where(i => i.OwnerId == contactRec.Id && i.Appointment == StrAppointmentAddress)
+                        .Join(langStrings, i => i.LangStringId, i => i.Id, (ds, ls) => ls)
+                        .FirstOrDefault(i => i.LanguageCode == AppParameters.Config.SystemLang.LangEnumToCode());
+
+                    var discountDetailBranchData = new DiscountDetailBranchData
+                    {
+                        DocumentId = contactRec.DocumentId,
+                        Latitude = contactRec.Latitude,
+                        Longitude = contactRec.Longitude,
+                        Address = addressRec?.Text,
+                        Phone1 = contactRec.Phone1,
+                        Phone2 = contactRec.Phone2
+                    };
+
+                    branches.Add(discountDetailBranchData);
+                }
+
+                return new DiscountDetailData
+                {
+                    DocumentId = discountRec.DocumentId,
+                    Persent = discountRec.PercentValue,
+                    DiscountType = discountRec.DiscountType.GetDiscountTypeName(),
+                    ImageFileName = discountRec.ImageFileName,
+                    Title = nameRec?.Text,
+                    Description = descriptionRec?.Text,
+                    CategoryList = categories,
+                    WebAddresses = webAddressRecs,
+                    BranchList = branches,
+                    GalleryImages = galleryImagesRecs,
+                    DiscountRating = discontRatingRec,
+                    PersonalRating = personalRatingRec
+                };
+            });
+        }
+
+        public List<string> GetDiscountsId()
+        {
+            return _database.Table<Discount>().Select(i => i.DocumentId).ToList();
+        }
+
+        public bool TryCheckAnyImage(string documentId, out bool containsImage, out bool containsGallery)
+        {
+            var discount = _database.Table<Discount>().FirstOrDefault(i => i.DocumentId == documentId);
+            var result = discount != null;
+
+            if (result)
+            {
+                containsImage = discount.ImageFileName != null;
+                containsGallery = _database.Table<GalleryImage>().Any(i => i.DiscountId == discount.Id);
+            }
+            else
+            {
+                containsImage = false;
+                containsGallery = false;
             }
 
-            return new DiscountDetailData
-            {
-                Persent = discountRec.PercentValue,
-                DiscountType = discountRec.DiscountType.GetDiscountTypeName(),
-                ImageFileName = discountRec.ImageFileName,
-                Title = nameRec?.Text,
-                Description = descriptionRec?.Text,
-                CategoryList = categories,
-                WebAddresses = webAddressRecs,
-                BranchList = branches,
-                GalleryImages = galleryImagesRecs
-            };
-        }
-
-        public List<string> GetDiscountsWithoutImages()
-        {
-            return _database.Table<Discount>().Where(i => i.ImageFileName == null).Select(i => i.DocumentId).ToList();
-        }
-
-        public List<string> GetDiscountsWithoutGallery()
-        {
-            var discounts = _database.Table<GalleryImage>().Select(i => i.DiscountId).Distinct().ToList();
-            return _database.Table<Discount>().Where(i => !discounts.Contains(i.Id)).Select(i => i.DocumentId).ToList();
+            return result;
         }
 
         public DateTime? GetCategoryLastSyncDate()
@@ -494,116 +581,168 @@ namespace ScnDiscounts.Models.Database
             return result;
         }
 
-        public async Task SyncCategory(DeserializeCategoryItem item)
+        public Task SyncCategory(DeserializeCategoryItem item)
         {
-            var category = _database.Table<Category>().FirstOrDefault(i => i.DocumentId == item.Id);
-
-            if (item.IsDeleted)
+            return Task.Run(() =>
             {
-                if (category != null)
+                var category = _database.Table<Category>().FirstOrDefault(i => i.DocumentId == item.Id);
+
+                if (item.IsDeleted)
                 {
-                    _database.BeginTransaction();
+                    if (category != null)
+                    {
+                        _database.BeginTransaction();
 
-                    _database.Table<Category>().Delete(i => i.Id == category.Id);
-                    _database.Table<DiscountCategory>().Delete(i => i.CategoryId == category.DocumentId);
-                    _database.Table<DiscountsStrings>()
-                        .Where(i => i.OwnerId == category.Id && i.Appointment == StrAppointmentCategory)
-                        .Select(i => i.LangStringId).ForEach(i => _database.Table<LangString>().Delete(j => j.Id == i));
-                    _database.Table<DiscountsStrings>().Delete(i =>
-                        i.OwnerId == category.Id && i.Appointment == StrAppointmentCategory);
+                        _database.Table<Category>().Delete(i => i.Id == category.Id);
+                        _database.Table<DiscountCategory>().Delete(i => i.CategoryId == category.DocumentId);
+                        _database.Table<DiscountsStrings>()
+                            .Where(i => i.OwnerId == category.Id && i.Appointment == StrAppointmentCategory)
+                            .Select(i => i.LangStringId)
+                            .ForEach(i => _database.Table<LangString>().Delete(j => j.Id == i));
+                        _database.Table<DiscountsStrings>().Delete(i =>
+                            i.OwnerId == category.Id && i.Appointment == StrAppointmentCategory);
 
-                    _database.Commit();
+                        _database.Commit();
+                    }
                 }
-            }
-            else
-                await Task.Run(() => SaveCategory(item, category));
+                else
+                    SaveCategory(item, category);
+            });
         }
 
-
-        public async Task SyncDiscount(DeserializeBranchItem item)
+        public Task SyncDiscount(DeserializeBranchItem item)
         {
-            var discount = _database.Table<Discount>().FirstOrDefault(i => i.DocumentId == item.Id);
-
-            if (item.IsDeleted)
+            return Task.Run(async () =>
             {
-                if (discount != null)
+                var discount = _database.Table<Discount>().FirstOrDefault(i => i.DocumentId == item.Id);
+
+                if (item.IsDeleted)
                 {
-                    _database.BeginTransaction();
+                    if (discount != null)
+                    {
+                        _database.BeginTransaction();
 
-                    _database.Table<Discount>().Delete(i => i.Id == discount.Id);
-                    _database.Table<WebAddress>().Delete(i => i.DiscountId == discount.Id);
-                    _database.Table<DiscountCategory>().Delete(i => i.DiscountId == discount.Id);
-                    _database.Table<DiscountsStrings>()
-                        .Where(i => i.OwnerId == discount.Id &&
-                                    (i.Appointment == StrAppointmentTitle ||
-                                     i.Appointment == StrAppointmentDescription)).Select(i => i.LangStringId)
-                        .ForEach(i => _database.Table<LangString>().Delete(j => j.Id == i));
-                    _database.Table<DiscountsStrings>().Delete(i =>
-                        i.OwnerId == discount.Id && (i.Appointment == StrAppointmentTitle ||
-                                                     i.Appointment == StrAppointmentDescription));
+                        _database.Table<Discount>().Delete(i => i.Id == discount.Id);
+                        _database.Table<WebAddress>().Delete(i => i.DiscountId == discount.Id);
+                        _database.Table<DiscountCategory>().Delete(i => i.DiscountId == discount.Id);
+                        _database.Table<DiscountsStrings>()
+                            .Where(i => i.OwnerId == discount.Id &&
+                                        (i.Appointment == StrAppointmentTitle ||
+                                         i.Appointment == StrAppointmentDescription)).Select(i => i.LangStringId)
+                            .ForEach(i => _database.Table<LangString>().Delete(j => j.Id == i));
+                        _database.Table<DiscountsStrings>().Delete(i =>
+                            i.OwnerId == discount.Id && (i.Appointment == StrAppointmentTitle ||
+                                                         i.Appointment == StrAppointmentDescription));
 
-                    var logoFileName = discount.DocumentId + PostfixLogoFileName;
-                    DeleteImage(logoFileName);
+                        var logoFileName = discount.DocumentId + PostfixLogoFileName;
+                        DeleteImage(logoFileName);
 
-                    var imgFileName = discount.DocumentId + PostfixImgFileName;
-                    DeleteImage(imgFileName);
+                        var imgFileName = discount.DocumentId + PostfixImgFileName;
+                        DeleteImage(imgFileName);
 
-                    var images = _database.Table<GalleryImage>().Where(i => i.DiscountId == discount.Id)
-                        .Select(i => i.FileName);
-                    DeleteGallery(images);
-                    _database.Table<GalleryImage>().Delete(i => i.DiscountId == discount.Id);
+                        var images = _database.Table<GalleryImage>().Where(i => i.DiscountId == discount.Id)
+                            .Select(i => i.FileName);
+                        DeleteGallery(images);
+                        _database.Table<GalleryImage>().Delete(i => i.DiscountId == discount.Id);
 
-                    _database.Commit();
+                        _database.Commit();
+                    }
                 }
-            }
-            else
-                await SaveDiscount(item, discount);
+                else
+                    await SaveDiscount(item, discount);
+            });
         }
 
-        public async Task SyncContact(DeserializeBranchItem item)
+        public Task SyncContact(DeserializeBranchItem item)
         {
-            var contact = _database.Table<Contact>().FirstOrDefault(i => i.DocumentId == item.Id);
-
-            if (item.IsDeleted)
+            return Task.Run(() =>
             {
-                if (contact != null)
+                var contact = _database.Table<Contact>().FirstOrDefault(i => i.DocumentId == item.Id);
+
+                if (item.IsDeleted)
                 {
-                    _database.BeginTransaction();
+                    if (contact != null)
+                    {
+                        _database.BeginTransaction();
 
-                    _database.Table<Contact>().Delete(i => i.Id == contact.Id);
-                    _database.Table<DiscountsStrings>()
-                        .Where(i => i.OwnerId == contact.Id && i.Appointment == StrAppointmentAddress)
-                        .Select(i => i.LangStringId).ForEach(i => _database.Table<LangString>().Delete(j => j.Id == i));
-                    _database.Table<DiscountsStrings>().Delete(i =>
-                        i.OwnerId == contact.Id && i.Appointment == StrAppointmentAddress);
+                        _database.Table<Contact>().Delete(i => i.Id == contact.Id);
+                        _database.Table<DiscountsStrings>()
+                            .Where(i => i.OwnerId == contact.Id && i.Appointment == StrAppointmentAddress)
+                            .Select(i => i.LangStringId)
+                            .ForEach(i => _database.Table<LangString>().Delete(j => j.Id == i));
+                        _database.Table<DiscountsStrings>().Delete(i =>
+                            i.OwnerId == contact.Id && i.Appointment == StrAppointmentAddress);
 
-                    _database.Commit();
+                        _database.Commit();
+                    }
                 }
-            }
-            else
-                await Task.Run(() => SaveContact(item, contact));
+                else
+                    SaveContact(item, contact);
+            });
         }
 
-        public void LoadData()
+        public Task SyncDiscountRating(DeserializeDiscountRating item)
         {
-            var discountsTable = _database.Table<Discount>().ToList();
-            var contactsTable = _database.Table<Contact>().ToList();
-            var categoriesTable = _database.Table<Category>().ToList();
-            var discountCategoriesTable = _database.Table<DiscountCategory>().ToList();
-            var discountsStringsTable = _database.Table<DiscountsStrings>().ToList();
-            var langStringsTable = _database.Table<LangString>().ToList();
+            return Task.Run(() =>
+            {
+                var discountRating = _database.Table<DiscountRating>().FirstOrDefault(i => i.PartnerId == item.Id);
 
-            LoadCategories(categoriesTable, discountsStringsTable, langStringsTable);
-            LoadMapData(discountsTable, contactsTable, discountCategoriesTable, discountsStringsTable, langStringsTable);
-            LoadDiscounts(discountsTable, discountCategoriesTable, discountsStringsTable, langStringsTable);
+                SaveDiscountRating(item, discountRating);
+            });
         }
 
-        private static void LoadCategories(
+        public Task<DiscountRatingData> LoadDiscountRating(string partnerId)
+        {
+            return Task.FromResult(_database.Table<DiscountRating>().Where(i => i.PartnerId == partnerId)
+                .Select(i => new DiscountRatingData(i)).FirstOrDefault());
+        }
+
+        public Task SyncPersonalRating(DeserializePersonalRating item)
+        {
+            return Task.Run(() =>
+            {
+                var personalRating = _database.Table<PersonalRating>().FirstOrDefault(i => i.DocumentId == item.Id);
+
+                SavePersonalRating(item, personalRating);
+            });
+        }
+
+        public Task<PersonalRatingData> LoadPersonalRating(string partnerId)
+        {
+            return Task.FromResult(_database.Table<PersonalRating>().Where(i => i.PartnerId == partnerId)
+                .Select(i => new PersonalRatingData(i)).FirstOrDefault());
+        }
+
+        public Task LoadData()
+        {
+            return Task.Run(async () =>
+            {
+                var discountsTable = _database.Table<Discount>().ToList();
+                var contactsTable = _database.Table<Contact>().ToList();
+                var categoriesTable = _database.Table<Category>().ToList();
+                var discountCategoriesTable = _database.Table<DiscountCategory>().ToList();
+                var discountsStringsTable = _database.Table<DiscountsStrings>().ToList();
+                var langStringsTable = _database.Table<LangString>().ToList();
+
+                var categoryCollection = await LoadCategories(categoriesTable, discountsStringsTable, langStringsTable);
+                AppData.Discount.CategoryCollection = categoryCollection;
+
+                var mapPinCollection = await LoadMapData(discountsTable, contactsTable, discountCategoriesTable,
+                    discountsStringsTable, langStringsTable);
+                AppData.Discount.MapPinCollection = mapPinCollection;
+
+                var discountCollection = await LoadDiscounts(discountsTable, discountCategoriesTable,
+                    discountsStringsTable, langStringsTable);
+                AppData.Discount.DiscountCollection = discountCollection;
+            });
+        }
+
+        private static Task<List<CategoryData>> LoadCategories(
             IEnumerable<Category> categoriesTable,
             IReadOnlyCollection<DiscountsStrings> discountsStringsTable,
             IReadOnlyCollection<LangString> langStringsTable)
         {
-            var categoryCollection = new List<CategoryData>();
+            var result = new List<CategoryData>();
 
             foreach (var category in categoriesTable)
             {
@@ -621,20 +760,20 @@ namespace ScnDiscounts.Models.Database
                 foreach (var nameRec in nameList)
                     categoryData.SetName(nameRec.LanguageCode, nameRec.Text);
 
-                categoryCollection.Add(categoryData);
+                result.Add(categoryData);
             }
 
-            AppData.Discount.CategoryCollection = categoryCollection;
+            return Task.FromResult(result);
         }
 
-        private static void LoadMapData(
+        private static Task<List<MapPinData>> LoadMapData(
             IEnumerable<Discount> discountsTable,
             IEnumerable<Contact> contactsTable,
-            IReadOnlyCollection<DiscountCategory> discountCategoriesTable, 
+            IReadOnlyCollection<DiscountCategory> discountCategoriesTable,
             IReadOnlyCollection<DiscountsStrings> discountsStringsTable,
             IReadOnlyCollection<LangString> langStringsTable)
         {
-            var mapPinCollection = new List<MapPinData>();
+            var result = new List<MapPinData>();
 
             var contactList = contactsTable.Join(discountsTable, i => i.DiscountId, i => i.Id,
                 (c, d) => new
@@ -673,19 +812,19 @@ namespace ScnDiscounts.Models.Database
                 foreach (var nameRec in nameList)
                     mapPinData.SetName(nameRec.LanguageCode, nameRec.Text);
 
-                mapPinCollection.Add(mapPinData);
+                result.Add(mapPinData);
             }
 
-            AppData.Discount.MapPinCollection = mapPinCollection;
+            return Task.FromResult(result);
         }
 
-        public void LoadDiscounts(
+        private static Task<List<DiscountData>> LoadDiscounts(
             IEnumerable<Discount> discountsTable,
             IReadOnlyCollection<DiscountCategory> discountCategoriesTable,
             IReadOnlyCollection<DiscountsStrings> discountsStringsTable,
             IReadOnlyCollection<LangString> langStringsTable)
         {
-            var discountCollection = new List<DiscountData>();
+            var result = new List<DiscountData>();
 
             foreach (var discount in discountsTable)
             {
@@ -699,7 +838,8 @@ namespace ScnDiscounts.Models.Database
                     DiscountPercent = discount.PercentValue,
                     DiscountType = discount.DiscountType.GetDiscountTypeName(),
                     LogoFileName = discount.LogoFileName,
-                    CategoryList = categories
+                    CategoryList = categories,
+                    ModifiedDate = discount.Modified ?? DateTime.MinValue
                 };
 
                 var nameList = discountsStringsTable
@@ -716,10 +856,10 @@ namespace ScnDiscounts.Models.Database
                 foreach (var descrRec in descrList)
                     discountData.SetDescription(descrRec.LanguageCode, descrRec.Text);
 
-                discountCollection.Add(discountData);
+                result.Add(discountData);
             }
 
-            AppData.Discount.DiscountCollection = discountCollection;
+            return Task.FromResult(result);
         }
     }
 }

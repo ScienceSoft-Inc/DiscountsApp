@@ -14,6 +14,8 @@ namespace ScnDiscounts.iOS.DependencyInterface
 {
     public class PhoneService : IPhoneService
     {
+        public string DeviceId => UIDevice.CurrentDevice.IdentifierForVendor.AsString();
+
         private static double PixelsToDp(double value)
         {
             return value / UIScreen.MainScreen.Scale;

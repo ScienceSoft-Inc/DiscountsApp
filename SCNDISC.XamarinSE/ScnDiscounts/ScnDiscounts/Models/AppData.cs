@@ -1,4 +1,5 @@
-﻿using ScnDiscounts.Helpers;
+﻿using ScnDiscounts.DependencyInterface;
+using ScnDiscounts.Helpers;
 using ScnDiscounts.Models.Data;
 using ScnDiscounts.Models.Database;
 using ScnDiscounts.Models.WebService;
@@ -6,6 +7,7 @@ using ScnDiscounts.Views.ContentUI;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace ScnDiscounts.Models
 {
@@ -13,24 +15,28 @@ namespace ScnDiscounts.Models
     {
         public class DiscountContainer
         {
+            private Client ServiceProvider { get; } = new Client();
+
+            private NamedLocker Locker { get; } = new NamedLocker();
+
+            public LocalDb Db { get; } = new LocalDb();
+
+            public string ActiveMapPinId { get; set; }
+
+            public List<CategoryData> CategoryCollection { get; set; }
+
+            public List<DiscountData> DiscountCollection { get; set; }
+
+            public List<MapPinData> MapPinCollection { get; set; }
+
+            public bool IsSynchingImages { get; set; }
+
             public DiscountContainer()
             {
                 CategoryCollection = new List<CategoryData>();
                 DiscountCollection = new List<DiscountData>();
                 MapPinCollection = new List<MapPinData>();
-
-                Db = new LocalDb();
             }
-
-            private Client ServiceProvider { get; } = new Client();
-
-            public LocalDb Db { get; }
-
-            public List<CategoryData> CategoryCollection { get; set; }
-            public List<DiscountData> DiscountCollection { get; set; }
-            public List<MapPinData> MapPinCollection { get; set; }
-
-            public string ActiveMapPinId { get; set; }
 
             public async Task<bool> SyncCategories()
             {
@@ -89,25 +95,92 @@ namespace ScnDiscounts.Models
                 return isSuccess;
             }
 
+            private async Task<bool> SyncPersonalRatings()
+            {
+                bool isSuccess;
+
+                try
+                {
+                    var deviceId = DependencyService.Get<IPhoneService>().DeviceId;
+                    isSuccess = await ServiceProvider.GetPersonalRatings(deviceId);
+                }
+                catch (Exception ex)
+                {
+                    LoggerHelper.WriteException(ex);
+
+                    isSuccess = false;
+                }
+
+                return isSuccess;
+            }
+
             public async Task<bool> SyncImages()
+            {
+                var isSuccess = true;
+
+                IsSynchingImages = true;
+
+                try
+                {
+                    var discountsId = Db.GetDiscountsId();
+
+                    foreach (var discountId in discountsId)
+                    {
+                        await SyncImagesFor(discountId);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LoggerHelper.WriteException(ex);
+
+                    isSuccess = false;
+                }
+
+                IsSynchingImages = false;
+
+                return isSuccess;
+            }
+
+            public async Task<bool> SyncImagesFor(string discountId)
+            {
+                var isSuccess = true;
+
+                var locker = Locker[discountId];
+                if (await locker.WaitAsync(0))
+                {
+                    try
+                    {
+                        if (Db.TryCheckAnyImage(discountId, out var containsImage, out var containsGallery))
+                        {
+                            if (!containsImage)
+                                await ServiceProvider.GetDiscountImage(discountId);
+
+                            if (!containsGallery)
+                                await ServiceProvider.GetDiscountGallery(discountId);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LoggerHelper.WriteException(ex);
+
+                        isSuccess = false;
+                    }
+                    finally
+                    {
+                        locker.Release();
+                    }
+                }
+
+                return isSuccess;
+            }
+
+            public async Task<bool> SyncRatingFor(string discountId)
             {
                 var isSuccess = true;
 
                 try
                 {
-                    var discountsWithoutImages = Db.GetDiscountsWithoutImages();
-
-                    foreach (var discountId in discountsWithoutImages)
-                    {
-                        await ServiceProvider.GetDiscountImage(discountId);
-                    }
-
-                    var discountsWithoutGallery = Db.GetDiscountsWithoutGallery();
-
-                    foreach (var discountId in discountsWithoutGallery)
-                    {
-                        await ServiceProvider.GetDiscountGallery(discountId);
-                    }
+                    await ServiceProvider.GetDiscountRating(discountId);
                 }
                 catch (Exception ex)
                 {
@@ -128,15 +201,42 @@ namespace ScnDiscounts.Models
                 if (result)
                     result = await SyncDiscounts();
 
-                actionProcess(content.TxtProcessLoadMapData);
                 if (result)
+                {
+                    actionProcess(content.TxtProcessLoadMapData);
                     result = await SyncSpatial();
+                }
+
+                if (result)
+                {
+                    actionProcess(content.TxtProcessLoadRating);
+                    result = await SyncPersonalRatings();
+                }
 
                 if (result)
                     SyncImages();
 
                 return result;
             }
+
+            public async Task<bool> SendPersonalRating(PersonalRatingData personalRating)
+            {
+                bool isSuccess;
+
+                try
+                {
+                    isSuccess = await ServiceProvider.PostPersonalRating(personalRating);
+                }
+                catch (Exception ex)
+                {
+                    LoggerHelper.WriteException(ex);
+
+                    isSuccess = false;
+                }
+
+                return isSuccess;
+            }
+
 
             public async Task<bool> SendFeedback(string name, string comment)
             {

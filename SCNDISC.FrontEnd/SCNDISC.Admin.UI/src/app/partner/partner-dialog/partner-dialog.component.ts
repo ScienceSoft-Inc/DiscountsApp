@@ -6,8 +6,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-partner-open',
-  templateUrl: './partner-dialog.component.html',
-  styleUrls: ['./partner-dialog.component.css']
+  templateUrl: './partner-dialog.component.html'
 })
 export class PartnerDialogComponent implements OnInit {
 

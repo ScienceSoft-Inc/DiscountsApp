@@ -10,73 +10,83 @@ using System.Threading.Tasks;
 namespace SCNDISC.Server.Infrastructure.Persistence.Queries.Discounts
 {
     public class DiscountListQuery : MongoCommandQueryBase<Branch>, IDiscountListQuery
-	{
-		public DiscountListQuery(IMongoCollectionProvider collectionProvider) : base(collectionProvider) { }
+    {
+        public DiscountListQuery(IMongoCollectionProvider collectionProvider) : base(collectionProvider) { }
 
-		private class PartnerOnly
-		{
-			public string PartnerId;
-			public IEnumerable<LocalizableText> Name;
-			public IEnumerable<LocalizableText> Address;
-			public IEnumerable<LocalizableText> Description;
-			public string Icon;
-			public IEnumerable<Phone> Phones;
-			public string Timetable;
-			public IEnumerable<string> Categories;
-			public string Url;
-			public bool IsDeleted;
-			public DateTime? Modified;
-			public IEnumerable<WebAddress> WebAddresses;
-			public IEnumerable<IEnumerable<Discount>> Discounts;
-		}
+        private class PartnerOnly
+        {
+            public string PartnerId;
+            public IEnumerable<LocalizableText> Name;
+            public IEnumerable<LocalizableText> Address;
+            public IEnumerable<LocalizableText> Description;
+            public string Icon;
+            public IEnumerable<Phone> Phones;
+            public string Timetable;
+            public IEnumerable<string> Categories;
+            public string Url;
+            public bool IsDeleted;
+            public DateTime? Modified;
+            public IEnumerable<WebAddress> WebAddresses;
+            public IEnumerable<Discount> Discounts;
+        }
 
-	    public async Task<IEnumerable<Branch>> GetPartnersDiscountListAsync(DateTime? syncdate = null)
-	    {
-	        var groups = Collection.Aggregate().Group(x => x.PartnerId, g =>  new PartnerOnly
-			{
-	            PartnerId = g.Key,
-		        Name = g.First(x => x.Id == x.PartnerId).Name,
-				Address = g.First(x => x.Id == x.PartnerId).Address,
-				Description = g.First(x => x.Id == x.PartnerId).Description,
-				Icon = g.First(x => x.Id == x.PartnerId).Icon,
-				Phones = g.First(x => x.Id == x.PartnerId).Phones,
-				Timetable = g.First(x => x.Id == x.PartnerId).Timetable,
-	            Categories = g.First(x => x.Id == x.PartnerId).CategoryIds,
-				Url = g.First(x => x.Id == x.PartnerId).Url,
-				IsDeleted = g.First(x => x.Id == x.PartnerId).IsDeleted,
-				Modified = g.First(x => x.Id == x.PartnerId).Modified,
-				WebAddresses = g.First(x => x.Id == x.PartnerId).WebAddresses,
-	            Discounts = g.Select(x => x.Discounts)
-	        });
+        public async Task<IEnumerable<Branch>> GetPartnersDiscountListAsync(DateTime? syncdate = null)
+        {
+            // TODO starting with mongoDb server 3.6+ versions we should use expr operator to get data in a one requst instead of two as below
+            // var exprFilter = new BsonDocument("$expr", new BsonDocument("$eq", new BsonArray(new[] { "$_id", "$PartnerId" })));
+            var partnerIds = await Collection.Aggregate().Group(x => x.PartnerId, g => new { g.Key }).ToListAsync();
+            var ids = partnerIds.Select(p => p.Key).ToList();
 
-		    IEnumerable<PartnerOnly> result;
+            var filterByIds = new FilterDefinitionBuilder<Branch>().In(x => x.Id, ids);
 
-	        if (syncdate != null)
-	        {
-	            syncdate = syncdate.Value.Kind == DateTimeKind.Utc ? syncdate : syncdate.Value.ToUniversalTime();
-		        result = await groups.Match(i => i.Modified > syncdate).ToListAsync();
-	        }
-	        else
-	        {
-		        result = await groups.ToListAsync();
-	        }
+            var partnnersOnly = Collection.
+                Aggregate().
+                Match(filterByIds).
+                Project(g => new PartnerOnly
+                {
+                    PartnerId = g.PartnerId,
+                    Name = g.Name,
+                    Address = g.Address,
+                    Description = g.Description,
+                    Icon = g.Icon,
+                    Phones = g.Phones,
+                    Timetable = g.Timetable,
+                    Categories = g.CategoryIds,
+                    Url = g.Url,
+                    IsDeleted = g.IsDeleted,
+                    Modified = g.Modified,
+                    WebAddresses = g.WebAddresses,
+                    Discounts = g.Discounts
+                });
 
-	        return result.Select(g => new Branch
-	        {
-	            Id = g.PartnerId,
-	            Name = g.Name,
-	            Description = g.Description,
-	            Address = g.Address,
-	            Icon = g.Icon,
-	            Phones = g.Phones,
-	            Timetable = g.Timetable,
-	            CategoryIds = g.Categories,
+            IEnumerable<PartnerOnly> result;
+
+            if (syncdate != null)
+            {
+                syncdate = syncdate.Value.Kind == DateTimeKind.Utc ? syncdate : syncdate.Value.ToUniversalTime();
+                result = await partnnersOnly.Match(i => i.Modified > syncdate).ToListAsync();
+            }
+            else
+            {
+                result = await partnnersOnly.ToListAsync();
+            }
+
+            return result.Select(g => new Branch
+            {
+                Id = g.PartnerId,
+                Name = g.Name,
+                Description = g.Description,
+                Address = g.Address,
+                Icon = g.Icon,
+                Phones = g.Phones,
+                Timetable = g.Timetable,
+                CategoryIds = g.Categories,
                 Url = g.Url,
-	            IsDeleted = g.IsDeleted,
-	            Modified = g.Modified,
-	            Discounts = g.Discounts.SelectMany(d => d),
-		        WebAddresses = g.WebAddresses
-			}).ToList();
-	    }
-	}
+                IsDeleted = g.IsDeleted,
+                Modified = g.Modified,
+                Discounts = g.Discounts,
+                WebAddresses = g.WebAddresses
+            }).ToList();
+        }
+    }
 }

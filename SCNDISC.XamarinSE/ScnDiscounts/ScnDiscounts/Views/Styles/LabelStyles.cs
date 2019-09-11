@@ -1,4 +1,5 @@
 ﻿using ScnDiscounts.Control;
+using ScnDiscounts.Helpers;
 using Xamarin.Forms;
 
 namespace ScnDiscounts.Views.Styles
@@ -29,6 +30,7 @@ namespace ScnDiscounts.Views.Styles
         public static string ButtonStyle = "buttonStyle";
         public static string EmptyListLabelStyle = "emptyListLabelStyle";
         public static string SearchBarStyle = "searchBarStyle";
+        public static string RatingStyle = "ratingStyle";
 
         public override void Load()
         {
@@ -211,7 +213,7 @@ namespace ScnDiscounts.Views.Styles
                     new Setter { Property = Label.FontFamilyProperty, Value = "Arial" },
                     new Setter { Property = Label.FontSizeProperty, Value = 21 },
                     new Setter { Property = Label.FontAttributesProperty, Value = FontAttributes.Bold },
-                    new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(68, 68, 68) },
+                    new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("444") },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.WordWrap }
                 }
             };
@@ -224,7 +226,7 @@ namespace ScnDiscounts.Views.Styles
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value = "Arial" },
                     new Setter { Property = Label.FontSizeProperty, Value = 42 },
-                    new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(60, 68, 68) },
+                    new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("444") },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
                 }
             };
@@ -237,7 +239,7 @@ namespace ScnDiscounts.Views.Styles
                 {
                     new Setter { Property = Label.FontFamilyProperty, Value = "Arial" },
                     new Setter { Property = Label.FontSizeProperty, Value = 22 },
-                    new Setter { Property = Label.TextColorProperty, Value = Color.FromRgb(0, 94, 184) },
+                    new Setter { Property = Label.TextColorProperty, Value = Color.FromHex("005EB8") },
                     new Setter { Property = Label.LineBreakModeProperty, Value = LineBreakMode.NoWrap }
                 }
             };
@@ -321,7 +323,7 @@ namespace ScnDiscounts.Views.Styles
                     new Setter { Property = Button.CornerRadiusProperty, Value = 5 },
                     new Setter { Property = Button.TextColorProperty, Value = Color.White },
                     new Setter { Property = ButtonExtended.DisabledTextColorProperty, Value = Color.Gray },
-                    new Setter { Property = VisualElement.BackgroundColorProperty, Value = Color.FromRgb(0, 94, 184) },
+                    new Setter { Property = VisualElement.BackgroundColorProperty, Value = Color.FromHex("005EB8") },
                     new Setter { Property = VisualElement.HeightRequestProperty, Value = 40 }
                 }
             };
@@ -357,6 +359,30 @@ namespace ScnDiscounts.Views.Styles
             };
             #endregion
 
+            #region Style Rating
+            var ratingStyle = new Style(typeof(RatingView))
+            {
+                Setters =
+                {
+                    new Setter { Property = RatingView.SpacingProperty, Value = 5 },
+                    new Setter { Property = RatingView.RatedSourceProperty, Value = new FontImageSource
+                    {
+                        FontFamily = Functions.OnPlatform("DiscountIcons", "DiscountIcons.ttf#DiscountIcons"),
+                        Glyph = "B",
+                        Size = 24,
+                        Color = Color.FromHex("005EB8")
+                    } },
+                    new Setter { Property = RatingView.EmptySourceProperty, Value = new FontImageSource
+                    {
+                        FontFamily = Functions.OnPlatform("DiscountIcons", "DiscountIcons.ttf#DiscountIcons"),
+                        Glyph = "B",
+                        Size = 24,
+                        Color = Color.LightGray
+                    } }
+                }
+            };
+            #endregion
+
             Resources.Add(PageTitleStyle, pageTitleStyle);
             Resources.Add(TitleStyle, titleStyle);
             Resources.Add(TitleLightStyle, titleLightStyle);
@@ -381,6 +407,7 @@ namespace ScnDiscounts.Views.Styles
             Resources.Add(ButtonStyle, buttonStyle);
             Resources.Add(EmptyListLabelStyle, emptyListLabelStyle);
             Resources.Add(SearchBarStyle, searchBarStyle);
+            Resources.Add(RatingStyle, ratingStyle);
         }
     }
 }

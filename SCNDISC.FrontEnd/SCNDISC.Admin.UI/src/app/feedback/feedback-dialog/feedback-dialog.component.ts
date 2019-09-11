@@ -4,8 +4,7 @@ import {FeedbacksListComponent} from '../feedbacks-list/feedbacks-list.component
 
 @Component({
   selector: 'app-feedback-dialog',
-  templateUrl: './feedback-dialog.component.html',
-  styleUrls: ['./feedback-dialog.component.css']
+  templateUrl: './feedback-dialog.component.html'
 })
 export class FeedbackDialogComponent implements OnInit {
 

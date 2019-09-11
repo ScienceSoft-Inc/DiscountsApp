@@ -113,7 +113,7 @@ namespace ScnDiscounts.ViewModels
         private void InitMenuList()
         {
             var discountContent = new DiscountContentUI();
-            //var healthContent = new HealthContentUI();
+            var healthContent = new HealthContentUI();
             var settingsContent = new SettingsContentUI();
             var feedbackContent = new FeedbackContentUI();
             var aboutContent = new AboutContentUI();
@@ -132,12 +132,12 @@ namespace ScnDiscounts.ViewModels
                     Title = discountContent.Title,
                     TypePage = typeof(DiscountPage)
                 },
-                //new MenuItemData
-                //{
-                //    Icon = healthContent.Icon,
-                //    Title = healthContent.Title,
-                //    TypePage = typeof(HealthPage)
-                //},
+                new MenuItemData
+                {
+                    Icon = healthContent.Icon,
+                    Title = healthContent.Title,
+                    TypePage = typeof(HealthPage)
+                },
                 new MenuItemData
                 {
                     Icon = settingsContent.Icon,
@@ -162,7 +162,7 @@ namespace ScnDiscounts.ViewModels
         private void UpdateMenuList()
         {
             var discountContent = new DiscountContentUI();
-            //var healthContent = new HealthContentUI();
+            var healthContent = new HealthContentUI();
             var settingsContent = new SettingsContentUI();
             var feedbackContent = new FeedbackContentUI();
             var aboutContent = new AboutContentUI();
@@ -173,8 +173,8 @@ namespace ScnDiscounts.ViewModels
             var discountItem = MenuItemList.First(i => i.TypePage == typeof(DiscountPage));
             discountItem.Title = discountContent.Title;
 
-            //var healthItem = MenuItemList.First(i => i.TypePage == typeof(HealthPage));
-            //healthItem.Title = healthContent.Title;
+            var healthItem = MenuItemList.First(i => i.TypePage == typeof(HealthPage));
+            healthItem.Title = healthContent.Title;
 
             var settingsItem = MenuItemList.First(i => i.TypePage == typeof(SettingsPage));
             settingsItem.Title = settingsContent.Title;

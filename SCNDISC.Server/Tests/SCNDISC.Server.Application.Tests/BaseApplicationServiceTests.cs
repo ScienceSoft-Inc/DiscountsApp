@@ -77,6 +77,21 @@ namespace SCNDISC.Server.Application.Tests
             };
         }
 
+        protected Rating CreateRating(int lowRatingMark = 0, int highRatingMark = 5)
+        {
+            return new Rating
+            {
+                Modified = DateTime.UtcNow,
+                DeviceId = Guid.NewGuid().ToString(),
+                PartnerId = ObjectId.GenerateNewId().ToString(),
+                Mark = _random.Next(lowRatingMark, highRatingMark)
+            };
+        }
+
+        protected string GetNewId()
+        {
+            return Guid.NewGuid().ToString();
+        }
         protected async Task<IEnumerable<Category>> CreateCategoriesAsync(IMongoCollection<Category> collection, int count)
         {
             var categories = new List<Category>();
@@ -86,6 +101,16 @@ namespace SCNDISC.Server.Application.Tests
             }
             await collection.InsertManyAsync(categories);
             return categories;
+        }
+
+        protected IEnumerable<Rating> CreateRatingElements(int count)
+        {
+            var ratings = new List<Rating>();
+            for (var i = 0; i < count; i++)
+            {
+                ratings.Add(CreateRating());
+            }
+            return ratings;
         }
 
         private IEnumerable<Phone> CreatePhones(int i)
@@ -228,8 +253,12 @@ namespace SCNDISC.Server.Application.Tests
                     branches.Add(CreateBranch(partner.Id, lowEntityLimit, highEntityLimit));
                 }
             }
-            await collection.InsertManyAsync(branches);
-            partners.AddRange(branches);
+            if (branches.Count > 0)
+            {
+                await collection.InsertManyAsync(branches);
+                partners.AddRange(branches);
+            }
+            
             return partners;
         }
     }

@@ -25,7 +25,8 @@ namespace SCNDISC.Server.Infrastructure.Persistence.Mappings
 					cm.AddKnownType(typeof(Parameter));
 					cm.AddKnownType(typeof(Feedback));
                     cm.AddKnownType(typeof(GalleryImage));
-				});
+                    cm.AddKnownType(typeof(Rating));
+                });
 			}
 
 			if (!BsonClassMap.IsClassMapRegistered(typeof(LocalizableText)))
@@ -106,6 +107,17 @@ namespace SCNDISC.Server.Infrastructure.Persistence.Mappings
                     cm.MapProperty(gi => gi.FileName);
                     cm.MapProperty(gi => gi.Created);
                     cm.MapProperty(gi => gi.PartnerId).SetSerializer(new StringSerializer(BsonType.ObjectId));
+                });
+            }
+
+            if (!BsonClassMap.IsClassMapRegistered(typeof(Rating)))
+            {
+                BsonClassMap.RegisterClassMap<Rating>(cm =>
+                {
+                    cm.MapProperty(r => r.DeviceId);
+                    cm.MapProperty(r => r.PartnerId).SetSerializer(new StringSerializer(BsonType.ObjectId));
+                    cm.MapProperty(r => r.Mark);
+                    cm.MapProperty(r => r.Modified);
                 });
             }
 

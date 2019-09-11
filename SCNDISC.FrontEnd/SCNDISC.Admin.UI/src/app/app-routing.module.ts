@@ -7,12 +7,12 @@ import {ResolverService} from './core/services/resolver.service';
 import {PartnerDialogComponent} from './partner/partner-dialog/partner-dialog.component';
 import {WarningComponent} from './shared/alerts/warning.component';
 
- const itemRoutes: Routes = [
-   {path: 'partner/:id', component: PartnerDialogComponent, resolve: {data: ResolverService}},
-   {path: 'categories', loadChildren: './category/category.module#CategoryModule'},
-   {path: 'feedback', loadChildren: './feedback/feedback.module#FeedbackModule'},
-   {path: 'notification', loadChildren: './notification/notification.module#NotificationModule'}
- ];
+const itemRoutes: Routes = [
+  {path: 'partner/:id', component: PartnerDialogComponent, resolve: {data: ResolverService}},
+  {path: 'categories', loadChildren: () => import('./category/category.module').then(m => m.CategoryModule)},
+  {path: 'feedback', loadChildren: () => import('./feedback/feedback.module').then(f => f.FeedbackModule)},
+  {path: 'notification', loadChildren: () => import('./notification/notification.module').then(n => n.NotificationModule)}
+];
 
 export const routes: Routes = [
   {path: 'login', component: LoginComponent},

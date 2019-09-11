@@ -21,11 +21,12 @@ namespace SCNDISC.Server.Infrastructure.Persistence.Providers
             _client = new MongoClient(settingsService.MongoConnectionString);
             var partnerIndexBuilder = new IndexKeysDefinitionBuilder<Branch>().Ascending(b => b.PartnerId);
             var spatialIndexBuilder = new IndexKeysDefinitionBuilder<Branch>().Geo2DSphere(x => x.Location);
-            GetCollection<Branch>().Indexes.CreateOneAsync(partnerIndexBuilder).GetAwaiter().GetResult();
-            GetCollection<Branch>().Indexes.CreateOneAsync(spatialIndexBuilder).GetAwaiter().GetResult();
-
+            GetCollection<Branch>().Indexes.CreateOneAsync(new CreateIndexModel<Branch>(partnerIndexBuilder)).GetAwaiter().GetResult();
+            GetCollection<Branch>().Indexes.CreateOneAsync(new CreateIndexModel<Branch>(spatialIndexBuilder)).GetAwaiter().GetResult();
             var parameterIndexBuilder = new IndexKeysDefinitionBuilder<Parameter>().Ascending(b => b.Key);
-            GetCollection<Parameter>().Indexes.CreateOneAsync(parameterIndexBuilder).GetAwaiter().GetResult();
+            GetCollection<Parameter>().Indexes.CreateOneAsync(new CreateIndexModel<Parameter>(parameterIndexBuilder)).GetAwaiter().GetResult();
+            var combinedRatingIndexBuilder = new IndexKeysDefinitionBuilder<Rating>().Ascending(r => r.DeviceId).Ascending(r => r.PartnerId);
+            GetCollection<Rating>().Indexes.CreateOneAsync(new CreateIndexModel<Rating>(combinedRatingIndexBuilder, new CreateIndexOptions { Unique = true })).GetAwaiter().GetResult();
         }
 
         public IMongoCollection<TAggregate> GetCollection<TAggregate>() where TAggregate : Aggregate

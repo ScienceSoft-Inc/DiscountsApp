@@ -111,7 +111,7 @@ namespace ScnDiscounts.Views
 
             var activityIndicator = new ActivityIndicator
             {
-                Color = Color.White,
+                Color = loadingColor,
                 HorizontalOptions = LayoutOptions.Center
             };
             activityIndicator.SetBinding(IsVisibleProperty, "IsUpdating");

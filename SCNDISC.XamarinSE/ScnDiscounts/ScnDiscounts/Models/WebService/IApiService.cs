@@ -26,7 +26,16 @@ namespace ScnDiscounts.Models.WebService
         [Get("/galleryimage/{id}")]
         Task<HttpContent> GetDiscountGalleryImage([AliasAs("id")] string imageId);
 
+        [Get("/partner/rating/{id}")]
+        Task<DeserializeDiscountRating> GetDiscountRating([AliasAs("id")] string documentId);
+
+        [Get("/device/{id}/ratings")]
+        Task<List<DeserializePersonalRating>> GetPersonalRatings([AliasAs("id")] string deviceId);
+
+        [Post("/partner/rating")]
+        Task<DeserializePersonalRating> PostPersonalRating([Body] DeserializePersonalRating rating);
+
         [Post("/feedbacks")]
-        Task PostFeedback([Body] DeserializeFeedback feedback);
+        Task<HttpContent> PostFeedback([Body] DeserializeFeedback feedback);
     }
 }

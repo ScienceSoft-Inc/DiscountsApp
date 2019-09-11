@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace ScnDiscounts.Models.Data
 {
-    public class DiscountDetailBranchData : NotifyPropertyChanged
+    public class DiscountDetailBranchData : NotifyPropertyChanged //TODO: is NotifyPropertyChanged really needed?
     {
         public string DocumentId { get; set; }
 

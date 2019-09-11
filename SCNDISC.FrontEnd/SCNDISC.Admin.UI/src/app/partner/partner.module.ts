@@ -14,11 +14,14 @@ import {ToolTipPartnerComponent} from './partners-list/tool-tip-partner/tool-tip
 import {AvatarLoadingComponent} from './partners-list/tool-tip-partner/avatar-loading/avatar-loading.component';
 import {GalleryImageComponent} from './components/gallery-image/gallery-image.component';
 import {GalleryImagesComponent} from './components/gallery-images/gallery-images.component';
+import {PartnerRatingComponent} from './components/rating/rating.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
     SharedModule,
-    RouterModule
+    RouterModule,
+    NgbModule
   ],
   declarations: [
     PartnerDialogComponent,
@@ -33,7 +36,8 @@ import {GalleryImagesComponent} from './components/gallery-images/gallery-images
     ToolTipPartnerComponent,
     AvatarLoadingComponent,
     GalleryImagesComponent,
-    GalleryImageComponent
+    GalleryImageComponent,
+    PartnerRatingComponent
   ],
   entryComponents: [PartnerDetailsComponent],
   exports: [ToolTipPartnerComponent, PartnersListComponent, PartnerDialogComponent]

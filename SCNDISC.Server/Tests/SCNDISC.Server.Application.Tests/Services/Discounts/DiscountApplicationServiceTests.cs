@@ -24,7 +24,7 @@ namespace SCNDISC.Server.Application.Tests.Services.Discounts
 			var branches = await CreateHierachyAsync(mongoCollection, 3, 3, 3, 2, 2);
             var service = CreateService();
             var discounts = await service.GetPartnersDiscountListAsync();
-            Assert.IsTrue(discounts.All(p => p.Discounts.Count() == (3 + 1) * 2));
+            Assert.IsTrue(discounts.All(p => p.Discounts.Count() == 2));
             var partners = branches.Where(b => b.Id == b.PartnerId).ToArray();
             Assert.AreEqual(partners.Count(), discounts.Count());
             foreach (var partner in partners)

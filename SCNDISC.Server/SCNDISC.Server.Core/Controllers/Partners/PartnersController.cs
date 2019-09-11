@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-//using System.Web.Http.Cors;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using SCNDISC.Server.Application.Services.Admin;
@@ -11,13 +10,11 @@ using SCNDISC.Server.Application.Services.Partners;
 using SCNDISC.Server.Domain.Aggregates.Partners;
 using SCNDISC.Server.Core.Models.Partner;
 using SCNDISC.Server.Core.Mapper;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Cors;
 using SCNDISC.Server.Core.Models;
 using SCNDISC.Server.Application.Services.Gallery;
+using SCNDISC.Server.Infrastructure.Imaging;
+using SCNDISC.Server.Application.Services.PartnerRating;
 
 namespace SCNDISC.Server.Core.Controllers.Partners
 {
@@ -27,16 +24,22 @@ namespace SCNDISC.Server.Core.Controllers.Partners
         private readonly IAdminQueryApplicationService _adminQueryApplicationService;
         private readonly ICategoryApplicationService _categoryApplicationService;
         private readonly IGalleryApplicationService _galleryService;
+        private readonly IPartnerRatingService _ratingService;
+        private readonly IImageConverter _imageConverter;
 
         public PartnersController(IPartnerApplicationService partnerApplicationService,
             IAdminQueryApplicationService adminQueryApplicationService,
             ICategoryApplicationService сategoryApplicationService,
-            IGalleryApplicationService galleryService)
+            IGalleryApplicationService galleryService,
+            IPartnerRatingService ratingService,
+            IImageConverter imageConverter)
         {
             _partnerApplicationService = partnerApplicationService;
             _adminQueryApplicationService = adminQueryApplicationService;
             _categoryApplicationService = сategoryApplicationService;
             _galleryService = galleryService;
+            _ratingService = ratingService;
+            _imageConverter = imageConverter;
         }
 
         [HttpGet]
@@ -49,10 +52,10 @@ namespace SCNDISC.Server.Core.Controllers.Partners
                 selectedCategories = null;
             }
             var categories = await _categoryApplicationService.GetCategoryListAsync();
-            IEnumerable<CategoryModel> categoriesModels = Mapper.CategoryMapper.MapToCategoryModels(categories);
+            IEnumerable<CategoryModel> categoriesModels = CategoryMapper.MapToCategoryModels(categories);
 
             var partners = await _adminQueryApplicationService.GetPartnersOnly(selectedCategories, discountName);
-            IEnumerable<DiscountModel> discounts = Mapper.DiscountMapper.MapToDiscountModel(partners, categoriesModels);
+            IEnumerable<DiscountModel> discounts = DiscountMapper.MapToDiscountModel(partners, categoriesModels);
             return discounts;
         }
 
@@ -61,10 +64,15 @@ namespace SCNDISC.Server.Core.Controllers.Partners
         public async Task<PartnerModel> GetPartnerDetailsAsync(string partnerId)
         {
             var categories = await _categoryApplicationService.GetCategoryListAsync();
-            var categoriesModels = Mapper.CategoryMapper.MapToCategoryModels(categories);
+            var categoriesModels = CategoryMapper.MapToCategoryModels(categories);
             var partnerBranches = await _partnerApplicationService.GetPartnerDetailsAsync(partnerId);
             var partnerGalleryImages = await _galleryService.GetGalleryImageIdsForPartner(partnerId);
-            var partner = Mapper.PartnerMapper.Map(partnerBranches?.ToList(), categoriesModels?.ToArray(), partnerGalleryImages?.ToList());
+            var rating = (await _ratingService.GetPartnerRatingAsync(partnerId)).MapToPartnerStatisticsModel();
+            var partner = PartnerMapper.Map(
+                partnerBranches?.ToList(), 
+                categoriesModels?.ToArray(), 
+                partnerGalleryImages?.ToList(),
+                rating);
             return partner;
         }
 
@@ -80,12 +88,12 @@ namespace SCNDISC.Server.Core.Controllers.Partners
         [Route("partners")]
         public async Task<HttpResponseMessage> SavePartnerAsync([FromBody] PartnerModel partner)
         {
-            var branches = Mapper.PartnerMapper.MapToBranches(partner);
+            var branches = PartnerMapper.MapToBranches(partner, _imageConverter);
             var partnerBranches = await _partnerApplicationService.GetPartnerDetailsAsync(partner.Id);
             var newPartner = new Branch();
             newPartner = branches.ElementAt(0).PartnerId != null ? branches.First(x => x.Id == x.PartnerId) : branches.ElementAt(0);
             var partnerFirst = await _partnerApplicationService.UpsertPartnerAsync(newPartner);
-            foreach (var branch in branches)
+            foreach (var branch in branches.Where(b => b.Id != b.PartnerId || (b.Id == null && b.PartnerId == null)))
             {
                 branch.PartnerId = partnerFirst.PartnerId;
                 var qwerty = await _partnerApplicationService.UpsertBranchAsync(branch);
@@ -115,12 +123,11 @@ namespace SCNDISC.Server.Core.Controllers.Partners
         [Route("galleryimage")]
         public async Task<ActionResult> PostAsync([FromBody]GalleryImageModel model)
         {
-            var result = string.Empty;
-
+            string result;
             if (ModelState.IsValid)
             {
-                var galleyImage = PartnerMapper.MapToGalleryImage(model);
-                result = await _galleryService.AddGalleryImageToPartnerAsync(galleyImage);
+                var galleryImage = PartnerMapper.MapToGalleryImage(model, _imageConverter);
+                result = await _galleryService.AddGalleryImageToPartnerAsync(galleryImage);
             }
             else return BadRequest();
 

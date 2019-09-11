@@ -11,7 +11,7 @@
     "Contacts": "Contacts",
     "PhoneNumber": "Phone",
     "Address": "Address",
-    "Hint": "Avatar must be of resolution at least 48x48. Theme minimal resoultion is 340x180. For optimal scaling keep the abovementioned ratios.",
+    "Hint": "Avatar must be of resolution at least 128x128. For theme and other pictures minimal resolution is 512x288. For optimal scaling keep the above mentioned ratios",
     "errorCoordinates": "Error in coordinate field. The value must be formatted as follows: 53.932160, 27.558136",
     "errorPhone": "Error entering phone number.",
     "ErrorName": " Field \"Name\" is required.",

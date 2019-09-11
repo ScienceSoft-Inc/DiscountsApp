@@ -56,9 +56,8 @@ namespace ScnDiscounts.ViewModels
             IsShowLoading = true;
 
             ProcessMessage = contentUI.TxtProcessLoadingData;
-            await Task.Yield();
 
-            AppData.Discount.Db.LoadData();
+            await AppData.Discount.Db.LoadData();
 
             await Application.Current.MainPage.Navigation.PushAsync(new MainPage());
             Application.Current.MainPage.Navigation.RemovePage(ViewPage);

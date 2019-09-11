@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import NumberFormatOptions = Intl.NumberFormatOptions;
 // code from https://stackoverflow.com/questions/37591076/how-to-convert-seconds-to-time-string-in-angular2
 
 @Pipe({

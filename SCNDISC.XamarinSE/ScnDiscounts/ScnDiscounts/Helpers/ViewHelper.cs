@@ -1,4 +1,5 @@
-﻿using ScnDiscounts.Models;
+﻿using Plugin.Connectivity;
+using ScnDiscounts.Models;
 using ScnDiscounts.Models.Data;
 using ScnDiscounts.Views;
 using ScnDiscounts.Views.ContentUI;
@@ -26,13 +27,22 @@ namespace ScnDiscounts.Helpers
                 return;
 
             page.ViewModel.IsLoadActivity = true;
-            await Task.Yield();
+
+            if (AppData.Discount.IsSynchingImages)
+            {
+                var isHasInternet = CrossConnectivity.Current.IsConnected;
+                if (isHasInternet)
+                    await AppData.Discount.SyncImagesFor(documentId);
+            }
 
             DiscountDetailData discountDetailData;
 
             try
             {
-                discountDetailData = AppData.Discount.Db.LoadDiscountDetail(documentId);
+                discountDetailData = await AppData.Discount.Db.LoadDiscountDetail(documentId);
+
+                if (discountDetailData != null)
+                    page.OpenPage(new DiscountDetailPage(discountDetailData));
             }
             catch (Exception ex)
             {
@@ -41,21 +51,12 @@ namespace ScnDiscounts.Helpers
                 discountDetailData = null;
             }
 
-            if (discountDetailData == null)
-            {
-                page.ViewModel.IsLoadActivity = false;
+            page.ViewModel.IsLoadActivity = false;
 
-                if (!isSilent)
-                {
-                    var discountContentUI = new DiscountContentUI();
-                    await page.DisplayAlert(null, discountContentUI.TitleErrLoading, discountContentUI.TxtOk);
-                }
-            }
-            else
+            if (discountDetailData == null && !isSilent)
             {
-                Functions.SafeCall(() => page.OpenPage(new DiscountDetailPage(discountDetailData)));
-
-                page.ViewModel.IsLoadActivity = false;
+                var discountContentUI = new DiscountContentUI();
+                await page.DisplayAlert(null, discountContentUI.TitleErrLoading, discountContentUI.TxtOk);
             }
         }
     }

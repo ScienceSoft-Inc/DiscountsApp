@@ -9,14 +9,15 @@ namespace ScnDiscounts.Views.ContentUI
             title = new LanguageStrings("ScienceSoft", "ScienceSoft");
             _titleErrInternet = new LanguageStrings("Internet is disabled", "Отсутствует интернет");
             _msgErrInternet = new LanguageStrings("Check connection. Application can't function without the Internet.",
-                                                "Проверьте подключение. Приложение не может работать без интернета.");
+                "Проверьте подключение. Приложение не может работать без интернета.");
             _txtProcessCheckInternet = new LanguageStrings("Checking Internet available", "Проверка доступа в интернет");
             _txtProcessLoadingData = new LanguageStrings("Loading local data", "Загрузка локальных данных");
             _txtProcessLoadMapData = new LanguageStrings("Loading map data", "Загрузка информации для карты");
+            _txtProcessLoadRating = new LanguageStrings("Loading personal rating values", "Загрузка персональных значений рейтинга");
             _txtProcessLoadDiscountsData = new LanguageStrings("Loading discounts data", "Загрузка информации о скидках");
             _titleErrLoading = new LanguageStrings("Error loading data", "Ошибка загрузки данных");
             _msgErrLoading = new LanguageStrings("Try to launch application again. If the error appears, contact the developers.",
-                                              "Попробуйте запустить приложение снова. Если ошибка появится, то сообщите об этом разработчикам.");
+                "Попробуйте запустить приложение снова. Если ошибка появится, то сообщите об этом разработчикам.");
             _btnTxtRetry = new LanguageStrings("Retry again", "Попробовать еще раз");
             _btnTxtSkip = new LanguageStrings("Skip", "Пропустить");
             _txtRetryCheckInternet = new LanguageStrings("Check internet connection", "Проверьте подключение к интернету");
@@ -36,6 +37,9 @@ namespace ScnDiscounts.Views.ContentUI
 
         private readonly LanguageStrings _txtProcessLoadMapData;
         public string TxtProcessLoadMapData => _txtProcessLoadMapData.Current;
+
+        private readonly LanguageStrings _txtProcessLoadRating;
+        public string TxtProcessLoadRating => _txtProcessLoadRating.Current;
 
         private readonly LanguageStrings _txtProcessLoadDiscountsData;
         public string TxtProcessLoadDiscountsData => _txtProcessLoadDiscountsData.Current;

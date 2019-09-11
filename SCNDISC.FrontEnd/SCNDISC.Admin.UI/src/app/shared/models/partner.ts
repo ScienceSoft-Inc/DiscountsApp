@@ -1,6 +1,7 @@
 import {WebAddress} from './webAddress';
 import {Contact} from './contact';
 import {Category} from './category';
+import {Rating} from './partner-rating';
 
 export class Partner {
   public webAddresses: WebAddress[];
@@ -17,6 +18,7 @@ export class Partner {
   public discount: number;
   public selectDiscount: string;
   public id: string;
+  public rating: Rating;
 
   constructor() {
       this.categories = [];
@@ -27,5 +29,6 @@ export class Partner {
       this.selectDiscount = '0';
       this.discount = 0;
       this.gallery = [];
+      this.rating = new Rating();
   }
 }

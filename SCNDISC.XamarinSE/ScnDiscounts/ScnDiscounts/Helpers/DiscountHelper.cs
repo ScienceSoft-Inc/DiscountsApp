@@ -1,4 +1,5 @@
 ﻿using ScnDiscounts.Models;
+using ScnDiscounts.Models.Data;
 using System;
 
 namespace ScnDiscounts.Helpers
@@ -214,6 +215,13 @@ namespace ScnDiscounts.Helpers
                 phoneOperator = PhoneOperatorEnum.Unknown;
 
             return result;
+        }
+
+        public static string ToRatingString(this DiscountRatingData discountRating)
+        {
+            return discountRating != null
+                ? $"{(discountRating.RatingCount > 0 ? (double) discountRating.RatingSum / discountRating.RatingCount : 0):F1} ({discountRating.RatingCount:N0})"
+                : null;
         }
     }
 }

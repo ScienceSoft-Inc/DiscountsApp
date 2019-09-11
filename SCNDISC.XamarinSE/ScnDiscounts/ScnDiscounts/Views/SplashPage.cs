@@ -42,10 +42,10 @@ namespace ScnDiscounts.Views
 
             var activityIndicator = new ActivityIndicator
             {
-                Color = Color.White
+                Color = loadingColor
             };
-            activityIndicator.SetBinding(IsVisibleProperty, "IsShowLoading");
-            activityIndicator.SetBinding(ActivityIndicator.IsRunningProperty, "IsShowLoading");
+            activityIndicator.SetBinding(IsVisibleProperty, nameof(SplashViewModel.IsShowLoading));
+            activityIndicator.SetBinding(ActivityIndicator.IsRunningProperty, nameof(SplashViewModel.IsShowLoading));
             AbsoluteLayout.SetLayoutFlags(activityIndicator, AbsoluteLayoutFlags.PositionProportional);
             AbsoluteLayout.SetLayoutBounds(activityIndicator,
                 new Rectangle(0.5, 0.8, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
@@ -57,7 +57,7 @@ namespace ScnDiscounts.Views
                 Command = viewModel.RetryCommand,
                 Text = contentUI.BtnTxtRetry.ToUpper()
             };
-            btnRetry.SetBinding(IsVisibleProperty, "IsRetry");
+            btnRetry.SetBinding(IsVisibleProperty, nameof(SplashViewModel.IsRetry));
             AbsoluteLayout.SetLayoutFlags(btnRetry,
                 AbsoluteLayoutFlags.PositionProportional | AbsoluteLayoutFlags.WidthProportional);
             AbsoluteLayout.SetLayoutBounds(btnRetry, new Rectangle(0.5, 0.7, 0.5f, AbsoluteLayout.AutoSize));
@@ -69,7 +69,7 @@ namespace ScnDiscounts.Views
                 Command = viewModel.SkipCommand,
                 Text = contentUI.BtnTxtSkip.ToUpper()
             };
-            btnSkip.SetBinding(IsVisibleProperty, "IsRetry");
+            btnSkip.SetBinding(IsVisibleProperty, nameof(SplashViewModel.IsRetry));
             AbsoluteLayout.SetLayoutFlags(btnSkip,
                 AbsoluteLayoutFlags.PositionProportional | AbsoluteLayoutFlags.WidthProportional);
             AbsoluteLayout.SetLayoutBounds(btnSkip, new Rectangle(0.5, 0.8, 0.5f, AbsoluteLayout.AutoSize));
@@ -80,7 +80,7 @@ namespace ScnDiscounts.Views
                 Style = LabelStyles.DescriptionLightStyle.FromResources<Style>(),
                 HorizontalTextAlignment = TextAlignment.Center
             };
-            txtProgress.SetBinding(Label.TextProperty, "ProcessMessage");
+            txtProgress.SetBinding(Label.TextProperty, nameof(SplashViewModel.ProcessMessage));
             AbsoluteLayout.SetLayoutFlags(txtProgress,
                 AbsoluteLayoutFlags.PositionProportional | AbsoluteLayoutFlags.WidthProportional);
             AbsoluteLayout.SetLayoutBounds(txtProgress, new Rectangle(0f, 0.9, 1f, AbsoluteLayout.AutoSize));

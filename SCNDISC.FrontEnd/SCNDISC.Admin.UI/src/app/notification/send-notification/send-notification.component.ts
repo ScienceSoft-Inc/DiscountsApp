@@ -65,10 +65,10 @@ export class SendNotificationComponent implements OnInit, OnDestroy {
       this.checkCountDown(language);
     });
 
-    this.discountsSubscription = this.partnerService.getAllTooltips().subscribe((toolTipPrtners: ToolTipPartner[]) => {
-      this.toolTipPartners = toolTipPrtners;
-      this.namePartnersEn = toolTipPrtners.map( t => new NamePartner( t.id, t.name_En));
-      this.namePartnersRu = toolTipPrtners.map( t => new NamePartner( t.id, t.name_Ru));
+    this.discountsSubscription = this.partnerService.getAllTooltips().subscribe((toolTipPartners: ToolTipPartner[]) => {
+      this.toolTipPartners = toolTipPartners;
+      this.namePartnersEn = toolTipPartners.map( t => new NamePartner( t.id, t.name_En));
+      this.namePartnersRu = toolTipPartners.map( t => new NamePartner( t.id, t.name_Ru));
       if (this.language_en) {
         this.namePartners = this.namePartnersEn;
       } else {

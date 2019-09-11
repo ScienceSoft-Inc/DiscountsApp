@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Control\KeyboardView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\MapPinDetail.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\MapTile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Control\RatingView.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Control\SearchBarExtended.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyInterface\IClientDatabase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyInterface\IImageService.cs" />
@@ -25,10 +26,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\CategoryHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\DiscountHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Functions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\HttpHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\IsolatedStorageHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\LanguageHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\LocationHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\LoggerHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\NamedAsyncLocker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\PushNotificationHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ResourcesHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SafeAreaHelper.cs" />
@@ -37,6 +40,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\AppMobileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\AppParameters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Database\LocalDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Database\Tables\PersonalRating.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Database\Tables\DiscountRating.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Database\Tables\GalleryImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Database\Tables\WebAddress.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Database\Tables\DiscountCategory.cs" />
@@ -46,6 +51,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Database\Tables\DiscountsStrings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Database\Tables\LangString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Data\CategoryData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Data\DiscountRatingData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Data\PersonalRatingData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Data\PushNotificationData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Data\GalleryImageData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Data\WebAddressData.cs" />
@@ -66,6 +73,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\WebService\LoggingHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\WebService\MongoDB\DeserializeCategoryItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\WebService\MongoDB\DeserializeBranchItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\WebService\MongoDB\DeserializePersonalRating.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\WebService\MongoDB\DeserializeDiscountRating.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\WebService\MongoDB\DeserializeFeedback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\WebService\SyncParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueConverter\CustomSafeAreaConverter.cs" />

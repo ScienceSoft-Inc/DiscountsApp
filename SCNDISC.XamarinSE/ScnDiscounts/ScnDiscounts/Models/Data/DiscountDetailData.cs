@@ -4,6 +4,8 @@ namespace ScnDiscounts.Models.Data
 {
     public class DiscountDetailData
     {
+        public string DocumentId { get; set; }
+
         public string Title { get; set; }
 
         public string ImageFileName { get; set; }
@@ -13,6 +15,10 @@ namespace ScnDiscounts.Models.Data
         public string Persent { get; set; }
 
         public string DiscountType { get; set; }
+
+        public DiscountRatingData DiscountRating { get; set; }
+
+        public PersonalRatingData PersonalRating { get; set; }
 
         public List<CategoryData> CategoryList { get; set; }
 

@@ -16,8 +16,10 @@ namespace SCNDISC.Server.Infrastructure.Persistence.Commands.Partners
         public async Task<Branch> UpsertBranchAsync(Branch branch)
         {
 	        branch.Modified = DateTime.UtcNow;
+            branch.Icon = null;// set null to fields in order to store images and
+            branch.Image = null;// icons only per partner document, not in branches
 
-			if (String.IsNullOrEmpty(branch.Id))
+            if (String.IsNullOrEmpty(branch.Id))
             {
                 branch.Id = ObjectId.GenerateNewId().ToString();
             }

@@ -12,6 +12,7 @@ namespace ScnDiscounts.Views.ContentUI
             _txtSortBy = new LanguageStrings("Sort", "Сортировка");
             _txtSortByName = new LanguageStrings("by name", "по имени");
             _txtSortByDistance = new LanguageStrings("by distance", "по удалённости");
+            _txtSortByRecentDate = new LanguageStrings("by recent date", "по дате обновления");
             _txtEmptyList = new LanguageStrings("No results were found for the selected criteria", "По выбранным критериям ничего не найдено");
             _txtSearchByText = new LanguageStrings("Search", "Поиск");
         }
@@ -25,6 +26,8 @@ namespace ScnDiscounts.Views.ContentUI
         public string IconSortByName => "ic_menu_sort_alphabetically.png";
 
         public string IconSortByDistance => "ic_menu_mylocation.png";
+
+        public string IconSortByRecentDate => "ic_menu_recent_history.png";
 
         private readonly LanguageStrings _titleErrLoading;
         public string TitleErrLoading => _titleErrLoading.Current;
@@ -41,9 +44,11 @@ namespace ScnDiscounts.Views.ContentUI
         private readonly LanguageStrings _txtSortByDistance;
         public string TxtSortByDistance => _txtSortByDistance.Current;
 
+        private readonly LanguageStrings _txtSortByRecentDate;
+        public string TxtSortByRecentDate => _txtSortByRecentDate.Current;
+
         private readonly LanguageStrings _txtEmptyList;
         public string TxtEmptyList => _txtEmptyList.Current;
-
 
         private readonly LanguageStrings _txtSearchByText;
         public string TxtSearchByText => _txtSearchByText.Current;

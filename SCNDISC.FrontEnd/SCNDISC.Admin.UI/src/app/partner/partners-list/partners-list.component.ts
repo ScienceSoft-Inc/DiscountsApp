@@ -6,8 +6,7 @@ import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-discounts',
-  templateUrl: './partners-list.component.html',
-  styleUrls: ['./partners-list.component.css']
+  templateUrl: './partners-list.component.html'
 })
 export class PartnersListComponent implements OnInit, OnDestroy {
 
@@ -27,5 +26,4 @@ export class PartnersListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.discountsSubscription.unsubscribe();
   }
-
 }

@@ -11,9 +11,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.sciencesoft.discounts</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.7.0</string>
+	<string>1.7.2</string>
 	<key>CFBundleVersion</key>
-	<string>1.7.0</string>
+	<string>1.7.2</string>
 	<key>MinimumOSVersion</key>
 	<string>9.0</string>
 	<key>UIDeviceFamily</key>
@@ -80,6 +80,10 @@
 				<string>com.google.fcm</string>
 			</array>
 		</dict>
+	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>DiscountIcons.ttf</string>
 	</array>
 </dict>
 </plist>

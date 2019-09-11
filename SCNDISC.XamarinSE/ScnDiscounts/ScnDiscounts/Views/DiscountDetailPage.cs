@@ -1,4 +1,5 @@
 ﻿using CarouselView.FormsPlugin.Abstractions;
+using ScnDiscounts.Control;
 using ScnDiscounts.Helpers;
 using ScnDiscounts.Models.Data;
 using ScnDiscounts.ViewModels;
@@ -152,26 +153,7 @@ namespace ScnDiscounts.Views
 
             #endregion
 
-            #region Name company
-
-            var txtPartnerName = new Label
-            {
-                Style = LabelStyles.DetailTitleStyle.FromResources<Style>()
-            };
-            txtPartnerName.SetBinding(Label.TextProperty, nameof(DiscountDetailViewModel.NameCompany));
-
-            #endregion
-
-            #region Description
-
-            var txtDescription = new Label
-            {
-                Style = LabelStyles.DescriptionStyle.FromResources<Style>(),
-                LineBreakMode = LineBreakMode.WordWrap
-            };
-            txtDescription.SetBinding(Label.TextProperty, nameof(DiscountDetailViewModel.Description));
-
-            #endregion
+            #region Carousel images
 
             var carouselView = new CarouselViewControl
             {
@@ -203,16 +185,72 @@ namespace ScnDiscounts.Views
                 Constraint.RelativeToView(carouselView, (parent, view) => view.Width - sizeImgLabel - 5),
                 Constraint.RelativeToView(carouselView, (parent, view) => view.Height - sizeImgLabel - 5));
 
-            var stackDetails = new StackLayout
+            #endregion
+
+            #region Name company
+
+            var txtPartnerName = new Label
             {
-                Orientation = StackOrientation.Vertical,
-                Padding = new Thickness(20, 0),
+                Style = LabelStyles.DetailTitleStyle.FromResources<Style>(),
+                Margin = new Thickness(20, 0)
+            };
+            txtPartnerName.SetBinding(Label.TextProperty, nameof(DiscountDetailViewModel.NameCompany));
+
+            #endregion
+
+            #region Description
+
+            var txtDescription = new Label
+            {
+                Style = LabelStyles.DescriptionStyle.FromResources<Style>(),
+                Margin = new Thickness(20, 10, 20, 0),
+                LineBreakMode = LineBreakMode.WordWrap
+            };
+            txtDescription.SetBinding(Label.TextProperty, nameof(DiscountDetailViewModel.Description));
+
+            #endregion
+
+            #region Rating view
+
+            var ratingView = new RatingView
+            {
+                Style = LabelStyles.RatingStyle.FromResources<Style>()
+            };
+            ratingView.SetBinding(RatingView.ValueProperty, nameof(DiscountDetailViewModel.UserRating));
+
+            var ratingLabel = new Label
+            {
+                Style = LabelStyles.DescriptionStyle.FromResources<Style>(),
+                VerticalOptions = LayoutOptions.End
+            };
+            ratingLabel.SetBinding(Label.TextProperty, nameof(DiscountDetailViewModel.RatingString));
+            ratingLabel.SetBinding(IsVisibleProperty, nameof(DiscountDetailViewModel.IsDiscountRatingAvailable));
+
+            var activityIndicator = new ActivityIndicator
+            {
+                Color = Color.FromHex("444"),
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.End,
+                WidthRequest = 20,
+                HeightRequest = 20
+            };
+            activityIndicator.SetBinding(ActivityIndicator.IsRunningProperty, nameof(DiscountDetailViewModel.IsLoadingRating));
+            activityIndicator.SetBinding(IsVisibleProperty, nameof(DiscountDetailViewModel.IsLoadingRating));
+
+            var stackRating = new StackLayout
+            {
+                Orientation = StackOrientation.Horizontal,
+                Margin = new Thickness(20, 0),
+                Spacing = 10,
                 Children =
                 {
-                    txtPartnerName,
-                    txtDescription
+                    ratingView,
+                    ratingLabel,
+                    activityIndicator
                 }
             };
+
+            #endregion
 
             var discountLayout = new StackLayout
             {
@@ -222,7 +260,9 @@ namespace ScnDiscounts.Views
                 {
                     carouselLayout,
                     flexCategories,
-                    stackDetails
+                    txtPartnerName,
+                    stackRating,
+                    txtDescription
                 }
             };
 
